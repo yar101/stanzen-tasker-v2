@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,11 +17,17 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
+        // Create Roles
+        Role::create(['name' => 'user']);
+        Role::create(['name' => 'admin']);
+        Role::create(['name' => 'head-of-department']);
+
         // Create Admin
         User::factory()->create([
             'name' => 'admin',
             'email' => 'yakimec@stnzn.ru',
-            'password' => bcrypt('Redandwhite1'),
+            'password' => Hash::make('Redandwhite1'),
+            'role_id' => Role::where('name', 'admin')->first()->id
         ]);
     }
 }

@@ -15,6 +15,7 @@ defineProps({
 });
 
 const user = usePage().props.auth.user;
+const userRole = user.role.name;
 
 const form = useForm({
     name: user.name,
@@ -24,34 +25,40 @@ const form = useForm({
 
 <template>
     <section>
-        <header>
-            <h2 class="text-lg font-medium text-gray-900">
-                Profile Information
-            </h2>
+        <!--        <header>-->
+        <!--            <h2 class="text-lg font-medium text-gray-900">-->
+        <!--                Profile Information-->
+        <!--            </h2>-->
 
-            <p class="mt-1 text-sm text-gray-600">
-                Update your account's profile information and email address.
-            </p>
-        </header>
+        <!--            <p class="mt-1 text-sm text-gray-600">-->
+        <!--                Update your account's profile information and email address.-->
+        <!--            </p>-->
+        <!--        </header>-->
 
         <form
-            @submit.prevent="form.patch(route('profile.update'))"
             class="mt-6 space-y-6"
+            @submit.prevent="form.patch(route('profile.update'))"
         >
             <div>
-                <InputLabel for="name" value="Name" />
+                <InputLabel value="Роль" />
+
+                <TextInput :model-value="userRole" disabled />
+            </div>
+
+            <div>
+                <InputLabel for="name" value="Имя" />
 
                 <TextInput
                     id="name"
-                    type="text"
-                    class="mt-1 block w-full"
                     v-model="form.name"
-                    required
-                    autofocus
                     autocomplete="name"
+                    autofocus
+                    class="mt-1 block w-full"
+                    required
+                    type="text"
                 />
 
-                <InputError class="mt-2" :message="form.errors.name" />
+                <InputError :message="form.errors.name" class="mt-2" />
             </div>
 
             <div>
@@ -59,14 +66,14 @@ const form = useForm({
 
                 <TextInput
                     id="email"
-                    type="email"
-                    class="mt-1 block w-full"
                     v-model="form.email"
-                    required
                     autocomplete="username"
+                    class="mt-1 block w-full"
+                    required
+                    type="email"
                 />
 
-                <InputError class="mt-2" :message="form.errors.email" />
+                <InputError :message="form.errors.email" class="mt-2" />
             </div>
 
             <div v-if="mustVerifyEmail && user.email_verified_at === null">
@@ -74,9 +81,9 @@ const form = useForm({
                     Your email address is unverified.
                     <Link
                         :href="route('verification.send')"
-                        method="post"
                         as="button"
                         class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        method="post"
                     >
                         Click here to re-send the verification email.
                     </Link>
@@ -91,7 +98,7 @@ const form = useForm({
             </div>
 
             <div class="flex items-center gap-4">
-                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
+                <PrimaryButton :disabled="form.processing">Сохранить</PrimaryButton>
 
                 <Transition
                     enter-active-class="transition ease-in-out"
@@ -101,9 +108,9 @@ const form = useForm({
                 >
                     <p
                         v-if="form.recentlySuccessful"
-                        class="text-sm text-gray-600"
+                        class="text-sm text-green-600"
                     >
-                        Saved.
+                        Сохранено.
                     </p>
                 </Transition>
             </div>
