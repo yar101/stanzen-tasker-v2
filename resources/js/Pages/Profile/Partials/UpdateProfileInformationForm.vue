@@ -16,6 +16,7 @@ defineProps({
 
 const user = usePage().props.auth.user;
 const userRole = user.role.name;
+const userDepartment = user.department.name;
 
 const form = useForm({
     name: user.name,
@@ -43,6 +44,12 @@ const form = useForm({
                 <InputLabel value="Роль" />
 
                 <TextInput :model-value="userRole" disabled />
+            </div>
+
+            <div>
+                <InputLabel value="Отдел" />
+
+                <TextInput :model-value="userDepartment" disabled />
             </div>
 
             <div>
@@ -98,7 +105,9 @@ const form = useForm({
             </div>
 
             <div class="flex items-center gap-4">
-                <PrimaryButton :disabled="form.processing">Сохранить</PrimaryButton>
+                <PrimaryButton :disabled="form.processing"
+                    >Сохранить
+                </PrimaryButton>
 
                 <Transition
                     enter-active-class="transition ease-in-out"

@@ -1,12 +1,12 @@
 <?php
 
+use App\Models\Department;
 use App\Models\Role;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -21,7 +21,8 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
 
-            $table->foreignIdFor(Role::class)->constrained();
+            $table->foreignIdFor(Role::class)->default(1)->constrained();
+            $table->foreignIdFor(Department::class)->default(1)->constrained();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
