@@ -4,6 +4,7 @@ import { Head } from '@inertiajs/vue3';
 import InputError from '@/Components/InputError.vue';
 
 export default {
+    // eslint-disable-next-line vue/no-reserved-component-names
     components: { InputError, AuthenticatedLayout, Head },
     props: {
         contractors: {
@@ -61,6 +62,18 @@ export default {
                 },
             );
         },
+        destroy(id, name) {
+            if (
+                confirm(
+                    'Вы действительно хотите удалить контрагента `' +
+                        name +
+                        '`?',
+                )
+            ) {
+                this.$inertia.delete(route('contractors.destroy', id));
+                this.closeModals();
+            }
+        },
     },
 };
 </script>
@@ -68,7 +81,7 @@ export default {
 <template>
     <Head title="Контрагенты" />
     <AuthenticatedLayout>
-        <div class="mx-auto max-w-[60rem] overflow-x-auto rounded-md pb-5 pt-5">
+        <div class="mx-auto max-w-[40rem] overflow-x-auto rounded-md pb-5 pt-5">
             <!-- Таблица -->
             <table
                 class="min-w-full divide-y divide-gray-200 rounded-md border border-gray-200 shadow"
@@ -81,7 +94,7 @@ export default {
                             <span class="font-bold">Список контрагентов</span>
                             <div>
                                 <input
-                                    class="mr-10 h-6 rounded border border-gray-400 px-2 text-sm text-gray-700 outline-none transition-all focus:translate-y-[-3px] focus:shadow-xl"
+                                    class="mr-10 h-6 rounded border border-gray-400 px-2 text-sm text-gray-700 outline-none transition-all focus:translate-y-[-3px] focus:shadow-xl focus:ring-0"
                                     type="text"
                                 />
                             </div>
@@ -95,13 +108,17 @@ export default {
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                    <tr v-for="contractor in contractors" :key="contractor.id">
+                    <tr
+                        v-for="contractor in contractors"
+                        :key="contractor.id"
+                        class="group hover:bg-gray-100"
+                    >
                         <td
                             class="flex items-center justify-between px-4 py-2 text-sm text-gray-900"
                         >
                             <span>{{ contractor.name }}</span>
                             <button
-                                class="rounded bg-blue-500 px-3 py-1 text-sm text-white transition-all hover:bg-blue-600 hover:shadow-md"
+                                class="rounded bg-blue-500 px-3 py-1 text-sm text-white opacity-0 transition-all hover:bg-blue-600 hover:shadow-md group-hover:opacity-100 group-hover:shadow-md"
                                 @click="openEditModal(contractor)"
                             >
                                 Редактировать
@@ -182,20 +199,36 @@ export default {
                     />
                     <InputError :message="errors.name" class="mt-2" />
                 </div>
-                <div class="flex justify-end gap-2">
-                    <button
-                        class="rounded bg-gray-300 px-4 py-2 text-sm hover:bg-gray-400"
-                        type="button"
-                        @click="closeModals"
-                    >
-                        Отмена
-                    </button>
-                    <button
-                        class="rounded bg-blue-500 px-4 py-2 text-sm text-white hover:bg-blue-600"
-                        type="submit"
-                    >
-                        Сохранить
-                    </button>
+                <div class="flex justify-between gap-2">
+                    <div class="">
+                        <button
+                            class="rounded bg-red-500 px-4 py-2 text-sm hover:bg-red-600"
+                            type="button"
+                            @click="
+                                destroy(
+                                    selectedContractor.id,
+                                    selectedContractor.name,
+                                )
+                            "
+                        >
+                            Удалить
+                        </button>
+                    </div>
+                    <div class="flex gap-2">
+                        <button
+                            class="rounded bg-gray-300 px-4 py-2 text-sm hover:bg-gray-400"
+                            type="button"
+                            @click="closeModals"
+                        >
+                            Отмена
+                        </button>
+                        <button
+                            class="rounded bg-blue-500 px-4 py-2 text-sm text-white hover:bg-blue-600"
+                            type="submit"
+                        >
+                            Сохранить
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>

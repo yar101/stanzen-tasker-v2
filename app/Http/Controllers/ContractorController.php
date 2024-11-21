@@ -58,6 +58,7 @@ class ContractorController extends Controller
      */
     public function destroy(Contractor $contractor)
     {
-        
+        $contractor->delete();
+        return redirect()->route('contractors.index')->with('success', 'Контрагент удален.');
     }
 }
