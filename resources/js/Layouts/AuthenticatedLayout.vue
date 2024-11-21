@@ -86,7 +86,7 @@ const showingNavigationDropdown = ref(false);
                                         <DropdownLink
                                             :href="route('logout')"
                                             as="button"
-                                            class="text-red-500 hover:bg-red-100"
+                                            class="rounded-b-md text-red-500 hover:bg-red-100"
                                             method="post"
                                         >
                                             Выйти
@@ -152,7 +152,14 @@ const showingNavigationDropdown = ref(false);
                             :active="route().current('dashboard')"
                             :href="route('dashboard')"
                         >
-                            Dashboard
+                            Дашборд
+                        </ResponsiveNavLink>
+
+                        <ResponsiveNavLink
+                            :active="route().current('contractors.index')"
+                            :href="route('contractors.index')"
+                        >
+                            Контрагенты
                         </ResponsiveNavLink>
                     </div>
 
@@ -169,14 +176,14 @@ const showingNavigationDropdown = ref(false);
 
                         <div class="mt-3 space-y-1">
                             <ResponsiveNavLink :href="route('profile.edit')">
-                                Profile
+                                Профиль
                             </ResponsiveNavLink>
                             <ResponsiveNavLink
                                 :href="route('logout')"
                                 as="button"
                                 method="post"
                             >
-                                Log Out
+                                Выйти
                             </ResponsiveNavLink>
                         </div>
                     </div>

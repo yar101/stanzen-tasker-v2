@@ -1,66 +1,82 @@
-<script setup>
+<script>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import InputError from '@/Components/InputError.vue';
 
-defineProps(['contractors']);
-
-// Локальное состояние для модальных окон
-const isEditModalOpen = ref(false);
-const isCreateModalOpen = ref(false);
-const selectedContractor = ref(null);
-const newContractor = ref({ name: '' }); // Начальное состояние для нового контрагента
-
-// Открытие модального окна редактирования
-function openEditModal(contractor) {
-    selectedContractor.value = { ...contractor };
-    isEditModalOpen.value = true;
-}
-
-// Открытие модального окна создания
-function openCreateModal() {
-    newContractor.value = { name: '' }; // Сброс формы
-    isCreateModalOpen.value = true;
-}
-
-// Закрытие модальных окон
-function closeModals() {
-    isEditModalOpen.value = false;
-    isCreateModalOpen.value = false;
-    selectedContractor.value = null;
-}
-
-// Сохранение нового контрагента
-function saveNewContractor() {
-    console.log('Создаём контрагента:', newContractor.value);
-    // Здесь отправьте данные на сервер (например, через Inertia или Axios)
-    closeModals();
-}
-
-// Сохранение изменений контрагента
-function saveContractor() {
-    console.log('Сохраняем изменения:', selectedContractor.value);
-    // Здесь отправьте изменения на сервер
-    closeModals();
-}
+export default {
+    components: { InputError, AuthenticatedLayout, Head },
+    props: {
+        contractors: {
+            type: Object,
+            required: true,
+        },
+        errors: {
+            type: Object,
+            default: () => ({}),
+        },
+    },
+    data() {
+        return {
+            isEditModalOpen: false,
+            isCreateModalOpen: false,
+            selectedContractor: null,
+            newContractorForm: {
+                name: '',
+            },
+        };
+    },
+    methods: {
+        openEditModal(contractor) {
+            this.selectedContractor = { ...contractor }; // Копируем объект
+            this.isEditModalOpen = true;
+        },
+        openCreateModal() {
+            this.newContractorForm.name = ''; // Сбрасываем форму
+            this.isCreateModalOpen = true;
+        },
+        closeModals() {
+            this.isEditModalOpen = false;
+            this.isCreateModalOpen = false;
+            this.selectedContractor = null;
+        },
+        store() {
+            this.$inertia.post(
+                route('contractors.store'),
+                this.newContractorForm,
+                {
+                    onSuccess: () => {
+                        this.closeModals();
+                    },
+                },
+            );
+        },
+        update() {},
+    },
+};
 </script>
 
 <template>
-    <Head title="Контрагенты"></Head>
+    <Head title="Контрагенты" />
     <AuthenticatedLayout>
         <div class="mx-auto max-w-[60rem] overflow-x-auto rounded-md pb-5 pt-5">
             <!-- Таблица -->
             <table
                 class="min-w-full divide-y divide-gray-200 rounded-md border border-gray-200 shadow"
             >
-                <thead class="bg-gray-100">
+                <thead class="bg-neutral-100">
                     <tr>
                         <th
                             class="flex items-center justify-between px-4 py-2 text-start text-sm font-medium text-gray-700"
                         >
-                            <span>Контрагенты</span>
+                            <span class="font-bold">Список контрагентов</span>
+                            <div>
+                                <input
+                                    class="mr-10 h-6 rounded border border-gray-400 px-2 text-sm text-gray-700 outline-none transition-all focus:translate-y-[-3px] focus:shadow-xl"
+                                    type="text"
+                                />
+                            </div>
                             <button
-                                class="rounded bg-green-500 px-3 py-1 text-sm text-white hover:bg-green-600"
+                                class="rounded bg-green-500 px-3 py-1 text-sm text-white transition-all hover:bg-green-600 hover:shadow-md"
                                 @click="openCreateModal"
                             >
                                 Добавить
@@ -75,14 +91,14 @@ function saveContractor() {
                         >
                             <span>{{ contractor.name }}</span>
                             <button
-                                class="rounded bg-blue-500 px-3 py-1 text-sm text-white hover:bg-blue-600"
+                                class="rounded bg-blue-500 px-3 py-1 text-sm text-white transition-all hover:bg-blue-600 hover:shadow-md"
                                 @click="openEditModal(contractor)"
                             >
                                 Редактировать
                             </button>
                         </td>
                     </tr>
-                    <tr v-if="contractors.length === 0">
+                    <tr v-if="Object.keys(contractors).length === 0">
                         <td class="px-4 py-2 text-center text-sm text-gray-500">
                             Нет контрагентов
                         </td>
@@ -91,12 +107,56 @@ function saveContractor() {
             </table>
         </div>
 
+        <!-- Модальное окно создания -->
+        <div
+            v-if="isCreateModalOpen"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50"
+        >
+            <form
+                class="w-[30rem] rounded-md bg-white p-5 shadow-lg"
+                @submit.prevent="store"
+            >
+                <h2 class="mb-4 text-lg font-medium text-gray-800">
+                    Добавить контрагента
+                </h2>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">
+                        Имя
+                    </label>
+                    <input
+                        v-model="newContractorForm.name"
+                        class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        type="text"
+                    />
+                    <InputError :message="errors.name" class="mt-2" />
+                </div>
+                <div class="flex justify-end gap-2">
+                    <button
+                        class="rounded bg-gray-300 px-4 py-2 text-sm hover:bg-gray-400"
+                        type="button"
+                        @click="closeModals"
+                    >
+                        Отмена
+                    </button>
+                    <button
+                        class="rounded bg-green-500 px-4 py-2 text-sm text-white hover:bg-green-600"
+                        type="submit"
+                    >
+                        Добавить
+                    </button>
+                </div>
+            </form>
+        </div>
+
         <!-- Модальное окно редактирования -->
         <div
             v-if="isEditModalOpen"
             class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50"
         >
-            <div class="w-[30rem] rounded-md bg-white p-5 shadow-lg">
+            <form
+                class="w-[30rem] rounded-md bg-white p-5 shadow-lg"
+                @submit.prevent="update"
+            >
                 <h2 class="mb-4 text-lg font-medium text-gray-800">
                     Редактировать контрагента
                 </h2>
@@ -107,60 +167,26 @@ function saveContractor() {
                     <input
                         v-model="selectedContractor.name"
                         class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        required
                         type="text"
                     />
                 </div>
                 <div class="flex justify-end gap-2">
                     <button
                         class="rounded bg-gray-300 px-4 py-2 text-sm hover:bg-gray-400"
+                        type="button"
                         @click="closeModals"
                     >
                         Отмена
                     </button>
                     <button
                         class="rounded bg-blue-500 px-4 py-2 text-sm text-white hover:bg-blue-600"
-                        @click="saveContractor"
+                        type="submit"
                     >
                         Сохранить
                     </button>
                 </div>
-            </div>
-        </div>
-
-        <!-- Модальное окно создания -->
-        <div
-            v-if="isCreateModalOpen"
-            class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50"
-        >
-            <div class="w-[30rem] rounded-md bg-white p-5 shadow-lg">
-                <h2 class="mb-4 text-lg font-medium text-gray-800">
-                    Добавить контрагента
-                </h2>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700">
-                        Имя
-                    </label>
-                    <input
-                        v-model="newContractor.name"
-                        class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                        type="text"
-                    />
-                </div>
-                <div class="flex justify-end gap-2">
-                    <button
-                        class="rounded bg-gray-300 px-4 py-2 text-sm hover:bg-gray-400"
-                        @click="closeModals"
-                    >
-                        Отмена
-                    </button>
-                    <button
-                        class="rounded bg-green-500 px-4 py-2 text-sm text-white hover:bg-green-600"
-                        @click="saveNewContractor"
-                    >
-                        Добавить
-                    </button>
-                </div>
-            </div>
+            </form>
         </div>
     </AuthenticatedLayout>
 </template>

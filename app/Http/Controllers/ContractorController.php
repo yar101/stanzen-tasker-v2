@@ -14,22 +14,27 @@ class ContractorController extends Controller
     public function index()
     {
         return Inertia::render('Contractor/Index', [
-            'contractors' => Contractor::all(),
+            'contractors' => Contractor::orderByDesc('created_at')->get(),
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
+    {
+        Contractor::create(
+            $request->validate([
+                'name' => 'required|string|max:255|unique:contractors,name',
+            ])
+        );
+        return redirect()->route('contractors.index')->with('success', 'Контрагент добавлен.');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
     {
         //
     }
