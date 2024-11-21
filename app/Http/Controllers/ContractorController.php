@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Contractor;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class ContractorController extends Controller
@@ -25,18 +26,10 @@ class ContractorController extends Controller
     {
         Contractor::create(
             $request->validate([
-                'name' => 'required|string|max:255|unique:contractors,name',
+                'name' => ['required', 'string', 'max:255', Rule::unique('contractors', 'name')],
             ])
         );
         return redirect()->route('contractors.index')->with('success', 'Контрагент добавлен.');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -48,19 +41,16 @@ class ContractorController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Contractor $contractor)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Contractor $contractor)
     {
-        //
+        $contractor->update(
+            $request->validate([
+                'name' => ['required', 'string', 'max:255', Rule::unique('contractors', 'name')->ignore($contractor->id)],
+            ])
+        );
+        return redirect()->route('contractors.index')->with('success', 'Контрагент добавлен.');
     }
 
     /**
@@ -68,6 +58,6 @@ class ContractorController extends Controller
      */
     public function destroy(Contractor $contractor)
     {
-        //
+        
     }
 }

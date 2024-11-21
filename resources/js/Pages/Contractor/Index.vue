@@ -50,7 +50,17 @@ export default {
                 },
             );
         },
-        update() {},
+        update() {
+            this.$inertia.put(
+                route('contractors.update', this.selectedContractor.id),
+                this.selectedContractor,
+                {
+                    onSuccess: () => {
+                        this.closeModals();
+                    },
+                },
+            );
+        },
     },
 };
 </script>
@@ -170,6 +180,7 @@ export default {
                         required
                         type="text"
                     />
+                    <InputError :message="errors.name" class="mt-2" />
                 </div>
                 <div class="flex justify-end gap-2">
                     <button
