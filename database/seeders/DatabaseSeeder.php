@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Contractor;
 use App\Models\Department;
 use App\Models\Role;
 use App\Models\User;
@@ -17,6 +18,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // FAKE! Contractors
+        Contractor::factory(100)->create();
+
         // Create Departments
         Department::create(['name' => 'Без отдела']);
         Department::create(['name' => 'Инструменты']);

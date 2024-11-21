@@ -37,6 +37,15 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Дашборд
                                 </NavLink>
+
+                                <NavLink
+                                    :active="
+                                        route().current('contractors.index')
+                                    "
+                                    :href="route('contractors.index')"
+                                >
+                                    Контрагенты
+                                </NavLink>
                             </div>
                         </div>
 
