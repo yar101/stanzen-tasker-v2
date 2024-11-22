@@ -19,6 +19,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Create Contractors
+        Contractor::create(['name' => 'Без контрагента']);
+
         // FAKE! Contractors
         Contractor::factory(100)->create();
 
