@@ -99,7 +99,7 @@ export default {
                                 />
                             </div>
                             <button
-                                class="rounded bg-green-500 px-3 py-1 text-sm text-white transition-all hover:bg-green-600 hover:shadow-md"
+                                class="rounded bg-green-500 px-3 py-1 text-sm text-white transition-all duration-100 hover:bg-green-500/90 hover:shadow-md active:translate-y-[3px] active:shadow-inner active:ring-0"
                                 @click="openCreateModal"
                             >
                                 Добавить
@@ -118,7 +118,7 @@ export default {
                         >
                             <span>{{ contractor.name }}</span>
                             <button
-                                class="rounded bg-blue-500 px-3 py-1 text-sm text-white opacity-0 transition-all hover:bg-blue-600 hover:shadow-md group-hover:opacity-100 group-hover:shadow-md"
+                                class="translate-x-10 rounded bg-blue-500 px-3 py-1 text-sm text-white opacity-0 transition-all hover:bg-blue-600 hover:shadow-md group-hover:translate-x-0 group-hover:opacity-100 group-hover:shadow-md"
                                 @click="openEditModal(contractor)"
                             >
                                 Редактировать
