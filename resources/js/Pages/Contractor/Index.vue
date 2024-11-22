@@ -2,10 +2,18 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import InputError from '@/Components/InputError.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import TextInput from '@/Components/TextInput.vue';
 
 export default {
     // eslint-disable-next-line vue/no-reserved-component-names
-    components: { InputError, AuthenticatedLayout, Head },
+    components: {
+        TextInput,
+        InputLabel,
+        InputError,
+        AuthenticatedLayout,
+        Head,
+    },
     props: {
         contractors: {
             type: Object,
@@ -147,10 +155,10 @@ export default {
                     Добавить контрагента
                 </h2>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700">
+                    <InputLabel class="block text-sm font-medium text-gray-700">
                         Имя
-                    </label>
-                    <input
+                    </InputLabel>
+                    <TextInput
                         v-model="newContractorForm.name"
                         class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         type="text"

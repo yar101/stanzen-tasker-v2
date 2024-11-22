@@ -23,8 +23,8 @@ return new class extends Migration
             $table->foreignIdFor(User::class, 'created_by')->nullable()->constrained();
             $table->foreignIdFor(Status::class, 'status')->default(2)->constrained();
             $table->foreignIdFor(Contractor::class, 'contractor')->default(1)->constrained();
-            $table->date('deadline_start')->default(now());
-            $table->date('deadline_end')->default(Carbon::now()->addDays(14));
+            $table->date('deadline_start')->nullable();
+            $table->date('deadline_end')->nullable();
             $table->float('cost')->default(0);
             $table->foreignIdFor(Task::class, 'parent_task')->nullable()->constrained();
             $table->string('currency');

@@ -14,8 +14,10 @@ class ContractorController extends Controller
      */
     public function index()
     {
+        $contractors = Contractor::orderByDesc('created_at')->where('id', '!=', '1')->get();
+
         return Inertia::render('Contractor/Index', [
-            'contractors' => Contractor::orderByDesc('created_at')->get(),
+            'contractors' => $contractors,
         ]);
     }
 
