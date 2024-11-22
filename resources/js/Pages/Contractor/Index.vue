@@ -84,7 +84,7 @@ export default {
         <div class="mx-auto max-w-[40rem] overflow-x-auto rounded-md pb-5 pt-5">
             <!-- Таблица -->
             <table
-                class="min-w-full divide-y divide-gray-200 rounded-md border border-gray-200 shadow"
+                class="min-w-[38rem] divide-y divide-gray-200 rounded-md border border-gray-200 shadow"
             >
                 <thead class="bg-neutral-100">
                     <tr>
