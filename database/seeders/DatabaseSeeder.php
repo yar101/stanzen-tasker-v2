@@ -6,6 +6,7 @@ use App\Models\Contractor;
 use App\Models\Department;
 use App\Models\Role;
 use App\Models\Status;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -48,5 +49,8 @@ class DatabaseSeeder extends Seeder
         Status::create(['name' => 'ON HOLD']);
         Status::create(['name' => 'DELAY']);
         Status::create(['name' => 'DONE']);
+
+        // Create Tasks
+        Task::factory(100)->create();
     }
 }
