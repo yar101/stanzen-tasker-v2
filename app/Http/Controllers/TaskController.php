@@ -16,7 +16,8 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::orderByDesc('created_at')->get();
+//        $tasks = Task::orderByDesc('created_at')->get();
+        $tasks = Task::all();
         $contractors = Contractor::all();
         $statuses = Status::all();
 
@@ -90,6 +91,17 @@ class TaskController extends Controller
                 'parent_task' => ['nullable', 'integer'],
                 'priority' => ['string', 'required'],
             ])
+        );
+
+        return redirect()->route('tasks.index');
+    }
+
+    public function updateStatus(Request $request, Task $task)
+    {
+        $task->update(
+          $request->validate([
+            'status' => ['required', 'exists:statuses,id'],
+          ])
         );
 
         return redirect()->route('tasks.index');

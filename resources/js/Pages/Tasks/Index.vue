@@ -106,6 +106,15 @@ export default {
                 },
             );
         },
+
+        updateStatus(task) {
+            this.$inertia.patch(
+                route('tasks.updateStatus', {
+                    task,
+                    status: task.status,
+                }),
+            );
+        },
     },
 };
 </script>
@@ -131,7 +140,7 @@ export default {
                         </th>
 
                         <th
-                            class="px-4 py-2 text-center text-sm font-medium text-gray-700"
+                            class="w-0 px-4 py-2 text-center text-sm font-medium text-gray-700"
                         >
                             Приоритет
                         </th>
@@ -195,27 +204,61 @@ export default {
                         class="group transition-all duration-100 ease-in-out hover:bg-gray-100"
                     >
                         <td class="max-w-[6rem] text-sm text-gray-900">
-                            <div
-                                :class="[
-                                    getStatusName(task.status) === 'NOT STARTED'
-                                        ? 'bg-gray-200 text-gray-700'
-                                        : '',
-                                    getStatusName(task.status) === 'ONGOING'
-                                        ? 'bg-blue-200 text-blue-700'
-                                        : '',
-                                    getStatusName(task.status) === 'ON HOLD'
-                                        ? 'bg-yellow-200 text-yellow-700'
-                                        : '',
-                                    getStatusName(task.status) === 'DELAY'
-                                        ? 'bg-red-200 text-red-700'
-                                        : '',
-                                    getStatusName(task.status) === 'DONE'
-                                        ? 'bg-green-200 text-green-700'
-                                        : '',
-                                ]"
-                                class="ml-5 w-[7rem] rounded-md px-2 py-1 text-center font-semibold"
-                            >
-                                {{ getStatusName(task.status) }}
+                            <!--                            <div-->
+                            <!--                                :class="[-->
+                            <!--                                                                getStatusName(task.status) === 'NOT STARTED'-->
+                            <!--                                                                    ? 'bg-gray-200 text-gray-700'-->
+                            <!--                                                                    : '',-->
+                            <!--                                                                getStatusName(task.status) === 'ONGOING'-->
+                            <!--                                                                    ? 'bg-blue-200 text-blue-700'-->
+                            <!--                                                                    : '',-->
+                            <!--                                                                getStatusName(task.status) === 'ON HOLD'-->
+                            <!--                                                                    ? 'bg-yellow-200 text-yellow-700'-->
+                            <!--                                                                    : '',-->
+                            <!--                                                                getStatusName(task.status) === 'DELAY'-->
+                            <!--                                                                    ? 'bg-red-200 text-red-700'-->
+                            <!--                                                                    : '',-->
+                            <!--                                                                getStatusName(task.status) === 'DONE'-->
+                            <!--                                                                    ? 'bg-green-200 text-green-700'-->
+                            <!--                                                                    : '',-->
+                            <!--                                ]"-->
+                            <!--                                class="ml-5 w-[7rem] rounded-md px-2 py-1 text-center font-semibold"-->
+                            <!--                            >-->
+                            <!--                                {{ getStatusName(task.status) }}-->
+                            <!--                            </div>-->
+
+                            <div class="flex items-center justify-center">
+                                <select
+                                    v-model="task.status"
+                                    :class="[
+                                        getStatusName(task.status) ===
+                                        'NOT STARTED'
+                                            ? 'border-gray-500 bg-gray-200 text-gray-800 hover:bg-gray-300 hover:text-gray-900'
+                                            : '',
+                                        getStatusName(task.status) === 'ONGOING'
+                                            ? 'border-blue-500 bg-blue-200 text-blue-800 hover:bg-blue-300 hover:text-blue-900'
+                                            : '',
+                                        getStatusName(task.status) === 'ON HOLD'
+                                            ? 'border-yellow-500 bg-yellow-200 text-yellow-800 hover:bg-yellow-300 hover:text-yellow-900'
+                                            : '',
+                                        getStatusName(task.status) === 'DELAY'
+                                            ? 'border-red-500/70 bg-red-200 text-red-800 hover:bg-red-300 hover:text-red-900'
+                                            : '',
+                                        getStatusName(task.status) === 'DONE'
+                                            ? 'border-green-500 bg-green-200 text-green-800 hover:bg-green-300 hover:text-green-900'
+                                            : '',
+                                    ]"
+                                    class="rounded-lg text-sm transition-all focus:ring-0"
+                                    @change="updateStatus(task)"
+                                >
+                                    <option
+                                        v-for="status in statuses"
+                                        :key="status.id"
+                                        :value="status.id"
+                                    >
+                                        {{ getStatusName(status.id) }}
+                                    </option>
+                                </select>
                             </div>
                         </td>
 

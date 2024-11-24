@@ -31,4 +31,6 @@ Route::middleware('auth')->group(function () {
 require __DIR__ . '/auth.php';
 
 Route::resource('/contractors', ContractorController::class)->middleware('auth');
+
 Route::resource('/tasks', TaskController::class)->middleware('auth');
+Route::patch('/task/{task}/update-status', [TaskController::class, 'updateStatus'])->middleware('auth')->name('tasks.updateStatus');
