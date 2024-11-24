@@ -205,6 +205,7 @@ return [
         'day' => 'День',
         'default' => 'По умолчанию',
         'description' => 'Описание',
+        'cost' => 'Стоимость',
         'email' => 'E-Mail адрес',
         'enabled' => 'Включено',
         'first_name' => 'Имя',

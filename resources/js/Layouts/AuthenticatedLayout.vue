@@ -39,9 +39,7 @@ const showingNavigationDropdown = ref(false);
                                 </NavLink>
 
                                 <NavLink
-                                    :active="
-                                        route().current('tasks.index')
-                                    "
+                                    :active="route().current('tasks.index')"
                                     :href="route('tasks.index')"
                                 >
                                     Задачи

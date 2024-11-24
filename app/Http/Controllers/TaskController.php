@@ -80,7 +80,19 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        //
+        $task->update(
+            $request->validate([
+                'title' => ['required'],
+                'description' => ['required'],
+                'contractor' => ['required', 'integer'],
+                'cost' => ['numeric'],
+                'currency' => ['required'],
+                'parent_task' => ['nullable', 'integer'],
+                'priority' => ['string', 'required'],
+            ])
+        );
+
+        return redirect()->route('tasks.index');
     }
 
     /**
