@@ -123,6 +123,17 @@ export default {
     <Head title="Задачи" />
 
     <AuthenticatedLayout>
+        <template #nav-buttons>
+            <div class="">
+                <button
+                    class="m-2 rounded bg-green-500 px-3 py-1 text-sm text-white transition-all duration-100 hover:bg-green-500/90 hover:shadow-md active:translate-y-[3px] active:shadow-inner active:ring-0"
+                    @click="openCreateModal"
+                >
+                    СОЗДАТЬ ЗАДАЧУ
+                </button>
+            </div>
+        </template>
+
         <div class="mx-auto overflow-x-auto overflow-y-scroll px-5 pb-5 pt-5">
             <!-- Таблица -->
             <table
@@ -186,12 +197,12 @@ export default {
                         </th>
 
                         <th class="">
-                            <!--                            <button-->
-                            <!--                                class="m-2 rounded bg-green-500 px-3 py-1 text-sm text-white transition-all duration-100 hover:bg-green-500/90 hover:shadow-md active:translate-y-[3px] active:shadow-inner active:ring-0"-->
-                            <!--                                @click="openCreateModal"-->
-                            <!--                            >-->
-                            <!--                                СОЗДАТЬ-->
-                            <!--                            </button>-->
+                            <!--                                                        <button-->
+                            <!--                                                            class="m-2 rounded bg-green-500 px-3 py-1 text-sm text-white transition-all duration-100 hover:bg-green-500/90 hover:shadow-md active:translate-y-[3px] active:shadow-inner active:ring-0"-->
+                            <!--                                                            @click="openCreateModal"-->
+                            <!--                                                        >-->
+                            <!--                                                            СОЗДАТЬ-->
+                            <!--                                                        </button>-->
                         </th>
                     </tr>
                 </thead>

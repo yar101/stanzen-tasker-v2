@@ -58,6 +58,8 @@ const showingNavigationDropdown = ref(false);
                             </div>
                         </div>
 
+                        <slot class="w-full" name="nav-buttons" />
+
                         <div class="hidden sm:ms-6 sm:flex sm:items-center">
                             <!-- Settings Dropdown -->
                             <div class="relative ms-3">
