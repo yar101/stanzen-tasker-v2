@@ -226,6 +226,7 @@ export default {
 
                 <button
                     class="w-8 rounded-md border border-blue-300 bg-blue-100 p-1 transition-all duration-100 hover:bg-blue-200 hover:shadow-md"
+                    @click="openCreateCommentModal(this.task)"
                 >
                     <svg
                         fill="none"
