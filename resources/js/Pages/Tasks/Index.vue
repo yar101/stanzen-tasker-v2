@@ -52,12 +52,14 @@ export default {
     methods: {
         openEditModal(task) {
             this.selectedTask = { ...task }; // Копируем объект
+            this.form.parent_task = task.parent_task;
             this.form.title = String(task.title);
             this.form.description = task.description;
             this.form.contractor = task.contractor;
             this.form.cost = task.cost;
             this.form.currency = task.currency;
             this.form.priority = task.priority;
+            this.form.is_subtask = task.is_subtask;
             this.isEditModalOpen = true;
         },
         openCreateModal() {
@@ -157,7 +159,8 @@ export default {
                 <thead class="border-b border-gray-300 bg-neutral-200">
                     <tr>
                         <th
-                            class="px-4 py-2 text-center text-sm font-medium text-gray-700">
+                            class="px-4 py-2 text-center text-sm font-medium text-gray-700"
+                        >
                             ID
                         </th>
                         <th
@@ -410,7 +413,6 @@ export default {
                     <TextInput
                         v-model="form.title"
                         class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-0"
-                        disabled
                         type="text"
                     />
                     <InputError :message="errors.title" class="mt-2" />
@@ -520,7 +522,10 @@ export default {
                 @submit.prevent="update"
             >
                 <h2 class="mb-4 text-lg font-medium text-gray-800">
-                    Редактирование задачи
+                    <span v-if="this.form.is_subtask">
+                        Редактирование подзадачи
+                    </span>
+                    <span v-else>Редактирование задачи</span>
                 </h2>
 
                 <!--                Поля формы-->
@@ -556,7 +561,8 @@ export default {
                     <div class="flex gap-2">
                         <select
                             v-model="form.contractor"
-                            class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-0"
+                            class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-0 disabled:bg-neutral-200 disabled:text-neutral-500"
+                            disabled
                         >
                             <option
                                 v-for="contractor in contractors"
