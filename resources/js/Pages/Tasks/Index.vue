@@ -368,7 +368,7 @@ export default {
                             <option value="I">I</option>
                         </select>
                     </div>
-                    <InputError :message="errors.cost" class="mt-2" />
+                    <InputError :message="errors.priority" class="mt-2" />
                 </div>
 
                 <!--                Кнопки формы-->
@@ -490,7 +490,7 @@ export default {
                             <option value="I">I</option>
                         </select>
                     </div>
-                    <InputError :message="errors.cost" class="mt-2" />
+                    <InputError :message="errors.priority" class="mt-2" />
                 </div>
 
                 <!--                Кнопки формы-->
@@ -614,7 +614,7 @@ export default {
                             <option value="I">I</option>
                         </select>
                     </div>
-                    <InputError :message="errors.cost" class="mt-2" />
+                    <InputError :message="errors.priority" class="mt-2" />
                 </div>
 
                 <!--                Кнопки формы-->
