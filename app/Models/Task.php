@@ -32,6 +32,11 @@ class Task extends Model
         return $this->hasMany(Task::class, 'parent_task');
     }
 
+    public function comments() :HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
     public function isSubtask() :bool
     {
             return $this->parent_task !== null;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\Contractor;
 use App\Models\Status;
 use App\Models\Task;
@@ -17,7 +18,10 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::orderBy('created_by')->with('subtasks')->get();
+        $tasks = Task::orderBy('created_by')
+            ->with('subtasks')
+            ->with('comments')
+            ->get();
         $contractors = Contractor::all();
         $statuses = Status::all();
 

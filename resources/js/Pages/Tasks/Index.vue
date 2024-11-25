@@ -227,10 +227,12 @@ export default {
                             :contractors="contractors"
                             :statuses="statuses"
                             :task="task"
+                            :comments="task.comments"
                             @open-edit-modal="openEditModal"
                             @open-create-subtask-modal="openCreateSubtaskModal"
                             @update-status="updateStatus"
                             @update-deadline="updateDeadline"
+                            @open-comments-modal="openCommentsModal"
                         />
                         <TasksTableRow
                             v-for="subtask in task.subtasks"
@@ -238,10 +240,12 @@ export default {
                             :contractors="contractors"
                             :statuses="statuses"
                             :task="subtask"
+                            :comments="task.comments"
                             @open-edit-modal="openEditModal"
                             @open-create-subtask-modal="openCreateSubtaskModal"
                             @update-status="updateStatus"
                             @update-deadline="updateDeadline"
+                            @open-comments-modal="openCommentsModal"
                         />
                         <tr
                             v-if="

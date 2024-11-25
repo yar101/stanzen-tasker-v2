@@ -1,5 +1,9 @@
 <script>
+import TaskCommentsModal from '@/Components/Tasks/TaskCommentsModal.vue';
+import { useForm } from '@inertiajs/vue3';
+
 export default {
+    components: { TaskCommentsModal },
     props: {
         task: {
             type: Object,
@@ -15,6 +19,18 @@ export default {
         },
     },
 
+    data() {
+        return {
+            isCommentsModalOpen: false,
+            commentsModalForm: useForm({
+                task_id: null,
+                created_by: null,
+                content: '',
+                comments: [],
+            }),
+        };
+    },
+
     methods: {
         openEditModal() {
             this.$emit('open-edit-modal', this.task);
@@ -22,6 +38,14 @@ export default {
 
         openCreateSubtaskModal() {
             this.$emit('open-create-subtask-modal', this.task);
+        },
+
+        openCommentsModal(task) {
+            this.selectedTask = { ...task };
+            this.commentsModalForm.task_id = task.id;
+            this.commentsModalForm.created_by = this.$page.props.auth.user.id;
+            this.commentsModalForm.content = '';
+            this.isCommentsModalOpen = true;
         },
 
         updateStatus(task) {
@@ -66,14 +90,15 @@ export default {
     >
         <td
             :class="this.task.is_subtask === 1 ? 'opacity-0' : ''"
-            class="!border-s-0 text-center text-sm text-gray-900 w-8"
+            class="w-8 !border-s-0 text-center text-sm text-gray-900"
         >
             <span class="w-fit">
                 {{ this.task.id }}
             </span>
         </td>
-        <td class="text-sm text-gray-900"
+        <td
             :class="this.task.is_subtask === 1 ? '!border-s-0' : ''"
+            class="text-sm text-gray-900"
         >
             <div
                 :class="
@@ -233,7 +258,7 @@ export default {
 
                 <button
                     class="w-8 rounded-md border border-blue-300 bg-blue-100 p-1 transition-all duration-100 hover:bg-blue-200 hover:shadow-md"
-                    @click="openCreateCommentModal(this.task)"
+                    @click="openCommentsModal(task)"
                 >
                     <svg
                         fill="none"
@@ -290,4 +315,11 @@ export default {
             </div>
         </td>
     </tr>
+
+    <div
+        v-if="isCommentsModalOpen"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50"
+    >
+        <TaskCommentsModal :task="task"  />
+    </div>
 </template>
