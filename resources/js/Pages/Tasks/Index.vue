@@ -157,6 +157,10 @@ export default {
                 <thead class="border-b border-gray-300 bg-neutral-200">
                     <tr>
                         <th
+                            class="px-4 py-2 text-center text-sm font-medium text-gray-700">
+                            ID
+                        </th>
+                        <th
                             class="px-4 py-2 text-center text-sm font-medium text-gray-700"
                         >
                             Статус

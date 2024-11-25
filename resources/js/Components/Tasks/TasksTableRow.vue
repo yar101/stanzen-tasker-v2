@@ -62,10 +62,17 @@ export default {
 <template>
     <tr
         :class="this.task.is_subtask === 0 ? 'bg-indigo-50' : ''"
-        class="group transition-all duration-100 ease-in-out [&>td]:border-s [&>td]:border-dotted [&>td]:border-gray-500"
+        class="group transition-all duration-100 ease-in-out [&>td]:border-s-2 [&>td]:border-dotted [&>td]:border-gray-500/25"
     >
+        <td class="!border-s-0 text-center text-sm text-gray-900">
+            {{ this.task.id }}
+        </td>
         <td class="text-sm text-gray-900">
-            <div :class="this.task.is_subtask === 1 ? 'flex justify-end mr-2' : ''">
+            <div
+                :class="
+                    this.task.is_subtask === 1 ? 'mr-2 flex justify-end' : ''
+                "
+            >
                 <select
                     v-model="this.task.status"
                     :class="[
@@ -121,13 +128,17 @@ export default {
         </td>
 
         <td class="w-fit text-sm text-gray-900">
-            <div class="flex min-h-8 items-center justify-center overflow-x-scroll">
+            <div
+                class="flex min-h-8 items-center justify-center overflow-x-scroll"
+            >
                 {{ getContractorName(this.task.contractor) }}
             </div>
         </td>
 
         <td class="w-fit px-4 py-2 text-sm text-gray-900">
-            <div class="flex min-h-8 items-center justify-center overflow-x-scroll">
+            <div
+                class="flex min-h-8 items-center justify-center overflow-x-scroll"
+            >
                 {{ this.task.title }}
             </div>
         </td>
@@ -182,9 +193,7 @@ export default {
         <td class="text-center">comments in progress...</td>
 
         <td class="w-fit">
-            <div
-                class="flex min-h-8 items-center justify-center gap-1"
-            >
+            <div class="flex min-h-8 items-center justify-center gap-1">
                 <!--                            Edit button-->
                 <button
                     class="w-8 rounded-md border border-amber-300 bg-amber-100 p-1 transition-all duration-100 hover:bg-amber-200 hover:shadow-md"
