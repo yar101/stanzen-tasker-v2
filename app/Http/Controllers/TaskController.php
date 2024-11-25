@@ -17,8 +17,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-//        $tasks = Task::orderByDesc('created_at')->get();
-        $tasks = DB::table('tasks')->orderByDesc('created_at')->get();
+        $tasks = Task::orderBy('created_by')->with('subtasks')->get();
         $contractors = Contractor::all();
         $statuses = Status::all();
 
@@ -57,6 +56,12 @@ class TaskController extends Controller
             'deadline_start' => Carbon::now(),
             'deadline_end' => Carbon::now()->addDays(14),
         ]);
+
+        if ($request['parent_task'] != null) {
+          $newTask->update([
+             'is_subtask' => true,
+          ]);
+        };
 
         return redirect()->route('tasks.index');
     }

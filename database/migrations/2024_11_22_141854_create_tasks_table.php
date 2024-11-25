@@ -27,6 +27,7 @@ return new class extends Migration
             $table->date('deadline_end')->nullable();
             $table->float('cost')->default(0);
             $table->foreignIdFor(Task::class, 'parent_task')->nullable()->constrained();
+            $table->boolean('is_subtask')->default(false);
             $table->string('currency');
             $table->string('priority')->default('III');
             $table->timestamps();

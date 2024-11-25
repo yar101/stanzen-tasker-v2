@@ -12,7 +12,7 @@ const showingNavigationDropdown = ref(false);
 
 <template>
     <div>
-        <div class="bg-gray-100">
+        <div class="min-h-svh bg-gray-100">
             <nav
                 class="fixed top-0 z-10 w-full border-b border-gray-300 bg-white shadow-md"
             >

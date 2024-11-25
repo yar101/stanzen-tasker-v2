@@ -51,6 +51,6 @@ class DatabaseSeeder extends Seeder
         Status::create(['name' => 'DONE']);
 
         // Create Tasks
-        Task::factory(100)->create();
+//        Task::factory(100)->create();
     }
 }
