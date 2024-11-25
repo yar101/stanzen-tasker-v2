@@ -12,8 +12,10 @@ const showingNavigationDropdown = ref(false);
 
 <template>
     <div>
-        <div class="min-h-screen bg-gray-100">
-            <nav class="border-b border-gray-300 bg-white shadow-md">
+        <div class="bg-gray-100">
+            <nav
+                class="fixed top-0 w-full border-b border-gray-300 bg-white shadow-md"
+            >
                 <!-- Primary Navigation Menu -->
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="flex h-10 justify-between">
@@ -205,7 +207,7 @@ const showingNavigationDropdown = ref(false);
             <!--            </header>-->
 
             <!-- Page Content -->
-            <main>
+            <main class="mt-10">
                 <slot />
             </main>
         </div>

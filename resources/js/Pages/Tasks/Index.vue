@@ -123,9 +123,7 @@ export default {
     <Head title="Задачи" />
 
     <AuthenticatedLayout>
-        <div
-            class="mx-auto h-[80rem] overflow-x-auto overflow-y-scroll px-5 pb-5 pt-5"
-        >
+        <div class="mx-auto overflow-x-auto overflow-y-scroll px-5 pb-5 pt-5">
             <!-- Таблица -->
             <table
                 v-if="tasks.length > 0"
@@ -203,30 +201,7 @@ export default {
                         :key="task.id"
                         class="group transition-all duration-100 ease-in-out hover:bg-gray-100"
                     >
-                        <td class="max-w-[6rem] text-sm text-gray-900">
-                            <!--                            <div-->
-                            <!--                                :class="[-->
-                            <!--                                                                getStatusName(task.status) === 'NOT STARTED'-->
-                            <!--                                                                    ? 'bg-gray-200 text-gray-700'-->
-                            <!--                                                                    : '',-->
-                            <!--                                                                getStatusName(task.status) === 'ONGOING'-->
-                            <!--                                                                    ? 'bg-blue-200 text-blue-700'-->
-                            <!--                                                                    : '',-->
-                            <!--                                                                getStatusName(task.status) === 'ON HOLD'-->
-                            <!--                                                                    ? 'bg-yellow-200 text-yellow-700'-->
-                            <!--                                                                    : '',-->
-                            <!--                                                                getStatusName(task.status) === 'DELAY'-->
-                            <!--                                                                    ? 'bg-red-200 text-red-700'-->
-                            <!--                                                                    : '',-->
-                            <!--                                                                getStatusName(task.status) === 'DONE'-->
-                            <!--                                                                    ? 'bg-green-200 text-green-700'-->
-                            <!--                                                                    : '',-->
-                            <!--                                ]"-->
-                            <!--                                class="ml-5 w-[7rem] rounded-md px-2 py-1 text-center font-semibold"-->
-                            <!--                            >-->
-                            <!--                                {{ getStatusName(task.status) }}-->
-                            <!--                            </div>-->
-
+                        <td class="w-fit text-sm text-gray-900">
                             <div class="flex items-center justify-center">
                                 <select
                                     v-model="task.status"
@@ -267,13 +242,13 @@ export default {
                                 <div
                                     :class="[
                                         task.priority === 'I'
-                                            ? 'bg-red-200 text-red-700'
+                                            ? 'border border-red-500/70 bg-red-200 text-red-800'
                                             : '',
                                         task.priority === 'II'
-                                            ? 'bg-yellow-200 text-yellow-700'
+                                            ? 'border border-yellow-500 bg-yellow-200 text-yellow-800'
                                             : '',
                                         task.priority === 'III'
-                                            ? 'bg-blue-200 text-blue-700'
+                                            ? 'border border-blue-500 bg-blue-200 text-blue-800'
                                             : '',
                                     ]"
                                     class="w-[25px] rounded-md p-1 text-center font-semibold"
