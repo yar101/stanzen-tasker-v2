@@ -64,10 +64,17 @@ export default {
         :class="this.task.is_subtask === 0 ? 'bg-indigo-50' : ''"
         class="group transition-all duration-100 ease-in-out [&>td]:border-s-2 [&>td]:border-dotted [&>td]:border-gray-500/25"
     >
-        <td class="!border-s-0 text-center text-sm text-gray-900">
-            {{ this.task.id }}
+        <td
+            :class="this.task.is_subtask === 1 ? 'opacity-0' : ''"
+            class="!border-s-0 text-center text-sm text-gray-900 w-8"
+        >
+            <span class="w-fit">
+                {{ this.task.id }}
+            </span>
         </td>
-        <td class="text-sm text-gray-900">
+        <td class="text-sm text-gray-900"
+            :class="this.task.is_subtask === 1 ? '!border-s-0' : ''"
+        >
             <div
                 :class="
                     this.task.is_subtask === 1 ? 'mr-2 flex justify-end' : ''
