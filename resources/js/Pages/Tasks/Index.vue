@@ -129,7 +129,7 @@ export default {
                     class="m-2 rounded bg-green-500 px-3 py-1 text-sm text-white transition-all duration-100 hover:bg-green-500/90 hover:shadow-md active:translate-y-[3px] active:shadow-inner active:ring-0"
                     @click="openCreateModal"
                 >
-                    СОЗДАТЬ ЗАДАЧУ
+                    Создать задачу
                 </button>
             </div>
         </template>
@@ -270,7 +270,7 @@ export default {
                         </td>
 
                         <td
-                            class="max-w-[9rem] px-4 py-2 text-sm text-gray-900"
+                            class="max-w-[9rem] text-sm text-gray-900"
                         >
                             <div
                                 class="flex min-h-8 w-fit items-center overflow-x-scroll"
