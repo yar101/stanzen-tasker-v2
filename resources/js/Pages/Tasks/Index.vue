@@ -278,16 +278,16 @@ export default {
                             </div>
                         </td>
 
-                        <td class="max-w-[9rem] text-sm text-gray-900">
+                        <td class="w-fit text-sm text-gray-900">
                             <div
-                                class="flex min-h-8 w-fit items-center overflow-x-scroll"
+                                class="flex min-h-8 items-center overflow-x-scroll"
                             >
                                 {{ getContractorName(task.contractor) }}
                             </div>
                         </td>
 
                         <td
-                            class="max-w-[15rem] px-4 py-2 text-sm text-gray-900"
+                            class="w-fit px-4 py-2 text-sm text-gray-900"
                         >
                             <div
                                 class="flex min-h-8 items-center overflow-x-scroll"
@@ -297,7 +297,7 @@ export default {
                         </td>
 
                         <td
-                            class="max-w-[25rem] px-4 py-2 text-sm text-gray-900"
+                            class="w-fit px-4 py-2 text-sm text-gray-900"
                         >
                             <div
                                 class="flex min-h-8 items-center overflow-x-scroll text-center"

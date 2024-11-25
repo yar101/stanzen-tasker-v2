@@ -14,7 +14,7 @@ const showingNavigationDropdown = ref(false);
     <div>
         <div class="bg-gray-100">
             <nav
-                class="fixed top-0 w-full border-b border-gray-300 bg-white shadow-md"
+                class="fixed top-0 z-10 w-full border-b border-gray-300 bg-white shadow-md"
             >
                 <!-- Primary Navigation Menu -->
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
