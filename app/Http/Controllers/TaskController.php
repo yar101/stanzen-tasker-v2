@@ -108,6 +108,17 @@ class TaskController extends Controller
         return redirect()->route('tasks.index');
     }
 
+    public function updateDeadline(Request $request, Task $task)
+    {
+        $task->update(
+            $request->validate([
+                'deadline_end' => ['required', 'date'],
+            ])
+        );
+
+        return redirect()->route('tasks.index');
+    }
+
     /**
      * Remove the specified resource from storage.
      */

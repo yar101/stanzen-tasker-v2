@@ -115,6 +115,15 @@ export default {
                 }),
             );
         },
+
+        updateDeadline(task) {
+            this.$inertia.patch(
+                route('tasks.updateDeadline', {
+                    task,
+                    deadline_end: task.deadline_end,
+                }),
+            );
+        },
     },
 };
 </script>
@@ -313,15 +322,21 @@ export default {
 
                         <td>
                             <div class="text-center text-sm text-gray-900">
-                                {{
-                                    new Date(
-                                        task.deadline_end,
-                                    ).toLocaleDateString('ru-RU', {
-                                        day: '2-digit',
-                                        month: '2-digit',
-                                        year: 'numeric',
-                                    })
-                                }}
+                                <!--                                {{-->
+                                <!--                                    new Date(-->
+                                <!--                                        task.deadline_end,-->
+                                <!--                                    ).toLocaleDateString('ru-RU', {-->
+                                <!--                                        day: '2-digit',-->
+                                <!--                                        month: '2-digit',-->
+                                <!--                                        year: 'numeric',-->
+                                <!--                                    })-->
+                                <!--                                }}-->
+                                <input
+                                    v-model="task.deadline_end"
+                                    class="rounded-md border-none text-sm focus:bg-blue-100 focus:ring-0"
+                                    type="date"
+                                    @blur="updateDeadline(task)"
+                                />
                             </div>
                         </td>
 

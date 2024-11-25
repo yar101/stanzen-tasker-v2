@@ -34,3 +34,5 @@ Route::resource('/contractors', ContractorController::class)->middleware('auth')
 
 Route::resource('/tasks', TaskController::class)->middleware('auth');
 Route::patch('/task/{task}/update-status', [TaskController::class, 'updateStatus'])->middleware('auth')->name('tasks.updateStatus');
+Route::patch('/task/{task}/update-deadline', [TaskController::class, 'updateDeadline'])->middleware('auth')->name('tasks.updateDeadline');
+
