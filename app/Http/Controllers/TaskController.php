@@ -7,6 +7,7 @@ use App\Models\Status;
 use App\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class TaskController extends Controller
@@ -17,7 +18,7 @@ class TaskController extends Controller
     public function index()
     {
 //        $tasks = Task::orderByDesc('created_at')->get();
-        $tasks = Task::all();
+        $tasks = DB::table('tasks')->orderByDesc('created_at')->get();
         $contractors = Contractor::all();
         $statuses = Status::all();
 
