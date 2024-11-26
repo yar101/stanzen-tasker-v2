@@ -6,6 +6,7 @@ use App\Models\Comment;
 use App\Models\Contractor;
 use App\Models\Status;
 use App\Models\Task;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,18 +19,24 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::orderBy('created_by')
-            ->with('subtasks')
-            ->with('comments')
+        $tasks = Task::orderByDesc('created_at')
+            ->with('subtasks', 'comments', 'subtasks.comments')
             ->get();
         $contractors = Contractor::all();
         $statuses = Status::all();
+        $users = User::all();
 
         return Inertia::render('Tasks/Index', [
             'tasks' => $tasks,
             'statuses' => $statuses,
             'contractors' => $contractors,
+            'users' => $users,
         ]);
+    }
+
+    public function getComments(Task $task)
+    {
+       return Comment::where('task_id', $task->id)->orderByDesc('created_at')->get();
     }
 
     /**
@@ -103,6 +110,11 @@ class TaskController extends Controller
             ])
         );
 
+        if ($request['contractor'] != null) {
+            $task->subtasks()->update([
+                'contractor' => $request['contractor'],
+            ]);
+        }
         return redirect()->route('tasks.index');
     }
 

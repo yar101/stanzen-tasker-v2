@@ -30,6 +30,10 @@ export default {
             type: Object,
             required: true,
         },
+        users: {
+            type: Object,
+            required: true,
+        },
     },
 
     data() {
@@ -221,40 +225,38 @@ export default {
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                    <template v-for="(task, index) in tasks" :key="task.id">
+                    <template v-for="task in tasks" :key="task.id">
                         <TasksTableRow
                             v-if="!task.is_subtask"
+                            :comments="task.comments"
                             :contractors="contractors"
+                            :errors="errors"
                             :statuses="statuses"
                             :task="task"
-                            :comments="task.comments"
+                            :users="users"
                             @open-edit-modal="openEditModal"
                             @open-create-subtask-modal="openCreateSubtaskModal"
                             @update-status="updateStatus"
                             @update-deadline="updateDeadline"
-                            @open-comments-modal="openCommentsModal"
                         />
-                        <TasksTableRow
-                            v-for="subtask in task.subtasks"
-                            :key="subtask.id"
-                            :contractors="contractors"
-                            :statuses="statuses"
-                            :task="subtask"
-                            :comments="task.comments"
-                            @open-edit-modal="openEditModal"
-                            @open-create-subtask-modal="openCreateSubtaskModal"
-                            @update-status="updateStatus"
-                            @update-deadline="updateDeadline"
-                            @open-comments-modal="openCommentsModal"
-                        />
-                        <tr
-                            v-if="
-                                (index !== 0) &
-                                (index !== tasks.length - 1) &
-                                task.is_subtask
-                            "
-                            class="h-2.5 border-none bg-gray-100"
-                        ></tr>
+                        <template
+                            v-if="task.subtasks && task.subtasks.length > 0"
+                        >
+                            <TasksTableRow
+                                v-for="subtask in task.subtasks"
+                                :key="subtask.id"
+                                :comments="subtask.comments"
+                                :contractors="contractors"
+                                :errors="errors"
+                                :statuses="statuses"
+                                :task="subtask"
+                                :users="users"
+                                @open-edit-modal="openEditModal"
+                                @update-status="updateStatus"
+                                @update-deadline="updateDeadline"
+                            />
+                            <tr class="h-2.5 border-none bg-gray-100"></tr>
+                        </template>
                     </template>
                 </tbody>
             </table>
@@ -566,7 +568,7 @@ export default {
                         <select
                             v-model="form.contractor"
                             class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-0 disabled:bg-neutral-200 disabled:text-neutral-500"
-                            disabled
+                            :disabled="selectedTask.contractor !== 1"
                         >
                             <option
                                 v-for="contractor in contractors"

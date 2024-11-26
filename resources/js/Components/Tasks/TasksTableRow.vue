@@ -1,9 +1,10 @@
 <script>
-import TaskCommentsModal from '@/Components/Tasks/TaskCommentsModal.vue';
 import { useForm } from '@inertiajs/vue3';
+import TaskCommentsModal from '@/Components/Tasks/TaskCommentsModal.vue';
 
 export default {
     components: { TaskCommentsModal },
+    inheritAttrs: false,
     props: {
         task: {
             type: Object,
@@ -17,16 +18,33 @@ export default {
             type: Object,
             required: true,
         },
+        errors: {
+            type: Object,
+        },
+        comments: {
+            type: Array,
+            required: true,
+        },
+        users: {
+            type: Object,
+            required: true,
+        },
     },
+
+    emits: [
+        'open-edit-modal',
+        'open-create-subtask-modal',
+        'update-status',
+        'update-deadline',
+    ],
 
     data() {
         return {
             isCommentsModalOpen: false,
-            commentsModalForm: useForm({
-                task_id: null,
-                created_by: null,
+            form: useForm({
+                task_id: this.task.id,
+                created_by: this.$page.props.auth.user.id,
                 content: '',
-                comments: [],
             }),
         };
     },
@@ -40,12 +58,8 @@ export default {
             this.$emit('open-create-subtask-modal', this.task);
         },
 
-        openCommentsModal(task) {
-            this.selectedTask = { ...task };
-            this.commentsModalForm.task_id = task.id;
-            this.commentsModalForm.created_by = this.$page.props.auth.user.id;
-            this.commentsModalForm.content = '';
-            this.isCommentsModalOpen = true;
+        closeCommentsModal() {
+            this.isCommentsModalOpen = false;
         },
 
         updateStatus(task) {
@@ -79,6 +93,11 @@ export default {
             );
             return status ? status.name : '';
         },
+
+        getUserName(userId) {
+            const user = this.users.find((user) => user.id === userId);
+            return user ? user.name : '';
+        },
     },
 };
 </script>
@@ -104,6 +123,7 @@ export default {
                 :class="
                     this.task.is_subtask === 1 ? 'mr-2 flex justify-end' : ''
                 "
+                class="w-[12rem]"
             >
                 <select
                     v-model="this.task.status"
@@ -160,9 +180,7 @@ export default {
         </td>
 
         <td class="w-fit text-sm text-gray-900">
-            <div
-                class="flex min-h-8 items-center justify-center overflow-x-scroll"
-            >
+            <div class="min-h-8 overflow-x-scroll text-center">
                 {{ getContractorName(this.task.contractor) }}
             </div>
         </td>
@@ -222,7 +240,42 @@ export default {
             </div>
         </td>
 
-        <td class="text-center">comments in progress...</td>
+        <td>
+            <!--                  Last comment-->
+            <template v-if="this.comments && this.comments.length > 0">
+                <div
+                    class="m-1 max-w-[15rem] rounded-md border border-gray-300 bg-yellow-100"
+                >
+                    <div
+                        class="flex justify-between rounded-tl-md text-xs text-gray-900"
+                    >
+                        <div
+                            class="rounded-tl-md border-r border-gray-300 bg-amber-200 p-1"
+                        >
+                            {{ getUserName(task.comments[0].created_by) }}
+                        </div>
+                        <div class="p-1">
+                            {{
+                                new Date(
+                                    task.comments[0].created_at,
+                                ).toLocaleDateString('ru-RU', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                })
+                            }}
+                        </div>
+                    </div>
+                    <div
+                        class="max-h-[2.5rem] overflow-scroll rounded-b-md border-t border-gray-300 pb-1 text-center text-sm text-gray-900"
+                    >
+                        {{ task.comments[0].content }}
+                    </div>
+                </div>
+            </template>
+        </td>
 
         <td class="w-fit">
             <div class="flex min-h-8 items-center justify-center gap-1">
@@ -258,7 +311,7 @@ export default {
 
                 <button
                     class="w-8 rounded-md border border-blue-300 bg-blue-100 p-1 transition-all duration-100 hover:bg-blue-200 hover:shadow-md"
-                    @click="openCommentsModal(task)"
+                    @click="isCommentsModalOpen = true"
                 >
                     <svg
                         fill="none"
@@ -314,12 +367,13 @@ export default {
                 </button>
             </div>
         </td>
+        <TaskCommentsModal
+            :errors="errors"
+            :isCommentsModalOpen="isCommentsModalOpen"
+            :task="this.task"
+            :users="users"
+            @closeCommentModal="closeCommentsModal"
+            @getUserName="getUserName"
+        />
     </tr>
-
-    <div
-        v-if="isCommentsModalOpen"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50"
-    >
-        <TaskCommentsModal :task="task"  />
-    </div>
 </template>

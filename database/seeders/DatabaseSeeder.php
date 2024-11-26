@@ -36,12 +36,7 @@ class DatabaseSeeder extends Seeder
         Role::create(['name' => 'head-of-department']);
 
         // Create Admin
-        User::factory()->create([
-            'name' => 'admin',
-            'email' => 'yakimec@stnzn.ru',
-            'password' => Hash::make('Redandwhite1'),
-            'role_id' => Role::where('name', 'admin')->first()->id
-        ]);
+        User::factory()->create(['name' => 'admin', 'email' => 'yakimec@stnzn.ru', 'password' => Hash::make('Redandwhite1'), 'role_id' => Role::where('name', 'admin')->first()->id]);
 
         // Create Statuses
         Status::create(['name' => 'NOT STARTED']);
@@ -50,7 +45,13 @@ class DatabaseSeeder extends Seeder
         Status::create(['name' => 'DELAY']);
         Status::create(['name' => 'DONE']);
 
-        // Create Tasks
-//        Task::factory(100)->create();
+        // Create test Tasks
+        Task::factory(1000)->create();
+
+        // Create test Users
+        User::create(['name' => 'man1', 'email' => 'man1@stnzn.ru', 'password' => Hash::make('123123'), 'role_id' => Role::where('name', 'user')->first()->id]);
+        User::create(['name' => 'man2', 'email' => 'man2@stnzn.ru', 'password' => Hash::make('123123'), 'role_id' => Role::where('name', 'user')->first()->id]);
+        User::create(['name' => 'hod', 'email' => 'hod@stnzn.ru', 'password' => Hash::make('123123'), 'role_id' => Role::where('name', 'head-of-department')->first()->id]);
+
     }
 }

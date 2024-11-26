@@ -34,7 +34,8 @@ class Task extends Model
 
     public function comments() :HasMany
     {
-        return $this->hasMany(Comment::class);
+        $comments = $this->hasMany(Comment::class, 'task_id', 'id');
+        return $comments->orderByDesc('created_at');
     }
 
     public function isSubtask() :bool

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContractorController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskController;
@@ -35,4 +36,6 @@ Route::resource('/contractors', ContractorController::class)->middleware('auth')
 Route::resource('/tasks', TaskController::class)->middleware('auth');
 Route::patch('/task/{task}/update-status', [TaskController::class, 'updateStatus'])->middleware('auth')->name('tasks.updateStatus');
 Route::patch('/task/{task}/update-deadline', [TaskController::class, 'updateDeadline'])->middleware('auth')->name('tasks.updateDeadline');
+Route::get('/task/{task}/comments', [TaskController::class, 'getComments'])->middleware('auth')->name('tasks.getComments');
 
+Route::resource('/comments', CommentController::class)->middleware('auth');
