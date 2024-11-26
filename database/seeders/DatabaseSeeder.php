@@ -46,7 +46,7 @@ class DatabaseSeeder extends Seeder
         Status::create(['name' => 'DONE']);
 
         // Create test Tasks
-        Task::factory(1000)->create();
+        Task::factory(100)->create();
 
         // Create test Users
         User::create(['name' => 'man1', 'email' => 'man1@stnzn.ru', 'password' => Hash::make('123123'), 'role_id' => Role::where('name', 'user')->first()->id]);

@@ -36,6 +36,18 @@ export default {
         },
     },
 
+    computed: {
+        filteredTasks() {
+            // Фильтрация задач на основе выбранного статуса
+            if (this.selectedStatuses.length > 0) {
+                return this.tasks.filter((task) =>
+                    this.selectedStatuses.includes(task.status),
+                );
+            }
+            return this.tasks; // Если фильтр не выбран, возвращаем все задачи
+        },
+    },
+
     data() {
         return {
             isEditModalOpen: false,
@@ -50,10 +62,20 @@ export default {
                 cost: 0.0,
                 currency: 'RUB',
             }),
+            selectedStatuses: [2, 3, 4],
+            // eslint-disable-next-line vue/no-dupe-keys
+            // tasks: this.tasks,
+            filterByStatuses: false,
         };
     },
 
     methods: {
+        getStatusName(statusId) {
+            const status = this.statuses.find(
+                (status) => status.id === statusId,
+            );
+            return status ? status.name : '';
+        },
         openEditModal(task) {
             this.selectedTask = { ...task }; // Копируем объект
             this.form.parent_task = task.parent_task;
@@ -155,6 +177,70 @@ export default {
         </template>
 
         <div class="mx-auto overflow-x-auto overflow-y-scroll px-5 pb-5 pt-5">
+            <!-- Фильтр по статусу -->
+            <!--            <select v-model="selectedStatuses" multiple @change="filterTasks">-->
+            <!--                <option value="">Все</option>-->
+            <!--                <option-->
+            <!--                    v-for="status in statuses"-->
+            <!--                    :key="status.id"-->
+            <!--                    :value="status.id"-->
+            <!--                >-->
+            <!--                    {{ status.name }}-->
+            <!--                </option>-->
+            <!--            </select>-->
+
+            <div class="flex gap-5">
+                <div class="mb-5">
+                    <button
+                        class="rounded-md bg-blue-300 px-3 py-1 text-sm shadow-md transition-all duration-200 ease-in-out hover:bg-blue-400 active:translate-y-[3px] active:ring-0"
+                        @click="filterByStatuses = !filterByStatuses"
+                    >
+                        Фильтр по статусу
+                    </button>
+                    <!-- Фильтр по статусам с чекбоксами -->
+                    <div
+                        :class="
+                            filterByStatuses
+                                ? 'block translate-x-0'
+                                : 'translate-x-[-3000px]'
+                        "
+                        class="absolute ml-2 mt-2 w-fit rounded-md border border-blue-500 bg-blue-600/30 px-3 py-1 shadow-md backdrop-blur-lg transition-all duration-200"
+                    >
+                        <div
+                            v-for="status in statuses"
+                            :key="status.id"
+                            :class="[
+                                getStatusName(status.id) === 'NOT STARTED'
+                                    ? 'border-gray-500 bg-gray-200 text-gray-800 hover:bg-gray-300 hover:text-gray-900'
+                                    : '',
+                                getStatusName(status.id) === 'ONGOING'
+                                    ? 'border-blue-500 bg-blue-200 text-blue-800 hover:bg-blue-300 hover:text-blue-900'
+                                    : '',
+                                getStatusName(status.id) === 'ON HOLD'
+                                    ? 'border-yellow-500 bg-yellow-200 text-yellow-800 hover:bg-yellow-300 hover:text-yellow-900'
+                                    : '',
+                                getStatusName(status.id) === 'DELAY'
+                                    ? 'border-red-500/70 bg-red-200 text-red-800 hover:bg-red-300 hover:text-red-900'
+                                    : '',
+                                getStatusName(status.id) === 'DONE'
+                                    ? 'border-green-500 bg-green-200 text-green-800 hover:bg-green-300 hover:text-green-900'
+                                    : '',
+                            ]"
+                            class="mb-1 rounded border bg-opacity-90 p-1 text-sm shadow-sm"
+                        >
+                            <label>
+                                <input
+                                    v-model="selectedStatuses"
+                                    :value="status.id"
+                                    class="h-[14px] w-[13px] border border-gray-400 bg-neutral-100 text-blue-600 focus:ring-0"
+                                    type="checkbox"
+                                />
+                                {{ status.name }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- Таблица -->
             <table
                 v-if="tasks.length > 0"
@@ -225,7 +311,7 @@ export default {
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                    <template v-for="task in tasks" :key="task.id">
+                    <template v-for="task in filteredTasks" :key="task.id">
                         <TasksTableRow
                             v-if="!task.is_subtask"
                             :comments="task.comments"
@@ -567,8 +653,8 @@ export default {
                     <div class="flex gap-2">
                         <select
                             v-model="form.contractor"
-                            class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-0 disabled:bg-neutral-200 disabled:text-neutral-500"
                             :disabled="selectedTask.contractor !== 1"
+                            class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-0 disabled:bg-neutral-200 disabled:text-neutral-500"
                         >
                             <option
                                 v-for="contractor in contractors"
