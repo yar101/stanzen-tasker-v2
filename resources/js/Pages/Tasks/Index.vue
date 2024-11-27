@@ -108,6 +108,7 @@ export default {
             this.form.description = '';
             this.form.contractor = 1;
             this.form.cost = '';
+            this.form.manager = null;
             this.form.currency = 'RUB';
             this.form.priority = 'III';
             this.isCreateModalOpen = true;
@@ -312,7 +313,7 @@ export default {
                         <th
                             class="px-4 py-2 text-center text-sm font-medium text-gray-700"
                         >
-                            Менеджер
+                            ФИО
                         </th>
 
                         <th

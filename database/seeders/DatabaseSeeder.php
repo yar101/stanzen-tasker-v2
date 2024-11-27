@@ -49,9 +49,9 @@ class DatabaseSeeder extends Seeder
         Task::factory(100)->create();
 
         // Create test Users
-        User::create(['name' => 'man1', 'email' => 'man1@stnzn.ru', 'password' => Hash::make('123123'), 'role_id' => Role::where('name', 'user')->first()->id]);
-        User::create(['name' => 'man2', 'email' => 'man2@stnzn.ru', 'password' => Hash::make('123123'), 'role_id' => Role::where('name', 'user')->first()->id]);
-        User::create(['name' => 'hod', 'email' => 'hod@stnzn.ru', 'password' => Hash::make('123123'), 'role_id' => Role::where('name', 'head-of-department')->first()->id]);
+        User::create(['name' => 'Иван Иванов', 'email' => 'man1@stnzn.ru', 'password' => Hash::make('123123'), 'role_id' => Role::where('name', 'user')->first()->id]);
+        User::create(['name' => 'Алексей Сидоров', 'email' => 'man2@stnzn.ru', 'password' => Hash::make('123123'), 'role_id' => Role::where('name', 'user')->first()->id]);
+        User::create(['name' => 'Евгений Петров', 'email' => 'hod@stnzn.ru', 'password' => Hash::make('123123'), 'role_id' => Role::where('name', 'head-of-department')->first()->id]);
 
     }
 }

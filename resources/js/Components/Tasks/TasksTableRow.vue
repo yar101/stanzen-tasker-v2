@@ -46,6 +46,7 @@ export default {
                 created_by: this.$page.props.auth.user.id,
                 content: '',
             }),
+            isShowPopup: false,
         };
     },
 
@@ -80,11 +81,13 @@ export default {
             );
         },
 
-        getContractorName(contractorId) {
-            const contractor = this.contractors.find(
-                (contractor) => contractor.id === contractorId,
-            );
-            return contractor ? contractor.name : '';
+        splitUserName(fullUserName) {
+            const words = fullUserName.trim().split(' ');
+            const initials = words
+                .map((word) => word[0].toUpperCase())
+                .join('');
+
+            return initials;
         },
 
         getStatusName(statusId) {
@@ -178,9 +181,30 @@ export default {
             </div>
         </td>
 
-        <td class="w-fit text-sm text-gray-900">
-            <div class="min-h-8 overflow-x-scroll text-center">
-                {{ getUserName(this.task.manager) }}
+        <td
+            class="w-[2rem] text-sm text-gray-900"
+            @mouseleave="isShowPopup = false"
+        >
+            <div
+                class="relative flex h-[5rem] min-h-8 cursor-pointer flex-col items-center justify-center overflow-x-hidden overflow-y-hidden text-center hover:bg-indigo-100"
+                @click="isShowPopup = !isShowPopup"
+            >
+                <div
+                    class="select-none transition-all duration-100 ease-in-out"
+                >
+                    {{ splitUserName(getUserName(task.manager)) }}
+                </div>
+            </div>
+            <!-- Всплывающее окно -->
+            <div
+                :class="
+                    isShowPopup === true
+                        ? 'translate-y-0 opacity-100'
+                        : 'invisible translate-y-[-80px] opacity-0'
+                "
+                class="absolute select-none rounded border border-indigo-300 bg-indigo-200 px-3 py-1 text-sm text-black shadow-lg transition-all duration-100 ease-in-out"
+            >
+                {{ getUserName(task.manager) }}
             </div>
         </td>
 
