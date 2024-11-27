@@ -38,7 +38,7 @@ export default {
     },
 
     computed: {
-        filteredTasks() {
+        filteredTasksByStatus() {
             // Фильтрация задач на основе выбранного статуса
             if (this.selectedStatuses.length > 0) {
                 return this.tasks.filter((task) =>
@@ -46,6 +46,31 @@ export default {
                 );
             }
             return this.tasks; // Если фильтр не выбран, возвращаем все задачи
+        },
+
+        filteredTasksByQuery() {
+            const query = this.searchQuery.toLowerCase();
+            return this.tasks.filter((task) => {
+                return task.title.toLowerCase().includes(query);
+                // ||
+                // contractor.description.toLowerCase().includes(query)
+            });
+        },
+
+        filteredTasks() {
+            // Фильтрация по статусам
+            let filteredByStatus = this.tasks;
+            if (this.selectedStatuses.length > 0) {
+                filteredByStatus = filteredByStatus.filter((task) =>
+                    this.selectedStatuses.includes(task.status),
+                );
+            }
+
+            // Фильтрация по текстовому запросу
+            const query = this.searchQuery.toLowerCase();
+            return filteredByStatus.filter((task) => {
+                return task.title.toLowerCase().includes(query);
+            });
         },
     },
 
@@ -65,9 +90,8 @@ export default {
                 currency: 'RUB',
             }),
             selectedStatuses: [1, 2, 3],
-            // eslint-disable-next-line vue/no-dupe-keys
-            // tasks: this.tasks,
-            filterByStatuses: false,
+            filterByStatusesModal: false,
+            searchQuery: '',
         };
     },
 
@@ -180,18 +204,18 @@ export default {
 
         <div class="mx-auto overflow-x-auto overflow-y-scroll px-5 pb-5 pt-5">
             <!--            Фильтры-->
-            <div class="flex gap-5 text-sm">
-                <div class="mb-5">
+            <div class="mb-5 flex items-center justify-between gap-5 text-sm">
+                <!--                По статусу-->
+                <div class="">
                     <button
                         class="rounded-md bg-amber-300/80 px-3 py-1 text-sm font-semibold shadow-md transition-all duration-100 ease-in-out hover:bg-amber-400/80 active:translate-y-[3px] active:ring-0"
-                        @click="filterByStatuses = !filterByStatuses"
+                        @click="filterByStatusesModal = !filterByStatusesModal"
                     >
                         Фильтр по статусу
                     </button>
-                    <!-- Фильтр по статусам с чекбоксами -->
                     <div
                         :class="
-                            filterByStatuses
+                            filterByStatusesModal
                                 ? 'block translate-x-0'
                                 : 'translate-x-[-1000px]'
                         "
@@ -232,6 +256,16 @@ export default {
                             </label>
                         </div>
                     </div>
+                </div>
+
+                <!--                Поиск-->
+                <div class="w-[50rem]">
+                    <input
+                        v-model="searchQuery"
+                        class="h-8 w-full rounded border border-gray-400 px-2 text-sm text-gray-700 outline-none transition-all focus:translate-y-[-3px] focus:shadow-xl focus:ring-0"
+                        placeholder="Поиск..."
+                        type="text"
+                    />
                 </div>
             </div>
             <!-- Таблица -->
@@ -308,7 +342,10 @@ export default {
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                    <template v-for="task in filteredTasks" :key="task.id">
+                    <template
+                        v-for="task in filteredTasks"
+                        :key="task.id"
+                    >
                         <TasksTableRow
                             v-if="!task.is_subtask"
                             :comments="task.comments"

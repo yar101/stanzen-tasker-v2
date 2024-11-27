@@ -39,10 +39,12 @@ export default {
 
     computed: {
         filteredContractors() {
+            // Фильтруем по имени и описанию
+            const query = this.searchQuery.toLowerCase();
             return this.contractors.filter((contractor) => {
-                return contractor.name
-                    .toLowerCase()
-                    .includes(this.searchQuery.toLowerCase());
+                return contractor.name.toLowerCase().includes(query);
+                // ||
+                // contractor.description.toLowerCase().includes(query)
             });
         },
     },
