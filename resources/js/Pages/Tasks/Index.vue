@@ -62,7 +62,7 @@ export default {
                 cost: 0.0,
                 currency: 'RUB',
             }),
-            selectedStatuses: [2, 3, 4],
+            selectedStatuses: [1, 2, 3],
             // eslint-disable-next-line vue/no-dupe-keys
             // tasks: this.tasks,
             filterByStatuses: false,
@@ -177,22 +177,11 @@ export default {
         </template>
 
         <div class="mx-auto overflow-x-auto overflow-y-scroll px-5 pb-5 pt-5">
-            <!-- Фильтр по статусу -->
-            <!--            <select v-model="selectedStatuses" multiple @change="filterTasks">-->
-            <!--                <option value="">Все</option>-->
-            <!--                <option-->
-            <!--                    v-for="status in statuses"-->
-            <!--                    :key="status.id"-->
-            <!--                    :value="status.id"-->
-            <!--                >-->
-            <!--                    {{ status.name }}-->
-            <!--                </option>-->
-            <!--            </select>-->
-
-            <div class="flex gap-5">
+            <!--            Фильтры-->
+            <div class="flex gap-5 text-sm">
                 <div class="mb-5">
                     <button
-                        class="rounded-md bg-blue-300 px-3 py-1 text-sm shadow-md transition-all duration-200 ease-in-out hover:bg-blue-400 active:translate-y-[3px] active:ring-0"
+                        class="rounded-md bg-amber-300/80 px-3 py-1 text-sm font-semibold shadow-md transition-all duration-100 ease-in-out hover:bg-amber-400/80 active:translate-y-[3px] active:ring-0"
                         @click="filterByStatuses = !filterByStatuses"
                     >
                         Фильтр по статусу
@@ -202,33 +191,31 @@ export default {
                         :class="
                             filterByStatuses
                                 ? 'block translate-x-0'
-                                : 'translate-x-[-3000px]'
+                                : 'translate-x-[-1000px]'
                         "
-                        class="absolute ml-2 mt-2 w-fit rounded-md border border-blue-500 bg-blue-600/30 px-3 py-1 shadow-md backdrop-blur-lg transition-all duration-200"
+                        class="absolute ml-2 mt-2 flex w-fit flex-col gap-2 rounded-md border border-blue-500 bg-blue-600/30 px-3 py-3 shadow-md backdrop-blur-lg transition-all duration-200"
                     >
-                        <div
-                            v-for="status in statuses"
-                            :key="status.id"
-                            :class="[
-                                getStatusName(status.id) === 'NOT STARTED'
-                                    ? 'border-gray-500 bg-gray-200 text-gray-800 hover:bg-gray-300 hover:text-gray-900'
-                                    : '',
-                                getStatusName(status.id) === 'ONGOING'
-                                    ? 'border-blue-500 bg-blue-200 text-blue-800 hover:bg-blue-300 hover:text-blue-900'
-                                    : '',
-                                getStatusName(status.id) === 'ON HOLD'
-                                    ? 'border-yellow-500 bg-yellow-200 text-yellow-800 hover:bg-yellow-300 hover:text-yellow-900'
-                                    : '',
-                                getStatusName(status.id) === 'DELAY'
-                                    ? 'border-red-500/70 bg-red-200 text-red-800 hover:bg-red-300 hover:text-red-900'
-                                    : '',
-                                getStatusName(status.id) === 'DONE'
-                                    ? 'border-green-500 bg-green-200 text-green-800 hover:bg-green-300 hover:text-green-900'
-                                    : '',
-                            ]"
-                            class="mb-1 rounded border bg-opacity-90 p-1 text-sm shadow-sm"
-                        >
-                            <label>
+                        <div v-for="status in statuses" :key="status.id" class="w-full">
+                            <label
+                                :class="[
+                                    getStatusName(status.id) === 'NOT STARTED'
+                                        ? 'border-gray-500 bg-gray-200 text-gray-800 hover:bg-gray-300 hover:text-gray-900'
+                                        : '',
+                                    getStatusName(status.id) === 'ONGOING'
+                                        ? 'border-blue-500 bg-blue-200 text-blue-800 hover:bg-blue-300 hover:text-blue-900'
+                                        : '',
+                                    getStatusName(status.id) === 'ON HOLD'
+                                        ? 'border-yellow-500 bg-yellow-200 text-yellow-800 hover:bg-yellow-300 hover:text-yellow-900'
+                                        : '',
+                                    getStatusName(status.id) === 'DELAY'
+                                        ? 'border-red-500/70 bg-red-200 text-red-800 hover:bg-red-300 hover:text-red-900'
+                                        : '',
+                                    getStatusName(status.id) === 'DONE'
+                                        ? 'border-green-500 bg-green-200 text-green-800 hover:bg-green-300 hover:text-green-900'
+                                        : '',
+                                ]"
+                                class="flex items-center gap-1 rounded border bg-opacity-90 p-1 text-sm font-semibold transition-all duration-100 ease-in-out hover:shadow-md"
+                            >
                                 <input
                                     v-model="selectedStatuses"
                                     :value="status.id"
@@ -260,10 +247,8 @@ export default {
                         </th>
 
                         <th
-                            class="w-0 px-4 py-2 text-center text-sm font-medium text-gray-700"
-                        >
-                            Приоритет
-                        </th>
+                            class="text-center text-sm font-medium text-gray-700"
+                        ></th>
 
                         <th
                             class="px-4 py-2 text-center text-sm font-medium text-gray-700"

@@ -158,24 +158,22 @@ export default {
             </div>
         </td>
 
-        <td class="px-4 py-2 text-sm">
-            <div class="flex items-center justify-center">
-                <div
-                    :class="[
-                        this.task.priority === 'I'
-                            ? 'border border-red-500/70 bg-red-200 text-red-800'
-                            : '',
-                        this.task.priority === 'II'
-                            ? 'border border-yellow-500 bg-yellow-200 text-yellow-800'
-                            : '',
-                        this.task.priority === 'III'
-                            ? 'border border-blue-500 bg-blue-200 text-blue-800'
-                            : '',
-                    ]"
-                    class="w-[25px] rounded-md p-1 text-center font-semibold"
-                >
-                    {{ this.task.priority }}
-                </div>
+        <td class="w-fit p-1 text-sm">
+            <div
+                :class="[
+                    this.task.priority === 'I'
+                        ? 'border border-red-500/70 bg-red-200 text-red-800'
+                        : '',
+                    this.task.priority === 'II'
+                        ? 'border border-yellow-500 bg-yellow-200 text-yellow-800'
+                        : '',
+                    this.task.priority === 'III'
+                        ? 'border border-blue-500 bg-blue-200 text-blue-800'
+                        : '',
+                ]"
+                class="flex h-[25px] w-[25px] items-center justify-center rounded text-center font-semibold"
+            >
+                {{ this.task.priority }}
             </div>
         </td>
 
@@ -195,7 +193,7 @@ export default {
 
         <td class="w-fit px-4 py-2 text-sm text-gray-900">
             <div
-                class="flex min-h-8 items-center justify-center overflow-x-scroll text-center"
+                class="max-h-[3.5rem] max-w-[30rem] overflow-scroll pb-1 text-center text-sm text-gray-900"
             >
                 {{ this.task.description }}
             </div>
@@ -243,33 +241,31 @@ export default {
         <td>
             <!--                  Last comment-->
             <template v-if="this.comments && this.comments.length > 0">
-                <div
-                    class="m-1 max-w-[15rem] rounded-md border border-gray-300 bg-yellow-100"
-                >
+                <div class="m-1 max-w-[15rem] rounded-md bg-yellow-100">
+                    <!--                    <div-->
+                    <!--                        class="flex justify-between rounded-md text-xs text-gray-900"-->
+                    <!--                    >-->
+                    <!--                        <div-->
+                    <!--                            class="rounded-tl-md border-r border-gray-300 bg-amber-200 p-1"-->
+                    <!--                        >-->
+                    <!--                            {{ getUserName(task.comments[0].created_by) }}-->
+                    <!--                        </div>-->
+                    <!--                        <div class="p-1">-->
+                    <!--                            {{-->
+                    <!--                                new Date(-->
+                    <!--                                    task.comments[0].created_at,-->
+                    <!--                                ).toLocaleDateString('ru-RU', {-->
+                    <!--                                    day: '2-digit',-->
+                    <!--                                    month: '2-digit',-->
+                    <!--                                    year: 'numeric',-->
+                    <!--                                    hour: '2-digit',-->
+                    <!--                                    minute: '2-digit',-->
+                    <!--                                })-->
+                    <!--                            }}-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
                     <div
-                        class="flex justify-between rounded-tl-md text-xs text-gray-900"
-                    >
-                        <div
-                            class="rounded-tl-md border-r border-gray-300 bg-amber-200 p-1"
-                        >
-                            {{ getUserName(task.comments[0].created_by) }}
-                        </div>
-                        <div class="p-1">
-                            {{
-                                new Date(
-                                    task.comments[0].created_at,
-                                ).toLocaleDateString('ru-RU', {
-                                    day: '2-digit',
-                                    month: '2-digit',
-                                    year: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit',
-                                })
-                            }}
-                        </div>
-                    </div>
-                    <div
-                        class="max-h-[2.5rem] overflow-scroll rounded-b-md border-t border-gray-300 pb-1 text-center text-sm text-gray-900"
+                        class="max-h-[2.5rem] overflow-scroll rounded-md border border-yellow-300 pb-1 text-center text-sm text-gray-900"
                     >
                         {{ task.comments[0].content }}
                     </div>
