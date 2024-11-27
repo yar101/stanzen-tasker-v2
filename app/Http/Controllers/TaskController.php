@@ -24,13 +24,15 @@ class TaskController extends Controller
             ->get();
         $contractors = Contractor::all();
         $statuses = Status::all();
-        $users = User::all();
+        $users = User::where('role_id', '!=', 2)->get();
+        $currentUserRole = auth()->user()->role->name;
 
         return Inertia::render('Tasks/Index', [
             'tasks' => $tasks,
             'statuses' => $statuses,
             'contractors' => $contractors,
             'users' => $users,
+            'currentUserRole' => $currentUserRole
         ]);
     }
 
@@ -56,10 +58,12 @@ class TaskController extends Controller
             $request->validate([
                 'title' => ['required'],
                 'description' => ['required'],
+                'manager' => ['nullable', 'integer'],
                 'contractor' => ['required', 'integer'],
                 'cost' => ['numeric'],
                 'currency' => ['required'],
                 'parent_task' => ['nullable', 'integer'],
+                'priority' => ['string', 'required'],
             ])
         );
         $newTask->update([
@@ -73,6 +77,12 @@ class TaskController extends Controller
              'is_subtask' => true,
           ]);
         };
+
+        if ($request['manager'] != null && auth()->user()->role->name === 'head-of-department') {
+            $newTask->update([
+                'manager' => $request['manager'],
+            ]);
+        }
 
         return redirect()->route('tasks.index');
     }

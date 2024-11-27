@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->foreignIdFor(User::class, 'created_by')->nullable()->constrained();
+            $table->foreignIdFor(User::class, 'manager')->nullable()->constrained();
             $table->foreignIdFor(Status::class, 'status')->default(2)->constrained();
             $table->foreignIdFor(Contractor::class, 'contractor')->default(1)->constrained();
             $table->date('deadline_start')->nullable();

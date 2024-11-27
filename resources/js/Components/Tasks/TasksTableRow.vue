@@ -179,6 +179,16 @@ export default {
 
         <td class="w-fit text-sm text-gray-900">
             <div class="min-h-8 overflow-x-scroll text-center">
+                {{
+                    this.task.manager === null
+                        ? getUserName(this.task.created_by)
+                        : getUserName(this.task.manager)
+                }}
+            </div>
+        </td>
+
+        <td class="w-fit text-sm text-gray-900">
+            <div class="min-h-8 overflow-x-scroll text-center">
                 {{ getContractorName(this.task.contractor) }}
             </div>
         </td>

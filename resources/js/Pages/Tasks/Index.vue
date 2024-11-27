@@ -34,6 +34,7 @@ export default {
             type: Object,
             required: true,
         },
+        currentUserRole: String,
     },
 
     computed: {
@@ -59,6 +60,7 @@ export default {
                 title: '',
                 description: '',
                 contractor: 1,
+                manager: null,
                 cost: 0.0,
                 currency: 'RUB',
             }),
@@ -195,7 +197,11 @@ export default {
                         "
                         class="absolute ml-2 mt-2 flex w-fit flex-col gap-2 rounded-md border border-blue-500 bg-blue-600/30 px-3 py-3 shadow-md backdrop-blur-lg transition-all duration-200"
                     >
-                        <div v-for="status in statuses" :key="status.id" class="w-full">
+                        <div
+                            v-for="status in statuses"
+                            :key="status.id"
+                            class="w-full"
+                        >
                             <label
                                 :class="[
                                     getStatusName(status.id) === 'NOT STARTED'
@@ -249,6 +255,12 @@ export default {
                         <th
                             class="text-center text-sm font-medium text-gray-700"
                         ></th>
+
+                        <th
+                            class="px-4 py-2 text-center text-sm font-medium text-gray-700"
+                        >
+                            Менеджер
+                        </th>
 
                         <th
                             class="px-4 py-2 text-center text-sm font-medium text-gray-700"
@@ -361,6 +373,28 @@ export default {
                 </h2>
 
                 <!--                Поля формы-->
+
+                <div v-if="currentUserRole !== 'user'" class="mb-4">
+                    <InputLabel class="block text-sm font-medium text-gray-700">
+                        Менеджер
+                    </InputLabel>
+                    <div class="flex gap-2">
+                        <select
+                            v-model="form.manager"
+                            :disabled="currentUserRole === 'user'"
+                            class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-0 disabled:bg-neutral-200 disabled:text-neutral-500"
+                        >
+                            <option
+                                v-for="user in users"
+                                :key="user.id"
+                                :value="user.id"
+                            >
+                                {{ user.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <InputError :message="errors.contractor" class="mt-2" />
+                </div>
 
                 <div class="mb-4">
                     <InputLabel class="block text-sm font-medium text-gray-700">
