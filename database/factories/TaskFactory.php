@@ -21,7 +21,7 @@ class TaskFactory extends Factory
             'title' => $this->faker->realText(30),
             'description' => $this->faker->realText(50),
             'status' => $this->faker->numberBetween(1, 5),
-            'created_by' => $this->faker->numberBetween(1, $usersCount),
+            'created_by' => 1,
             'manager' => $this->faker->numberBetween(1, $usersCount),
             'cost' => $this->faker->numberBetween(500, 100000),
             'deadline_start' => now(),

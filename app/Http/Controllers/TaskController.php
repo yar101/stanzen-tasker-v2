@@ -20,7 +20,7 @@ class TaskController extends Controller
     public function index()
     {
         $tasks = Task::orderByDesc('created_at')
-            ->with('subtasks', 'comments', 'subtasks.comments')
+            ->with('subtasks', 'comments', 'subtasks.comments', 'contractor')
             ->get();
         $contractors = Contractor::all();
         $statuses = Status::all();
@@ -82,6 +82,10 @@ class TaskController extends Controller
             $newTask->update([
                 'manager' => $request['manager'],
             ]);
+        } elseif ($request['manager'] === null && auth()->user()->role->name === 'user') {
+            $newTask->update([
+                'manager' => $newTask->created_by,
+            ]);
         }
 
         return redirect()->route('tasks.index');
@@ -125,6 +129,13 @@ class TaskController extends Controller
                 'contractor' => $request['contractor'],
             ]);
         }
+
+        if ($request['manager'] != null && auth()->user()->role->name === 'head-of-department') {
+            $task->update([
+                'manager' => $request['manager'],
+            ]);
+        }
+
         return redirect()->route('tasks.index');
     }
 

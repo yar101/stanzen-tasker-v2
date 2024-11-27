@@ -38,38 +38,24 @@ export default {
     },
 
     computed: {
-        filteredTasksByStatus() {
-            // Фильтрация задач на основе выбранного статуса
-            if (this.selectedStatuses.length > 0) {
-                return this.tasks.filter((task) =>
-                    this.selectedStatuses.includes(task.status),
-                );
-            }
-            return this.tasks; // Если фильтр не выбран, возвращаем все задачи
-        },
-
-        filteredTasksByQuery() {
-            const query = this.searchQuery.toLowerCase();
-            return this.tasks.filter((task) => {
-                return task.title.toLowerCase().includes(query);
-                // ||
-                // contractor.description.toLowerCase().includes(query)
-            });
-        },
-
         filteredTasks() {
+            let filteredTasks = this.tasks;
+
             // Фильтрация по статусам
-            let filteredByStatus = this.tasks;
             if (this.selectedStatuses.length > 0) {
-                filteredByStatus = filteredByStatus.filter((task) =>
+                filteredTasks = filteredTasks.filter((task) =>
                     this.selectedStatuses.includes(task.status),
                 );
             }
 
             // Фильтрация по текстовому запросу
             const query = this.searchQuery.toLowerCase();
-            return filteredByStatus.filter((task) => {
-                return task.title.toLowerCase().includes(query);
+            return filteredTasks.filter((task) => {
+                return (
+                    task.title.toLowerCase().includes(query) ||
+                    task.description.toLowerCase().includes(query) ||
+                    task.contractor.name.toLowerCase().includes(query)
+                );
             });
         },
     },
@@ -85,7 +71,7 @@ export default {
                 title: '',
                 description: '',
                 contractor: 1,
-                manager: null,
+                manager: 0,
                 cost: 0.0,
                 currency: 'RUB',
             }),
@@ -109,6 +95,7 @@ export default {
             this.form.description = task.description;
             this.form.contractor = task.contractor;
             this.form.cost = task.cost;
+            this.form.manager = task.manager;
             this.form.currency = task.currency;
             this.form.priority = task.priority;
             this.form.is_subtask = task.is_subtask;
@@ -132,7 +119,8 @@ export default {
             this.form.title = task.title;
             this.form.description = '';
             this.form.contractor = task.contractor;
-            this.form.cost = task.cost;
+            this.form.cost = null;
+            this.form.manager = task.manager;
             this.form.currency = task.currency;
             this.form.priority = task.priority;
             this.isCreateSubtaskModalOpen = true;
@@ -182,6 +170,12 @@ export default {
                     deadline_end: task.deadline_end,
                 }),
             );
+        },
+
+        getUserName(userId) {
+            const user = this.users.find((user) => user.id === userId);
+            if (userId === 1) return 'admin';
+            return user ? user.name : '';
         },
     },
 };
@@ -259,11 +253,36 @@ export default {
                 </div>
 
                 <!--                Поиск-->
-                <div class="w-[50rem]">
+                <div class="flex w-[20rem] items-center">
+                    <div
+                        class="group flex h-8 w-6 items-center justify-center rounded-l-md bg-blue-200"
+                    >
+                        <svg
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g
+                                id="SVGRepo_tracerCarrier"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            ></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path
+                                    d="M11 6C13.7614 6 16 8.23858 16 11M16.6588 16.6549L21 21M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z"
+                                    stroke="#1c71d8"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="1.488"
+                                ></path>
+                            </g>
+                        </svg>
+                    </div>
                     <input
                         v-model="searchQuery"
-                        class="h-8 w-full rounded border border-gray-400 px-2 text-sm text-gray-700 outline-none transition-all focus:translate-y-[-3px] focus:shadow-xl focus:ring-0"
-                        placeholder="Поиск..."
+                        class="h-8 w-full rounded-r-md border border-blue-200 px-2 text-sm text-gray-700 outline-none transition-all focus:border-none focus:bg-blue-200 focus:shadow-xl focus:ring-0"
+                        placeholder="Поиск по теме и описанию..."
                         type="text"
                     />
                 </div>
@@ -342,10 +361,7 @@ export default {
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                    <template
-                        v-for="task in filteredTasks"
-                        :key="task.id"
-                    >
+                    <template v-for="task in filteredTasks" :key="task.id">
                         <TasksTableRow
                             v-if="!task.is_subtask"
                             :comments="task.comments"
@@ -382,7 +398,7 @@ export default {
             </table>
 
             <div
-                v-if="Object.keys(tasks).length === 0"
+                v-if="filteredTasks.length === 0 || tasks.length === 0"
                 class="w-full px-4 py-2 text-center text-2xl text-gray-500"
             >
                 Задачи не найдены
@@ -554,6 +570,28 @@ export default {
 
                 <!--                Поля формы-->
 
+                <div v-if="currentUserRole !== 'user'" class="mb-4">
+                    <InputLabel class="block text-sm font-medium text-gray-700">
+                        Менеджер
+                    </InputLabel>
+                    <div class="flex gap-2">
+                        <select
+                            v-model="form.manager"
+                            :disabled="currentUserRole === 'user'"
+                            class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-0 disabled:bg-neutral-200 disabled:text-neutral-500"
+                        >
+                            <option
+                                v-for="user in users"
+                                :key="user.id"
+                                :value="user.id"
+                            >
+                                {{ user.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <InputError :message="errors.contractor" class="mt-2" />
+                </div>
+
                 <div class="mb-4">
                     <InputLabel class="block text-sm font-medium text-gray-700">
                         Тема
@@ -677,6 +715,28 @@ export default {
                 </h2>
 
                 <!--                Поля формы-->
+
+                <div v-if="currentUserRole !== 'user'" class="mb-4">
+                    <InputLabel class="block text-sm font-medium text-gray-700">
+                        Менеджер
+                    </InputLabel>
+                    <div class="flex gap-2">
+                        <select
+                            v-model="form.manager"
+                            :disabled="currentUserRole === 'user'"
+                            class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-0 disabled:bg-neutral-200 disabled:text-neutral-500"
+                        >
+                            <option
+                                v-for="user in users"
+                                :key="user.id"
+                                :value="user.id"
+                            >
+                                {{ user.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <InputError :message="errors.contractor" class="mt-2" />
+                </div>
 
                 <div class="mb-4">
                     <InputLabel class="block text-sm font-medium text-gray-700">

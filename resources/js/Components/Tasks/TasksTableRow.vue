@@ -96,6 +96,7 @@ export default {
 
         getUserName(userId) {
             const user = this.users.find((user) => user.id === userId);
+            if (userId === 1) return 'admin';
             return user ? user.name : '';
         },
     },
@@ -168,7 +169,7 @@ export default {
                         ? 'border border-yellow-500 bg-yellow-200 text-yellow-800'
                         : '',
                     this.task.priority === 'III'
-                        ? 'border border-blue-500 bg-blue-200 text-blue-800'
+                        ? 'border border-green-500 bg-green-200 text-green-800'
                         : '',
                 ]"
                 class="flex h-[25px] w-[25px] items-center justify-center rounded text-center font-semibold"
@@ -179,17 +180,13 @@ export default {
 
         <td class="w-fit text-sm text-gray-900">
             <div class="min-h-8 overflow-x-scroll text-center">
-                {{
-                    this.task.manager === null
-                        ? getUserName(this.task.created_by)
-                        : getUserName(this.task.manager)
-                }}
+                {{ getUserName(this.task.manager) }}
             </div>
         </td>
 
         <td class="w-fit text-sm text-gray-900">
             <div class="min-h-8 overflow-x-scroll text-center">
-                {{ getContractorName(this.task.contractor) }}
+                {{ this.task.contractor.name }}
             </div>
         </td>
 
@@ -283,8 +280,8 @@ export default {
             </template>
         </td>
 
-        <td class="w-fit">
-            <div class="flex min-h-8 items-center justify-center gap-1">
+        <td class="px-2">
+            <div class="flex items-center justify-center gap-1">
                 <!--                            Edit button-->
                 <button
                     class="w-8 rounded-md border border-amber-300 bg-amber-100 p-1 transition-all duration-100 hover:bg-amber-200 hover:shadow-md"

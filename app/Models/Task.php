@@ -24,7 +24,7 @@ class Task extends Model
 
     public function contractor() :BelongsTo
     {
-        return $this->belongsTo(Contractor::class);
+        return $this->belongsTo(Contractor::class, 'contractor');
     }
 
     public function subtasks() :HasMany
