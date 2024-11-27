@@ -33,8 +33,20 @@ export default {
             newContractorForm: {
                 name: '',
             },
+            searchQuery: '',
         };
     },
+
+    computed: {
+        filteredContractors() {
+            return this.contractors.filter((contractor) => {
+                return contractor.name
+                    .toLowerCase()
+                    .includes(this.searchQuery.toLowerCase());
+            });
+        },
+    },
+
     methods: {
         openEditModal(contractor) {
             this.selectedContractor = { ...contractor }; // Копируем объект
@@ -101,9 +113,13 @@ export default {
                             class="flex items-center justify-between px-4 py-2 text-start text-sm font-medium text-gray-700"
                         >
                             <span class="font-bold">Список контрагентов</span>
+
+                            <!--                            Поиск-->
                             <div>
                                 <input
+                                    v-model="searchQuery"
                                     class="mr-10 h-6 rounded border border-gray-400 px-2 text-sm text-gray-700 outline-none transition-all focus:translate-y-[-3px] focus:shadow-xl focus:ring-0"
+                                    placeholder="Поиск..."
                                     type="text"
                                 />
                             </div>
@@ -118,7 +134,7 @@ export default {
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
                     <tr
-                        v-for="contractor in contractors"
+                        v-for="contractor in filteredContractors"
                         :key="contractor.id"
                         class="group hover:bg-gray-100"
                     >
@@ -135,9 +151,9 @@ export default {
                             </button>
                         </td>
                     </tr>
-                    <tr v-if="Object.keys(contractors).length === 0">
+                    <tr v-if="filteredContractors.length === 0">
                         <td class="px-4 py-2 text-center text-sm text-gray-500">
-                            Нет контрагентов
+                            Контрагенты не найдены
                         </td>
                     </tr>
                 </tbody>
@@ -210,20 +226,20 @@ export default {
                     <InputError :message="errors.name" class="mt-2" />
                 </div>
                 <div class="flex justify-between gap-2">
-                    <div class="">
-                        <button
-                            class="rounded bg-red-500 px-4 py-2 text-sm hover:bg-red-600"
-                            type="button"
-                            @click="
-                                destroy(
-                                    selectedContractor.id,
-                                    selectedContractor.name,
-                                )
-                            "
-                        >
-                            Удалить
-                        </button>
-                    </div>
+                    <!--                    <div class="">-->
+                    <!--                        <button-->
+                    <!--                            class="rounded bg-red-500 px-4 py-2 text-sm hover:bg-red-600"-->
+                    <!--                            type="button"-->
+                    <!--                            @click="-->
+                    <!--                                destroy(-->
+                    <!--                                    selectedContractor.id,-->
+                    <!--                                    selectedContractor.name,-->
+                    <!--                                )-->
+                    <!--                            "-->
+                    <!--                        >-->
+                    <!--                            Удалить-->
+                    <!--                        </button>-->
+                    <!--                    </div>-->
                     <div class="flex gap-2">
                         <button
                             class="rounded bg-gray-300 px-4 py-2 text-sm hover:bg-gray-400"
@@ -232,6 +248,8 @@ export default {
                         >
                             Отмена
                         </button>
+                    </div>
+                    <div>
                         <button
                             class="rounded bg-blue-500 px-4 py-2 text-sm text-white hover:bg-blue-600"
                             type="submit"
