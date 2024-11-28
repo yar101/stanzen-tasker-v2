@@ -5,6 +5,20 @@ import InputError from '@/Components/InputError.vue';
 import TextInput from '@/Components/TextInput.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TasksTableRow from '@/Components/Tasks/TasksTableRow.vue';
+import { addIcons, OhVueIcon } from 'oh-vue-icons';
+import {
+    BiBarChartLineFill,
+    BiCurrencyExchange,
+    FaCommentAlt,
+    IoPersonSharp,
+} from 'oh-vue-icons/icons';
+
+addIcons(
+    IoPersonSharp,
+    BiCurrencyExchange,
+    FaCommentAlt,
+    BiBarChartLineFill,
+);
 
 export default {
     components: {
@@ -13,6 +27,7 @@ export default {
         TextInput,
         InputError,
         AuthenticatedLayout,
+        'v-icon': OhVueIcon,
         // eslint-disable-next-line vue/no-reserved-component-names
         Head,
     },
@@ -93,7 +108,7 @@ export default {
             this.form.parent_task = task.parent_task;
             this.form.title = String(task.title);
             this.form.description = task.description;
-            this.form.contractor = task.contractor;
+            this.form.contractor = task.contractor.id;
             this.form.cost = task.cost;
             this.form.manager = task.manager;
             this.form.currency = task.currency;
@@ -296,69 +311,69 @@ export default {
                 <thead class="border-b border-gray-300 bg-neutral-200">
                     <tr>
                         <th
-                            class="px-4 py-2 text-center text-sm font-medium text-gray-700"
+                            class="text-center text-sm font-medium text-gray-700"
                         >
                             ID
                         </th>
                         <th
-                            class="px-4 py-2 text-center text-sm font-medium text-gray-700"
+                            class="text-center text-sm font-medium text-gray-700"
                         >
                             Статус
                         </th>
 
-                        <th
-                            class="text-center text-sm font-medium text-gray-700"
-                        ></th>
-
-                        <th
-                            class="px-4 py-2 text-center text-sm font-medium text-gray-700"
-                        >
-                            ФИО
+                        <th class="text-gray-700">
+                            <v-icon name="bi-bar-chart-line-fill" scale="1.7" />
                         </th>
 
                         <th
-                            class="px-4 py-2 text-center text-sm font-medium text-gray-700"
+                            class="text-center text-sm font-medium text-gray-700"
+                        >
+                            <v-icon name="io-person-sharp" scale="1.5" />
+                        </th>
+
+                        <th
+                            class="text-center text-sm font-medium text-gray-700"
                         >
                             Контрагент
                         </th>
 
                         <th
-                            class="px-4 py-2 text-center text-sm font-medium text-gray-700"
+                            class="text-center text-sm font-medium text-gray-700"
                         >
                             Тема
                         </th>
 
                         <th
-                            class="px-4 py-2 text-center text-sm font-medium text-gray-700"
+                            class="text-center text-sm font-medium text-gray-700"
                         >
                             Описание
                         </th>
 
                         <th
-                            class="px-4 py-2 text-center text-sm font-medium text-gray-700"
+                            class="text-center text-sm font-medium text-gray-700"
                         >
                             Дата начала
                         </th>
 
                         <th
-                            class="px-4 py-2 text-center text-sm font-medium text-gray-700"
+                            class="text-center text-sm font-medium text-gray-700"
                         >
                             Дедлайн
                         </th>
 
                         <th
-                            class="px-4 py-2 text-center text-sm font-medium text-gray-700"
+                            class="text-center text-sm font-medium text-gray-700"
                         >
-                            Стоимость
+                            <v-icon name="bi-currency-exchange" scale="2" />
                         </th>
 
                         <th
-                            class="px-4 py-2 text-center text-sm font-medium text-gray-700"
+                            class="text-center text-sm font-medium text-gray-700"
                         >
-                            Последний комментарий
+                            <v-icon name="fa-comment-alt" scale="1.5" />
                         </th>
 
-                        <th class=""></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">

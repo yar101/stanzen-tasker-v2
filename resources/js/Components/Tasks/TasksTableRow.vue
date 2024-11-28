@@ -162,22 +162,24 @@ export default {
             </div>
         </td>
 
-        <td class="w-fit p-1 text-sm">
-            <div
-                :class="[
-                    this.task.priority === 'I'
-                        ? 'border border-red-500/70 bg-red-200 text-red-800'
-                        : '',
-                    this.task.priority === 'II'
-                        ? 'border border-yellow-500 bg-yellow-200 text-yellow-800'
-                        : '',
-                    this.task.priority === 'III'
-                        ? 'border border-green-500 bg-green-200 text-green-800'
-                        : '',
-                ]"
-                class="flex h-[25px] w-[25px] items-center justify-center rounded text-center font-semibold"
-            >
-                {{ this.task.priority }}
+        <td class="text-sm">
+            <div class="flex items-center justify-center">
+                <span
+                    :class="[
+                        this.task.priority === 'I'
+                            ? 'border border-red-500/70 bg-red-200 text-red-800'
+                            : '',
+                        this.task.priority === 'II'
+                            ? 'border border-yellow-500 bg-yellow-200 text-yellow-800'
+                            : '',
+                        this.task.priority === 'III'
+                            ? 'border border-green-500 bg-green-200 text-green-800'
+                            : '',
+                    ]"
+                    class="flex h-[25px] w-[25px] items-center justify-center rounded text-center font-semibold"
+                >
+                    {{ this.task.priority }}
+                </span>
             </div>
         </td>
 
@@ -209,17 +211,13 @@ export default {
         </td>
 
         <td class="w-fit text-sm text-gray-900">
-            <div class="min-h-8 overflow-x-scroll text-center">
+            <div class="overflow-x-scroll text-center">
                 {{ task.contractor.name }}
             </div>
         </td>
 
-        <td class="w-fit px-4 py-2 text-sm text-gray-900">
-            <div
-                class="flex min-h-8 items-center justify-center overflow-x-scroll"
-            >
-                {{ task.title }}
-            </div>
+        <td class="max-w-[15rem] break-words px-2 text-sm text-gray-900">
+            {{ task.title }}
         </td>
 
         <td class="w-fit px-4 py-2 text-sm text-gray-900">
@@ -272,7 +270,9 @@ export default {
         <td class="max-w-[20rem]">
             <!--                  Last comment-->
             <template v-if="this.comments && this.comments.length > 0">
-                <div class="text-sm text-gray-900 w-full max-h-full p-1 text-center overflow-y-scroll bg-yellow-50">
+                <div
+                    class="max-h-full w-full overflow-y-scroll bg-yellow-50 p-1 text-center text-sm text-gray-900"
+                >
                     <!--                    <div-->
                     <!--                        class="flex justify-between rounded-md text-xs text-gray-900"-->
                     <!--                    >-->
@@ -300,7 +300,8 @@ export default {
             </template>
         </td>
 
-        <td class="px-2">
+        <!--        Buttons-->
+        <td class="">
             <div class="flex items-center justify-center gap-1">
                 <!--                            Edit button-->
                 <button
