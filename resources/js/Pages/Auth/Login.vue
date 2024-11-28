@@ -1,11 +1,10 @@
 <script setup>
-import Checkbox from '@/Components/Checkbox.vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 
 defineProps({
     canResetPassword: {
@@ -69,23 +68,23 @@ const submit = () => {
                 <InputError :message="form.errors.password" class="mt-2" />
             </div>
 
-            <div class="mt-4 block">
-                <label class="flex items-center">
-                    <Checkbox v-model:checked="form.remember" name="remember" />
-                    <span class="ms-2 text-sm text-gray-600"
-                        >Запомнить меня</span
-                    >
-                </label>
-            </div>
+            <!--            <div class="mt-4 block">-->
+            <!--                <label class="flex items-center">-->
+            <!--                    <Checkbox v-model:checked="form.remember" name="remember" />-->
+            <!--                    <span class="ms-2 text-sm text-gray-600"-->
+            <!--                        >Запомнить меня</span-->
+            <!--                    >-->
+            <!--                </label>-->
+            <!--            </div>-->
 
             <div class="mt-4 flex items-center justify-end">
-                <Link
-                    v-if="canResetPassword"
-                    :href="route('password.request')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                    Забыли пароль?
-                </Link>
+                <!--                <Link-->
+                <!--                    v-if="canResetPassword"-->
+                <!--                    :href="route('password.request')"-->
+                <!--                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"-->
+                <!--                >-->
+                <!--                    Забыли пароль?-->
+                <!--                </Link>-->
 
                 <PrimaryButton
                     :class="{ 'opacity-25': form.processing }"
