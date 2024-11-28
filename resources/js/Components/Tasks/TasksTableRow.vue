@@ -210,22 +210,20 @@ export default {
             </div>
         </td>
 
-        <td class="w-fit text-sm text-gray-900">
-            <div class="overflow-x-scroll text-center">
-                {{ task.contractor.name }}
-            </div>
+        <td class="max-w-[15rem] break-words text-center text-sm text-gray-900">
+            {{ task.contractor.name }}
         </td>
 
-        <td class="max-w-[15rem] break-words px-2 text-sm text-gray-900">
+        <td
+            class="max-w-[15rem] break-words px-2 text-center text-sm text-gray-900"
+        >
             {{ task.title }}
         </td>
 
-        <td class="w-fit px-4 py-2 text-sm text-gray-900">
-            <div
-                class="max-h-[3.5rem] max-w-[30rem] overflow-scroll pb-1 text-center text-sm text-gray-900"
-            >
-                {{ task.description }}
-            </div>
+        <td
+            class="max-w-[15rem] break-words p-1 text-center text-sm text-gray-900"
+        >
+            {{ task.description }}
         </td>
 
         <td>
@@ -254,9 +252,9 @@ export default {
             </div>
         </td>
 
-        <td class="px-4 py-2 text-sm text-gray-900">
+        <td class="text-sm text-gray-900">
             <div
-                class="flex min-h-8 flex-col items-center justify-center overflow-x-scroll"
+                class="flex flex-col items-center justify-center"
             >
                 <div class="text-center">
                     {{ this.task.cost }}
@@ -271,7 +269,7 @@ export default {
             <!--                  Last comment-->
             <template v-if="this.comments && this.comments.length > 0">
                 <div
-                    class="max-h-full w-full overflow-y-scroll bg-yellow-50 p-1 text-center text-sm text-gray-900"
+                    class="overflow-y-scroll bg-yellow-50 p-1 text-center text-sm text-gray-900"
                 >
                     <!--                    <div-->
                     <!--                        class="flex justify-between rounded-md text-xs text-gray-900"-->

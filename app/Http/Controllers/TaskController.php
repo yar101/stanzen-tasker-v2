@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use App\Models\Contractor;
+use App\Models\Department;
 use App\Models\Status;
 use App\Models\Task;
 use App\Models\User;
@@ -23,8 +24,8 @@ class TaskController extends Controller
             ->with('subtasks', 'comments', 'subtasks.comments', 'contractor')
             ->get();
         $contractors = Contractor::all();
-        $statuses = Status::all();
-        $users = User::where('role_id', '!=', 2)->get();
+        $statuses = Status::all()->where('department_id', '=', auth()->user()->department_id);
+        $users = User::where('role_id', '!=', 1)->get();
         $currentUserRole = auth()->user()->role->name;
 
         return Inertia::render('Tasks/Index', [

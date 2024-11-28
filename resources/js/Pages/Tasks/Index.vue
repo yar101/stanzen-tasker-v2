@@ -123,7 +123,7 @@ export default {
             this.form.description = '';
             this.form.contractor = 1;
             this.form.cost = '';
-            this.form.manager = null;
+            this.form.manager = this.$page.props.auth.user.id;
             this.form.currency = 'RUB';
             this.form.priority = 'III';
             this.isCreateModalOpen = true;

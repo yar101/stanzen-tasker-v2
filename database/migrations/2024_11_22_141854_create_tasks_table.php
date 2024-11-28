@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Department;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Status;
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->foreignIdFor(User::class, 'manager')->nullable()->constrained();
             $table->foreignIdFor(Status::class, 'status')->default(2)->constrained();
             $table->foreignIdFor(Contractor::class, 'contractor')->default(1)->constrained();
+            $table->foreignIdFor(Department::class, 'department_id')->default(1)->constrained();
             $table->date('deadline_start')->nullable();
             $table->date('deadline_end')->nullable();
             $table->float('cost')->default(0);
