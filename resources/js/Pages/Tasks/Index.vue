@@ -104,6 +104,7 @@ export default {
     },
 
     methods: {
+
         getStatusName(statusId) {
             const status = this.statuses.find(
                 (status) => status.id === statusId,

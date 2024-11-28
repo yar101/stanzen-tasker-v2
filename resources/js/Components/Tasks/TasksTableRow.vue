@@ -127,7 +127,7 @@ export default {
                 :class="
                     this.task.is_subtask === 1 ? 'mr-2 flex justify-end' : ''
                 "
-                class="w-[12rem]"
+                class="max-w-[10rem]"
             >
                 <select
                     v-model="this.task.status"
@@ -148,7 +148,7 @@ export default {
                             ? 'border-green-500 bg-green-200 text-green-800 hover:bg-green-300 hover:text-green-900'
                             : '',
                     ]"
-                    class="ml-3 rounded-lg text-sm transition-all focus:ring-0"
+                    class="ml-3 rounded-lg text-sm transition-colors focus:ring-0"
                     @change="updateStatus(this.task)"
                 >
                     <option
@@ -253,9 +253,7 @@ export default {
         </td>
 
         <td class="text-sm text-gray-900">
-            <div
-                class="flex flex-col items-center justify-center"
-            >
+            <div class="flex flex-col items-center justify-center">
                 <div class="text-center">
                     {{ this.task.cost }}
                 </div>
