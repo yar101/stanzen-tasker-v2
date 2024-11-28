@@ -2,14 +2,15 @@
 
 namespace Database\Seeders;
 
+use App\Imports\ContractorsImport;
 use App\Models\Contractor;
 use App\Models\Department;
 use App\Models\Role;
 use App\Models\Status;
-use App\Models\Task;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
@@ -26,6 +27,7 @@ class DatabaseSeeder extends Seeder
         Contractor::create(['name' => 'Без контрагента']);
 
         // export contractors
+//        Excel::import(new ContractorsImport, 'contractors.xlsx');
 
 
         // Create Departments
