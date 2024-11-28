@@ -225,7 +225,7 @@ export default {
                 <!--                По статусу-->
                 <div class="">
                     <button
-                        class="rounded-md bg-amber-300/80 px-3 py-1 text-sm font-semibold shadow-md transition-all duration-100 ease-in-out hover:bg-amber-400/80 active:translate-y-[3px] active:ring-0"
+                        class="rounded-md bg-amber-300/80 px-3 py-1 text-sm font-medium shadow-md transition-all duration-100 ease-in-out hover:bg-amber-400/80 active:translate-y-[3px] active:ring-0"
                         @click="filterByStatusesModal = !filterByStatusesModal"
                     >
                         Фильтр по статусу
@@ -261,7 +261,7 @@ export default {
                                         ? 'border-green-500 bg-green-200 text-green-800 hover:bg-green-300 hover:text-green-900'
                                         : '',
                                 ]"
-                                class="flex items-center gap-1 rounded border bg-opacity-90 p-1 text-sm font-semibold transition-all duration-100 ease-in-out hover:shadow-md"
+                                class="flex select-none items-center gap-1 rounded border bg-opacity-90 p-1 text-sm font-semibold transition-all duration-100 ease-in-out hover:shadow-md"
                             >
                                 <input
                                     v-model="selectedStatuses"
@@ -278,7 +278,7 @@ export default {
                 <!--                Фильтр по пользователю-->
                 <div class="">
                     <button
-                        class="rounded-md bg-amber-300/80 px-3 py-1 text-sm font-semibold shadow-md transition-all duration-100 ease-in-out hover:bg-amber-400/80 active:translate-y-[3px] active:ring-0"
+                        class="rounded-md bg-amber-300/80 px-3 py-1 text-sm font-medium shadow-md transition-all duration-100 ease-in-out hover:bg-amber-400/80 active:translate-y-[3px] active:ring-0"
                         @click="filterByUserModal = !filterByUserModal"
                     >
                         Фильтр по исполнителю
@@ -302,7 +302,7 @@ export default {
                                         ? 'border-amber-500 bg-amber-200 text-amber-900 hover:bg-amber-300 hover:text-amber-900'
                                         : 'border-amber-300 bg-gray-100/60 text-gray-900 hover:bg-amber-200 hover:text-amber-900',
                                 ]"
-                                class="flex items-center gap-1 rounded border p-1 text-sm font-medium transition-all duration-100 ease-in-out hover:shadow-md"
+                                class="flex select-none items-center gap-1 rounded border p-1 text-sm font-medium transition-all duration-100 ease-in-out hover:shadow-md"
                             >
                                 <input
                                     v-model="selectedUsers"
