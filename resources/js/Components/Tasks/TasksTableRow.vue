@@ -272,7 +272,7 @@ export default {
         <td>
             <!--                  Last comment-->
             <template v-if="this.comments && this.comments.length > 0">
-                <div class="m-1 max-w-[15rem] rounded-md bg-yellow-100">
+                <div class="flex items-center justify-center">
                     <!--                    <div-->
                     <!--                        class="flex justify-between rounded-md text-xs text-gray-900"-->
                     <!--                    >-->
@@ -296,7 +296,7 @@ export default {
                     <!--                        </div>-->
                     <!--                    </div>-->
                     <div
-                        class="max-h-[2.5rem] overflow-scroll rounded-md border border-yellow-300 pb-1 text-center text-sm text-gray-900"
+                        class="max-h-[3.5rem] max-w-[30rem] overflow-scroll rounded-md border border-yellow-300 bg-amber-100 px-2 text-center text-sm text-gray-900"
                     >
                         {{ task.comments[0].content }}
                     </div>
