@@ -13,12 +13,7 @@ import {
     IoPersonSharp,
 } from 'oh-vue-icons/icons';
 
-addIcons(
-    IoPersonSharp,
-    BiCurrencyExchange,
-    FaCommentAlt,
-    BiBarChartLineFill,
-);
+addIcons(IoPersonSharp, BiCurrencyExchange, FaCommentAlt, BiBarChartLineFill);
 
 export default {
     components: {
@@ -63,6 +58,13 @@ export default {
                 );
             }
 
+            // Фильтрация по пользователям
+            if (this.selectedUsers.length > 0) {
+                filteredTasks = filteredTasks.filter((task) =>
+                    this.selectedUsers.includes(task.manager),
+                );
+            }
+
             // Фильтрация по текстовому запросу
             const query = this.searchQuery.toLowerCase();
             return filteredTasks.filter((task) => {
@@ -90,9 +92,14 @@ export default {
                 cost: 0.0,
                 currency: 'RUB',
             }),
-            selectedStatuses: [1, 2, 3],
-            filterByStatusesModal: false,
+
             searchQuery: '',
+
+            filterByStatusesModal: false,
+            selectedStatuses: [1, 2, 3],
+
+            filterByUserModal: false,
+            selectedUsers: [this.$page.props.auth.user.id],
         };
     },
 
@@ -214,7 +221,7 @@ export default {
 
         <div class="mx-auto overflow-x-auto overflow-y-scroll px-5 pb-5 pt-5">
             <!--            Фильтры-->
-            <div class="mb-5 flex items-center justify-between gap-5 text-sm">
+            <div class="mb-5 flex items-center justify-start gap-5 text-sm">
                 <!--                По статусу-->
                 <div class="">
                     <button
@@ -229,7 +236,7 @@ export default {
                                 ? 'block translate-x-0'
                                 : 'translate-x-[-1000px]'
                         "
-                        class="absolute ml-2 mt-2 flex w-fit flex-col gap-2 rounded-md border border-blue-500 bg-blue-600/30 px-3 py-3 shadow-md backdrop-blur-lg transition-all duration-200"
+                        class="absolute mt-2 flex w-fit flex-col gap-2 rounded-md border border-blue-500 bg-blue-600/30 px-3 py-3 shadow-md backdrop-blur-lg transition-all duration-200"
                     >
                         <div
                             v-for="status in statuses"
@@ -263,6 +270,47 @@ export default {
                                     type="checkbox"
                                 />
                                 {{ status.name }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!--                Фильтр по пользователю-->
+                <div class="">
+                    <button
+                        class="rounded-md bg-amber-300/80 px-3 py-1 text-sm font-semibold shadow-md transition-all duration-100 ease-in-out hover:bg-amber-400/80 active:translate-y-[3px] active:ring-0"
+                        @click="filterByUserModal = !filterByUserModal"
+                    >
+                        Фильтр по исполнителю
+                    </button>
+                    <div
+                        :class="
+                            filterByUserModal
+                                ? 'block translate-x-0'
+                                : 'translate-x-[-1000px]'
+                        "
+                        class="absolute mt-2 flex w-fit flex-col gap-2 rounded-md border border-blue-500 bg-blue-600/30 px-3 py-3 shadow-md backdrop-blur-lg transition-all duration-200"
+                    >
+                        <div
+                            v-for="user in users"
+                            :key="user.id"
+                            class="w-full"
+                        >
+                            <label
+                                :class="[
+                                    selectedUsers.includes(user.id)
+                                        ? 'border-amber-500 bg-amber-200 text-amber-900 hover:bg-amber-300 hover:text-amber-900'
+                                        : 'border-amber-300 bg-gray-100/60 text-gray-900 hover:bg-amber-200 hover:text-amber-900',
+                                ]"
+                                class="flex items-center gap-1 rounded border p-1 text-sm font-medium transition-all duration-100 ease-in-out hover:shadow-md"
+                            >
+                                <input
+                                    v-model="selectedUsers"
+                                    :value="user.id"
+                                    class="h-[14px] w-[13px] border border-gray-400 bg-neutral-100 text-blue-600 checked:bg-blue-500 hover:checked:bg-blue-600 focus:ring-0 focus:checked:bg-blue-500"
+                                    type="checkbox"
+                                />
+                                {{ user.name }}
                             </label>
                         </div>
                     </div>
