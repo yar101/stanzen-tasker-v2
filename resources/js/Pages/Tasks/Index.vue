@@ -119,7 +119,7 @@ export default {
             this.form.parent_task = task.id;
             this.form.title = task.title;
             this.form.description = '';
-            this.form.contractor = task.contractor;
+            this.form.contractor = task.contractor.id;
             this.form.cost = null;
             this.form.manager = task.manager;
             this.form.currency = task.currency;
@@ -283,7 +283,7 @@ export default {
                     <input
                         v-model="searchQuery"
                         class="h-8 w-full rounded-r-md border border-blue-200 px-2 text-sm text-gray-700 outline-none transition-all focus:border-none focus:bg-blue-200 focus:shadow-xl focus:ring-0"
-                        placeholder="Поиск по теме и описанию..."
+                        placeholder="Поиск..."
                         type="text"
                     />
                 </div>
