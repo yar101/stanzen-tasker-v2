@@ -7,19 +7,19 @@ use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    redirect('/dashboard');
-//    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-//    return Inertia::render('Dashboard', [
-//        'canLogin' => Route::has('login'),
-//        'canRegister' => Route::has('register'),
-//        'laravelVersion' => Application::VERSION,
-//        'phpVersion' => PHP_VERSION,
-//    ]);
-//})->middleware('auth');
+//Route::get('/', function () {
+//    redirect('/dashboard');
+////    return Inertia::render('Dashboard');
+//})->middleware(['auth', 'verified'])->name('dashboard');
+////    return Inertia::render('Dashboard', [
+////        'canLogin' => Route::has('login'),
+////        'canRegister' => Route::has('register'),
+////        'laravelVersion' => Application::VERSION,
+////        'phpVersion' => PHP_VERSION,
+////    ]);
+////})->middleware('auth');
 
-Route::get('/dashboard', function () {
+Route::get('/', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
