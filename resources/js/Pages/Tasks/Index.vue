@@ -364,9 +364,9 @@ export default {
             <!-- Таблица -->
             <table
                 v-if="tasks.length > 0"
-                class="w-full table-auto rounded-md border border-gray-300 shadow-md"
+                class="w-full table-auto overflow-hidden rounded-md border-none border-transparent bg-white shadow-lg"
             >
-                <thead class="border-b border-gray-300 bg-neutral-200">
+                <thead class="bg-neutral-200">
                     <tr>
                         <th
                             class="text-center text-sm font-medium text-gray-700"

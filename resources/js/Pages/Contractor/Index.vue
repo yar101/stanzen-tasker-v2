@@ -107,9 +107,9 @@ export default {
         <div class="mx-auto max-w-[40rem] overflow-x-auto rounded-md pb-5 pt-5">
             <!-- Таблица -->
             <table
-                class="min-w-[38rem] divide-y divide-gray-200 rounded-md border border-gray-200 shadow"
+                class="m-5 min-w-[38rem] divide-y divide-gray-200 overflow-hidden rounded-md border border-none border-gray-200 border-transparent shadow-lg"
             >
-                <thead class="bg-neutral-100">
+                <thead class="bg-neutral-200">
                     <tr>
                         <th
                             class="flex items-center justify-between px-4 py-2 text-start text-sm font-medium text-gray-700"
