@@ -51,6 +51,15 @@ export default {
     },
 
     methods: {
+        isDeadlineApproaching(deadline) {
+            if (!deadline) return false;
+            const deadlineDate = new Date(deadline);
+            const today = new Date();
+            const twoDaysLater = today.setDate(today.getDate() + 2); // Add 2 days to today's date
+
+            return deadlineDate <= twoDaysLater;
+        },
+
         openEditModal() {
             this.$emit('open-edit-modal', this.task);
         },
@@ -124,9 +133,7 @@ export default {
             class="text-sm text-gray-900"
         >
             <div
-                :class="
-                    this.task.is_subtask === 1 ? 'ml-[5rem]' : ''
-                "
+                :class="this.task.is_subtask === 1 ? 'ml-[5rem]' : ''"
                 class="w-fit max-w-[10rem]"
             >
                 <select
@@ -245,7 +252,12 @@ export default {
             <div class="text-center text-sm text-gray-900">
                 <input
                     v-model="this.task.deadline_end"
-                    class="rounded-md border-none text-sm focus:bg-blue-100 focus:ring-0"
+                    :class="
+                        isDeadlineApproaching(task.deadline_end)
+                            ? 'bg-red-400 text-black shadow-md shadow-red-300 ring-1 ring-neutral-600/50 focus:bg-red-500'
+                            : ''
+                    "
+                    class="rounded-md border-none text-sm ring-1 ring-neutral-500/50 transition-all duration-200 ease-in-out hover:shadow-md focus:bg-blue-100"
                     type="date"
                     @blur="updateDeadline(this.task)"
                 />
