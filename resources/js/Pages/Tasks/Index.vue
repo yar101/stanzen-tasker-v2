@@ -11,9 +11,16 @@ import {
     BiCurrencyExchange,
     FaCommentAlt,
     IoPersonSharp,
+    MdErroroutlineRound,
 } from 'oh-vue-icons/icons';
 
-addIcons(IoPersonSharp, BiCurrencyExchange, FaCommentAlt, BiBarChartLineFill);
+addIcons(
+    IoPersonSharp,
+    BiCurrencyExchange,
+    FaCommentAlt,
+    BiBarChartLineFill,
+    MdErroroutlineRound,
+);
 
 export default {
     components: {
@@ -104,7 +111,6 @@ export default {
     },
 
     methods: {
-
         getStatusName(statusId) {
             const status = this.statuses.find(
                 (status) => status.id === statusId,
@@ -210,7 +216,7 @@ export default {
 
     <AuthenticatedLayout>
         <template #nav-buttons>
-            <div class="">
+            <div :class="tasks.length === 0 ? 'hidden' : ''" class="">
                 <button
                     class="m-2 rounded bg-green-500 px-3 py-1 text-sm text-white transition-all duration-100 hover:bg-green-500/90 hover:shadow-md active:translate-y-[3px] active:shadow-inner active:ring-0"
                     @click="openCreateModal"
@@ -222,7 +228,10 @@ export default {
 
         <div class="mx-auto overflow-x-auto overflow-y-scroll px-5 pb-5 pt-5">
             <!--            Фильтры-->
-            <div class="mb-5 flex items-center justify-start gap-5 text-sm">
+            <div
+                :class="tasks.length === 0 ? 'hidden' : ''"
+                class="mb-5 flex items-center justify-start gap-5 text-sm"
+            >
                 <!--                По статусу-->
                 <div class="">
                     <button
@@ -464,15 +473,15 @@ export default {
 
             <div
                 v-if="filteredTasks.length === 0 || tasks.length === 0"
-                class="w-full px-4 py-2 text-center text-2xl text-gray-500"
+                class="mx-auto flex h-[20rem] w-[40rem] flex-col items-center justify-evenly border-2 border-dotted border-gray-300 px-4 py-2 text-center text-xl text-gray-500"
             >
                 Задачи не найдены
-                <br />
+                <v-icon name="md-erroroutline-round" scale="5" />
                 <button
-                    class="m-2 w-[200px] rounded bg-green-500 px-3 py-1 text-[22px] text-white transition-all duration-100 hover:bg-green-500/90 hover:shadow-md active:translate-y-[3px] active:shadow-inner active:ring-0"
+                    class="text-md m-2 w-[200px] rounded bg-green-500 px-3 py-1 text-white transition-all duration-100 hover:bg-green-500/90 hover:shadow-md active:translate-y-[3px] active:shadow-inner active:ring-0"
                     @click="openCreateModal"
                 >
-                    СОЗДАТЬ
+                    Создать задачу
                 </button>
             </div>
         </div>
