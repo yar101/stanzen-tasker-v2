@@ -473,7 +473,7 @@ export default {
 
             <div
                 v-if="filteredTasks.length === 0 || tasks.length === 0"
-                class="mx-auto flex h-[20rem] w-[40rem] flex-col items-center justify-evenly border-2 border-dotted border-gray-300 px-4 py-2 text-center text-xl text-gray-500"
+                class="mx-auto mb-10 mt-10 flex h-[20rem] w-[40rem] flex-col items-center justify-evenly rounded-md border-2 border-dotted border-gray-300 bg-neutral-200/50 px-4 py-2 text-center text-xl text-gray-500 text-red-400 shadow-xl"
             >
                 Задачи не найдены
                 <v-icon name="md-erroroutline-round" scale="5" />
