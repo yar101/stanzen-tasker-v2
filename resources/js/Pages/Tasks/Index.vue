@@ -81,7 +81,8 @@ export default {
                 return (
                     task.title.toLowerCase().includes(query) ||
                     task.description.toLowerCase().includes(query) ||
-                    task.contractor.name.toLowerCase().includes(query)
+                    task.contractor.name.toLowerCase().includes(query) ||
+                    task.id.toString().toLowerCase().includes(query)
                 );
             });
         },
