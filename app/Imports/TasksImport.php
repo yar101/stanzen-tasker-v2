@@ -19,11 +19,11 @@ class TasksImport implements ToCollection
             ]);
 
             $task = Task::create([
-                'title' => $row[0],
-                'description' => $row[1],
+                'title' => $row[0] ? $row[0] : 'Без темы',
+                'description' => $row[1] ? $row[1] : 'Без описания',
                 'manager' => $row[2],
                 'status' => $row[3],
-                'contractor' => Contractor::firstWhere('name', $row[4])->id,
+                'contractor' => $row[4] ? Contractor::firstWhere('name', $row[4])->id : 1,
                 'cost' => $row[5] ? $row[5] : 0,
                 'currency' => $row[6] ? $row[6] : 'RUB',
                 'priority' => $row[7],

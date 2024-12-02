@@ -19,7 +19,7 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('description')->nullable();
+            $table->text('description');
             $table->foreignIdFor(User::class, 'created_by')->nullable()->constrained();
             $table->foreignIdFor(User::class, 'manager')->nullable()->constrained();
             $table->foreignIdFor(Status::class, 'status')->default(2)->constrained();
