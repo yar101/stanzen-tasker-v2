@@ -24,7 +24,7 @@ class TasksImport implements ToCollection
                 'manager' => $row[2],
                 'status' => $row[3],
                 'contractor' => Contractor::firstWhere('name', $row[4])->id,
-                'cost' => $row[5],
+                'cost' => $row[5] ? $row[5] : 0,
                 'currency' => $row[6] ? $row[6] : 'RUB',
                 'priority' => $row[7],
             ]);

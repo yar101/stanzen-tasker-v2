@@ -27,7 +27,7 @@ return new class extends Migration
             $table->foreignIdFor(Department::class, 'department_id')->default(1)->constrained();
             $table->date('deadline_start')->nullable();
             $table->date('deadline_end')->nullable();
-            $table->decimal('cost', 15, 2)->nullable()->default(0);
+            $table->decimal('cost', 15, 2)->default(0);
             $table->foreignIdFor(Task::class, 'parent_task')->nullable()->constrained();
             $table->boolean('is_subtask')->default(false);
             $table->string('currency');
