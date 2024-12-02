@@ -1,9 +1,12 @@
 <script>
 import { useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import TaskCommentsModal from '@/Components/Tasks/TaskCommentsModal.vue';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
 
 export default {
-    components: { TaskCommentsModal },
+    components: { TaskCommentsModal, VueDatePicker, ref },
     inheritAttrs: false,
     props: {
         task: {
@@ -37,6 +40,17 @@ export default {
         'update-status',
         'update-deadline',
     ],
+
+    setup() {
+        const format = (date) => {
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            return `${day}.${month}.${year}`;
+        };
+
+        return { format };
+    },
 
     data() {
         return {
@@ -82,10 +96,13 @@ export default {
         },
 
         updateDeadline(task) {
+            const formattedDate = new Date(task.deadline_end)
+                .toISOString()
+                .split('T')[0];
             this.$inertia.patch(
                 route('tasks.updateDeadline', {
                     task,
-                    deadline_end: task.deadline_end,
+                    deadline_end: formattedDate,
                 }),
             );
         },
@@ -249,18 +266,44 @@ export default {
         </td>
 
         <td>
-            <div class="text-center text-sm text-gray-900">
-                <input
-                    v-model="this.task.deadline_end"
+            <div class="flex items-center justify-center text-sm text-gray-900">
+                <VueDatePicker
+                    v-model="task.deadline_end"
                     :class="
                         isDeadlineApproaching(task.deadline_end)
-                            ? 'bg-red-400 text-black shadow-md shadow-red-300 ring-1 ring-neutral-600/50 focus:bg-red-500'
+                            ? 'box-border rounded-md border-[2px] border-red-400 shadow-lg shadow-red-500/50'
                             : ''
                     "
-                    class="rounded-md border-none text-sm ring-1 ring-neutral-500/50 transition-all duration-200 ease-in-out hover:shadow-md focus:bg-blue-100"
-                    type="date"
-                    @blur="updateDeadline(this.task)"
+                    :clearable="false"
+                    :enable-time-picker="false"
+                    :format="format"
+                    cancel-text="Отмена"
+                    class="max-w-[9rem]"
+                    locale="ru"
+                    select-text="Подтвердить"
+                    @blur="updateDeadline(task)"
                 />
+                <!--                {{-->
+                <!--                    new Date(this.task.deadline_end).toLocaleDateString(-->
+                <!--                        'ru-RU',-->
+                <!--                        {-->
+                <!--                            day: '2-digit',-->
+                <!--                            month: '2-digit',-->
+                <!--                            year: 'numeric',-->
+                <!--                        },-->
+                <!--                    )-->
+                <!--                }}-->
+                <!--                <input-->
+                <!--                    v-model="this.task.deadline_end"-->
+                <!--                                    :class="-->
+                <!--                                        isDeadlineApproaching(task.deadline_end)-->
+                <!--                                            ? 'bg-red-400 text-black shadow-md shadow-red-300 ring-1 ring-neutral-600/50 focus:bg-red-500'-->
+                <!--                                            : ''-->
+                <!--                                    "-->
+                <!--                    class="rounded-md border-none text-sm ring-1 ring-neutral-500/50 transition-all duration-200 ease-in-out hover:shadow-md focus:bg-blue-100"-->
+                <!--                    type="date"-->
+                <!--                    @blur="updateDeadline(this.task)"-->
+                <!--                />-->
             </div>
         </td>
 
