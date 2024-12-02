@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Imports\ContractorsImport;
+use App\Imports\TasksImport;
 use App\Models\Contractor;
 use App\Models\Department;
 use App\Models\Role;
@@ -109,5 +110,8 @@ class DatabaseSeeder extends Seeder
         Status::create(['name' => 'ON HOLD', 'department_id' => Department::where('name', 'Инструменты')->first()->id]);
         Status::create(['name' => 'DELAY', 'department_id' => Department::where('name', 'Инструменты')->first()->id]);
         Status::create(['name' => 'DONE', 'department_id' => Department::where('name', 'Инструменты')->first()->id]);
+
+        // TasksImport
+        Excel::import(new TasksImport, 'tools_tasks.xlsx');
     }
 }
