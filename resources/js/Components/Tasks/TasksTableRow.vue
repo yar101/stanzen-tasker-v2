@@ -277,6 +277,8 @@ export default {
                     :clearable="false"
                     :enable-time-picker="false"
                     :format="format"
+                    :action-row="{ showNow: true }"
+                    now-button-label="Сегодня"
                     cancel-text="Отмена"
                     class="max-w-[9rem]"
                     locale="ru"
