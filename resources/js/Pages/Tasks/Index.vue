@@ -1,6 +1,6 @@
 <script>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, useForm, WhenVisible } from '@inertiajs/vue3';
 import InputError from '@/Components/InputError.vue';
 import TextInput from '@/Components/TextInput.vue';
 import InputLabel from '@/Components/InputLabel.vue';
@@ -11,6 +11,7 @@ import {
     BiCurrencyExchange,
     FaCommentAlt,
     IoPersonSharp,
+    MdDownloadingRound,
     MdErroroutlineRound,
 } from 'oh-vue-icons/icons';
 
@@ -20,10 +21,12 @@ addIcons(
     FaCommentAlt,
     BiBarChartLineFill,
     MdErroroutlineRound,
+    MdDownloadingRound,
 );
 
 export default {
     components: {
+        WhenVisible,
         TasksTableRow,
         InputLabel,
         TextInput,
@@ -436,19 +439,37 @@ export default {
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
                     <template v-for="task in filteredTasks" :key="task.id">
-                        <TasksTableRow
-                            v-if="!task.is_subtask"
-                            :comments="task.comments"
-                            :contractors="contractors"
-                            :errors="errors"
-                            :statuses="statuses"
-                            :task="task"
-                            :users="users"
-                            @open-edit-modal="openEditModal"
-                            @open-create-subtask-modal="openCreateSubtaskModal"
-                            @update-status="updateStatus"
-                            @update-deadline="updateDeadline"
-                        />
+                        <WhenVisible data="task" always>
+                            <template #fallback>
+                                <tr
+                                    class="group transition-all duration-100 ease-in-out [&>td]:border-s-2 [&>td]:border-dotted [&>td]:border-gray-500"
+                                >
+                                    <td class="" colspan="12">
+                                        Задача {{ task.id }}
+                                        загружается
+                                        <v-icon
+                                            class="text-blue-500"
+                                            name="md-downloading-round"
+                                        />
+                                    </td>
+                                </tr>
+                            </template>
+                            <TasksTableRow
+                                v-if="!task.is_subtask"
+                                :comments="task.comments"
+                                :contractors="contractors"
+                                :errors="errors"
+                                :statuses="statuses"
+                                :task="task"
+                                :users="users"
+                                @open-edit-modal="openEditModal"
+                                @open-create-subtask-modal="
+                                    openCreateSubtaskModal
+                                "
+                                @update-status="updateStatus"
+                                @update-deadline="updateDeadline"
+                            />
+                        </WhenVisible>
                         <template
                             v-if="task.subtasks && task.subtasks.length > 0"
                         >
