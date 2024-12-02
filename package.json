@@ -28,6 +28,7 @@
     },
     "dependencies": {
         "@vue/language-server": "^2.1.10",
+        "@vuepic/vue-datepicker": "^10.0.0",
         "oh-vue-icons": "^1.0.0-rc3"
     }
 }
