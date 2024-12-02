@@ -48,10 +48,13 @@ class DatabaseSeeder extends Seeder
             'role_id' => Role::where('name', 'admin')->first()->id
         ]);
 
+
         // Create Users
         $userRole = Role::where('name', 'user')->first()->id;
         $headOfDepartmentRole = Role::where('name', 'head-of-department')->first()->id;
         $toolsDepartment = Department::where('name', 'Инструменты')->first()->id;
+
+
         // Инструменты
         User::create([
             'name' => 'Евгений Голосных',
@@ -113,5 +116,23 @@ class DatabaseSeeder extends Seeder
 
         // TasksImport
         Excel::import(new TasksImport, 'tools_tasks.xlsx');
+
+        // Антон Андреев
+        User::create([
+            'name' => 'Антон Андреев',
+            'email' => 'andreev@stnzn.ru',
+            'password' => Hash::make('0000'),
+            'role_id' => $headOfDepartmentRole,
+            'department_id' => $toolsDepartment,
+        ]);
+
+        User::create([
+           'name' => 'Андрей Разумов',
+           'email' => 'razumov@stnzn.ru',
+           'password' => Hash::make('0000'),
+           'role_id' => Role::where('name', 'admin')->first()->id
+        ]);
+
+
     }
 }
