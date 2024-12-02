@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Models\Comment;
 use App\Models\Contractor;
 use App\Models\Task;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Illuminate\Support\Collection;
 
@@ -27,6 +28,7 @@ class TasksImport implements ToCollection
                 'cost' => $row[5] ? $row[5] : 0,
                 'currency' => $row[6] ? $row[6] : 'RUB',
                 'priority' => $row[7],
+                'deadline_start' => Carbon::now(),
             ]);
 
             if ($row[8]) {
