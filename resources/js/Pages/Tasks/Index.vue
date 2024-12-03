@@ -156,7 +156,7 @@ export default {
                 description: '',
                 contractor: 1,
                 manager: 0,
-                cost: 0.0,
+                cost: 0,
                 currency: 'RUB',
             }),
 
@@ -676,7 +676,7 @@ export default {
                         <TextInput
                             v-model="form.cost"
                             class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-0"
-                            type="text"
+                            model-value="0"
                         />
                         <select
                             v-model="form.currency"
@@ -820,7 +820,7 @@ export default {
                         <TextInput
                             v-model="form.cost"
                             class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-0"
-                            type="text"
+                            model-value="0"
                         />
                         <select
                             v-model="form.currency"
