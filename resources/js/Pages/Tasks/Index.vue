@@ -61,6 +61,11 @@ export default {
         if (this.currentUserRole === 'head-of-department') {
             this.selectAllUsersInFilter();
         }
+        document.addEventListener('mousedown', this.closeFilters);
+    },
+
+    beforeUnmount() {
+        document.removeEventListener('mousedown', this.closeFilters);
     },
 
     computed: {
@@ -112,15 +117,31 @@ export default {
 
             searchQuery: '',
 
-            filterByStatusesModal: false,
+            filterByStatuses: false,
             selectedStatuses: [1, 2, 3],
 
-            filterByUserModal: false,
+            filterByUser: false,
             selectedUsers: [this.$page.props.auth.user.id],
         };
     },
 
     methods: {
+        closeFilters(event) {
+            console.log('close filters');
+            const statusModal = this.$refs.filterByStatusesModal;
+            const userModal = this.$refs.filterByUserModal;
+
+            if (
+                statusModal &&
+                !statusModal.contains(event.target) &&
+                userModal &&
+                !userModal.contains(event.target)
+            ) {
+                this.filterByStatuses = false;
+                this.filterByUser = false;
+            }
+        },
+
         selectAllUsersInFilter() {
             this.selectedUsers = this.users.map((user) => user.id);
         },
@@ -250,13 +271,14 @@ export default {
                 <div class="">
                     <button
                         class="rounded-md bg-amber-300/80 px-3 py-1 text-sm font-medium shadow-md transition-all duration-100 ease-in-out hover:bg-amber-400/80 active:translate-y-[3px] active:ring-0"
-                        @click="filterByStatusesModal = !filterByStatusesModal"
+                        @click="filterByStatuses = !filterByStatuses"
                     >
                         Фильтр по статусу
                     </button>
                     <div
+                        ref="filterByStatusesModal"
                         :class="
-                            filterByStatusesModal
+                            filterByStatuses
                                 ? 'block translate-x-0'
                                 : 'translate-x-[-1000px]'
                         "
@@ -303,13 +325,14 @@ export default {
                 <div class="">
                     <button
                         class="rounded-md bg-amber-300/80 px-3 py-1 text-sm font-medium shadow-md transition-all duration-100 ease-in-out hover:bg-amber-400/80 active:translate-y-[3px] active:ring-0"
-                        @click="filterByUserModal = !filterByUserModal"
+                        @click.stop="filterByUser = !filterByUser"
                     >
                         Фильтр по исполнителю
                     </button>
                     <div
+                        ref="filterByUserModal"
                         :class="
-                            filterByUserModal
+                            filterByUser
                                 ? 'block translate-x-0'
                                 : 'translate-x-[-1000px]'
                         "
