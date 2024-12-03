@@ -80,7 +80,7 @@ export default {
                                         ? 'justify-end'
                                         : 'justify-between'
                                 "
-                                class="flex items-center px-2 text-xs text-gray-500"
+                                class="mb-1 flex items-center px-1 text-xs text-gray-500"
                             >
                                 <div
                                     v-if="
