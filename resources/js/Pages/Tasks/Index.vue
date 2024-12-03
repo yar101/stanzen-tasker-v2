@@ -163,7 +163,7 @@ export default {
             searchQuery: '',
 
             filterByStatuses: false,
-            selectedStatuses: [1, 2, 3],
+            selectedStatuses: [1, 2, 3, 5],
 
             filterByUser: false,
             selectedUsers: [this.$page.props.auth.user.id],
