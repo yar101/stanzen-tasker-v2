@@ -104,7 +104,7 @@ export default {
 <template>
     <Head title="Контрагенты" />
     <AuthenticatedLayout>
-        <div class="mx-auto max-w-[40rem] overflow-x-auto rounded-md pb-5 pt-5">
+        <div class="mx-auto w-fit overflow-hidden rounded-md pb-5 pt-5">
             <!-- Таблица -->
             <table
                 class="m-5 min-w-[38rem] divide-y divide-gray-200 overflow-hidden rounded-md border border-none border-gray-200 border-transparent shadow-lg"

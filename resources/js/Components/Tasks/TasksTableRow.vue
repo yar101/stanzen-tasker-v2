@@ -324,7 +324,7 @@ export default {
             <!--                  Last comment-->
             <template v-if="this.comments && this.comments.length > 0">
                 <div
-                    class="overflow-y-scroll bg-yellow-50 p-1 text-center text-sm text-gray-900"
+                    class="overflow-y-scroll p-1 text-center text-sm text-gray-900"
                 >
                     <!--                    <div-->
                     <!--                        class="flex justify-between rounded-md text-xs text-gray-900"-->
