@@ -57,6 +57,12 @@ export default {
         currentUserRole: String,
     },
 
+    mounted() {
+        if (this.currentUserRole === 'head-of-department') {
+            this.selectAllUsersInFilter();
+        }
+    },
+
     computed: {
         filteredTasks() {
             let filteredTasks = this.tasks;
@@ -115,6 +121,10 @@ export default {
     },
 
     methods: {
+        selectAllUsersInFilter() {
+            this.selectedUsers = this.users.map((user) => user.id);
+        },
+
         getStatusName(statusId) {
             const status = this.statuses.find(
                 (status) => status.id === statusId,
@@ -440,7 +450,7 @@ export default {
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
                     <template v-for="task in filteredTasks" :key="task.id">
-                        <WhenVisible data="task" always>
+                        <WhenVisible always data="task">
                             <template #fallback>
                                 <tr
                                     class="group transition-all duration-100 ease-in-out [&>td]:border-s-2 [&>td]:border-dotted [&>td]:border-gray-500"
