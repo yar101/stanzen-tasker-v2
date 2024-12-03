@@ -145,7 +145,6 @@ export default {
                         >
                             <span>{{ contractor.name }}</span>
                             <button
-                                v-if="currentUserRole !== 'user'"
                                 class="translate-x-10 rounded bg-blue-500 px-3 py-1 text-sm text-white opacity-0 transition-all hover:bg-blue-600 hover:shadow-md group-hover:translate-x-0 group-hover:opacity-100 group-hover:shadow-md"
                                 @click="openEditModal(contractor)"
                             >
