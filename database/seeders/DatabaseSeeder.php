@@ -133,6 +133,10 @@ class DatabaseSeeder extends Seeder
            'role_id' => Role::where('name', 'admin')->first()->id
         ]);
 
+        // Contractors
+
+        Contractor::firstOrCreate(['name' => 'АВТОВАЗ АО']);
+        Contractor::firstOrCreate(['name' => 'АКВАРИУМ ООО']);
 
     }
 }
