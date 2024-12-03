@@ -24,7 +24,7 @@ class TaskController extends Controller
             ->get();
         $contractors = Contractor::all();
         $statuses = Status::all();
-        $users = User::where('role_id', '!=', 1)->get();
+        $users = User::where('role_id', '!=', 1)->where('name', '!=', 'Антон Андреев')->get();
         $currentUserRole = auth()->user()->role->name;
 
         return Inertia::render('Tasks/Index', [
