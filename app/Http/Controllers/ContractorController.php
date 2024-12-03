@@ -14,7 +14,7 @@ class ContractorController extends Controller
      */
     public function index()
     {
-        $contractors = Contractor::orderByDesc('created_at')->where('id', '!=', '1')->get();
+        $contractors = Contractor::orderBy('name')->where('id', '!=', '1')->get();
         $currentUserRole = auth()->user()->role->name;
 
         return Inertia::render('Contractor/Index', [
