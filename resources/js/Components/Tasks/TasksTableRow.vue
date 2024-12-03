@@ -269,6 +269,7 @@ export default {
             <div class="flex items-center justify-center text-sm text-gray-900">
                 <VueDatePicker
                     v-model="task.deadline_end"
+                    :action-row="{ showNow: true }"
                     :class="
                         isDeadlineApproaching(task.deadline_end)
                             ? 'box-border rounded-md border-[2px] border-red-400 shadow-lg shadow-red-500/50'
@@ -277,11 +278,10 @@ export default {
                     :clearable="false"
                     :enable-time-picker="false"
                     :format="format"
-                    :action-row="{ showNow: true }"
-                    now-button-label="Сегодня"
                     cancel-text="Отмена"
                     class="max-w-[9rem]"
                     locale="ru"
+                    now-button-label="Сегодня"
                     select-text="Подтвердить"
                     @blur="updateDeadline(task)"
                 />
@@ -358,6 +358,11 @@ export default {
             <div class="flex items-center justify-center gap-1">
                 <!--                            Edit button-->
                 <button
+                    v-if="
+                        this.$page.props.auth.user.id === task.manager ||
+                        this.$page.props.auth.user.role.name !== 'user' ||
+                        this.$page.props.auth.user.id === task.created_by
+                    "
                     class="w-8 rounded-md border border-amber-300 bg-amber-100 p-1 transition-all duration-100 hover:bg-amber-200 hover:shadow-md"
                     @click="openEditModal(this.task)"
                 >
@@ -383,7 +388,6 @@ export default {
                         </g>
                     </svg>
                 </button>
-
                 <!--                            CommentButton-->
 
                 <button
