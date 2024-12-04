@@ -72,8 +72,11 @@ class TaskController extends Controller
             $newTask->update([
                 'deadline_end' => $deadlineEnd,
             ]);
+        } elseif (!($request['deadline_end']) || $request['deadline_end'] === null) {
+            $newTask->update([
+                'deadline_end' => Carbon::now()->addDays(14),
+            ]);
         };
-
 
         if ($request['cost'] === null) {
             $newTask->update([
@@ -86,15 +89,10 @@ class TaskController extends Controller
             'deadline_start' => Carbon::now(),
         ]);
 
-        if (!($request['deadline_end']) || $request['deadline_end'] === null) {
-          $newTask->update([
-              'deadline_end' => Carbon::now()->addDays(14),
-          ]);
-        };
-
         if ($request['parent_task'] != null) {
           $newTask->update([
-             'is_subtask' => true,
+            'is_subtask' => true,
+            'contractor' => Task::find($request['parent_task'])->contractor
           ]);
         };
 

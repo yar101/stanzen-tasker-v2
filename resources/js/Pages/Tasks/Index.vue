@@ -235,6 +235,9 @@ export default {
             this.form.title = String(task.title);
             this.form.description = task.description;
             this.form.contractor = task.contractor.id;
+            if (task.is_subtask) {
+                this.form.contractor = task.contractor;
+            }
             this.form.cost = task.cost;
             this.form.manager = task.manager;
             this.form.currency = task.currency;
@@ -899,7 +902,6 @@ export default {
                         <TextInput
                             v-model="form.cost"
                             class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-0"
-                            model-value="0"
                         />
                         <select
                             v-model="form.currency"
@@ -1034,7 +1036,7 @@ export default {
                             </option>
                         </select>
                     </div>
-                    <InputError :message="errors.contractor" class="mt-2" />
+                    <InputError :message="errors.manager" class="mt-2" />
                 </div>
 
                 <div class="mb-4">
@@ -1068,7 +1070,6 @@ export default {
                     <div class="flex gap-2">
                         <select
                             v-model="form.contractor"
-                            :disabled="selectedTask.contractor !== 1"
                             class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-0 disabled:bg-neutral-200 disabled:text-neutral-500"
                         >
                             <option

@@ -22,13 +22,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create Contractors
 
         // null contractor
         Contractor::create(['name' => 'Без контрагента']);
 
-        // export contractors
-//        Excel::import(new ContractorsImport, 'contractors.xlsx');
 
 
         // Create Departments
@@ -115,7 +112,7 @@ class DatabaseSeeder extends Seeder
         Status::create(['name' => 'DONE', 'department_id' => Department::where('name', 'Инструменты')->first()->id]);
 
         // TasksImport
-        Excel::import(new TasksImport, 'tools_tasks.xlsx');
+//        Excel::import(new TasksImport, 'tools_tasks.xlsx');
 
         // Антон Андреев
         User::create([

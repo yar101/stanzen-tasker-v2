@@ -378,7 +378,7 @@ export default {
                         this.$page.props.auth.user.id === task.created_by
                     "
                     class="w-8 rounded-md border border-amber-300 bg-amber-100 p-1 transition-all duration-100 hover:bg-amber-200 hover:shadow-md"
-                    @click="openEditModal(this.task)"
+                    @click="openEditModal(task)"
                 >
                     <svg
                         fill="none"
