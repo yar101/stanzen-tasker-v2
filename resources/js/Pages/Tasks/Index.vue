@@ -205,7 +205,6 @@ export default {
         },
 
         closeFilters(event) {
-            console.log('close filters');
             const statusModal = this.$refs.filterByStatusesModal;
             const userModal = this.$refs.filterByUserModal;
 

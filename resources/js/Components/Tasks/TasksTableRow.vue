@@ -278,10 +278,10 @@ export default {
                     :clearable="false"
                     :enable-time-picker="false"
                     :format="format"
+                    :min-date="new Date()"
                     cancel-text="Отмена"
                     class="max-w-[9rem]"
                     locale="ru"
-                    :min-date="new Date()"
                     now-button-label="Сегодня"
                     select-text="Подтвердить"
                     @blur="updateDeadline(task)"
@@ -323,9 +323,17 @@ export default {
 
         <td class="max-w-[20rem]">
             <!--                  Last comment-->
-            <template v-if="this.comments && this.comments.length > 0">
+            <template v-if="task.comments && task.comments.length > 0">
                 <div
-                    class="overflow-y-scroll p-1 text-center text-sm text-gray-900"
+                    v-if="task.comments.length > 1"
+                    class="ml-1 mt-1 w-fit cursor-pointer rounded border border-blue-500 bg-blue-200 px-2 text-end text-sm font-medium text-blue-900 transition-all duration-100 ease-in-out hover:bg-blue-300"
+                    @click="isCommentsModalOpen = true"
+                >
+                    {{ task.comments.length }}
+                </div>
+                <div
+                    class="m-1 mt-2 cursor-pointer overflow-y-auto rounded-md border border-transparent p-1 text-sm text-neutral-900 transition-all duration-100 ease-in-out hover:translate-y-[-3px] hover:border-blue-600 hover:bg-blue-400/50 hover:shadow-md"
+                    @click="isCommentsModalOpen = true"
                 >
                     <!--                    <div-->
                     <!--                        class="flex justify-between rounded-md text-xs text-gray-900"-->
@@ -349,7 +357,12 @@ export default {
                     <!--                            }}-->
                     <!--                        </div>-->
                     <!--                    </div>-->
-                    {{ task.comments[0].content }}
+                    <div
+                        class="cursor-pointer p-1 text-start font-medium"
+                        @click="isCommentsModalOpen = true"
+                    >
+                        {{ task.comments[0].content }}
+                    </div>
                 </div>
             </template>
         </td>

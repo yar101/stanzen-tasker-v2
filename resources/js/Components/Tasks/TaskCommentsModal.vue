@@ -58,7 +58,9 @@ export default {
         v-if="isCommentsModalOpen"
         class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50"
     >
-        <div class="w-[50rem] rounded-lg bg-white p-4 shadow-md">
+        <div
+            class="flex w-[50rem] flex-col gap-5 rounded-lg bg-white p-4 shadow-md"
+        >
             <h2 class="mb-4 text-lg font-medium text-gray-800">Комментарии</h2>
 
             <div
