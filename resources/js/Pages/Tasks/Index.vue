@@ -6,6 +6,7 @@ import TextInput from '@/Components/TextInput.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TasksTableRow from '@/Components/Tasks/TasksTableRow.vue';
 import { addIcons, OhVueIcon } from 'oh-vue-icons';
+import VueDatePicker from '@vuepic/vue-datepicker';
 import {
     BiBarChartLineFill,
     BiCurrencyExchange,
@@ -23,7 +24,6 @@ addIcons(
     MdErroroutlineRound,
     MdDownloadingRound,
 );
-
 export default {
     components: {
         WhenVisible,
@@ -32,6 +32,7 @@ export default {
         TextInput,
         InputError,
         AuthenticatedLayout,
+        VueDatePicker,
         'v-icon': OhVueIcon,
         // eslint-disable-next-line vue/no-reserved-component-names
         Head,
@@ -55,6 +56,17 @@ export default {
             required: true,
         },
         currentUserRole: String,
+    },
+
+    setup() {
+        const format = (date) => {
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            return `${day}.${month}.${year}`;
+        };
+
+        return { format };
     },
 
     mounted() {
@@ -155,9 +167,10 @@ export default {
                 title: '',
                 description: '',
                 contractor: 1,
-                manager: 0,
                 cost: 0,
                 currency: 'RUB',
+                deadline_end: new Date(),
+                priority: 'III',
             }),
 
             searchQuery: '',
@@ -171,6 +184,26 @@ export default {
     },
 
     methods: {
+        isToday(date) {
+            if (!date) return false;
+            const today = new Date();
+            const targetDate = new Date(date);
+            return (
+                today.getFullYear() === targetDate.getFullYear() &&
+                today.getMonth() === targetDate.getMonth() &&
+                today.getDate() === targetDate.getDate()
+            );
+        },
+
+        isDeadlineApproaching(deadline) {
+            if (!deadline) return false;
+            const deadlineDate = new Date(deadline);
+            const today = new Date();
+            const twoDaysLater = today.setDate(today.getDate() + 2); // Add 2 days to today's date
+
+            return deadlineDate <= twoDaysLater;
+        },
+
         closeFilters(event) {
             console.log('close filters');
             const statusModal = this.$refs.filterByStatusesModal;
@@ -306,7 +339,9 @@ export default {
             </div>
         </template>
 
-        <div class="mx-auto overflow-x-auto overflow-y-scroll px-5 pb-5 pt-5">
+        <div
+            class="mx-auto h-screen overflow-x-auto overflow-y-scroll px-5 pb-5 pt-5"
+        >
             <!--            Фильтры-->
             <div
                 :class="tasks.length === 0 ? 'hidden' : ''"
@@ -446,7 +481,7 @@ export default {
             <!-- Таблица -->
             <table
                 v-if="tasks.length > 0"
-                class="w-full table-auto overflow-hidden rounded-md border-none border-transparent bg-white shadow-lg"
+                class="w-full table-auto overflow-scroll rounded-md border-none border-transparent bg-white shadow-lg"
             >
                 <thead class="bg-neutral-200">
                     <tr>
@@ -620,7 +655,7 @@ export default {
                             </option>
                         </select>
                     </div>
-                    <InputError :message="errors.contractor" class="mt-2" />
+                    <InputError :message="errors.manager" class="mt-2" />
                 </div>
 
                 <div class="mb-4">
@@ -689,6 +724,52 @@ export default {
                         </select>
                     </div>
                     <InputError :message="errors.currency" class="mt-2" />
+                </div>
+
+                <div class="mb-4">
+                    <InputLabel class="block text-sm font-medium text-gray-700">
+                        Дедлайн
+                        <span v-if="isToday(form.deadline_end)"
+                            >установлен на
+                            <span
+                                class="rounded border border-red-700 bg-red-100 px-2 py-0.5 font-semibold text-neutral-800"
+                                >сегодняшний день</span
+                            ></span
+                        >
+                        <span
+                            v-else-if="isDeadlineApproaching(form.deadline_end)"
+                            ><b
+                                class="rounded border border-red-700 bg-red-100 px-2 py-0.5 font-semibold text-neutral-800"
+                                >скоро наступит</b
+                            ></span
+                        >
+                        <span v-else
+                            ><b
+                                class="rounded border border-green-700 bg-green-100 px-2 py-0.5 font-semibold text-neutral-800"
+                                >установлен более чем на 2 дня</b
+                            ></span
+                        >
+                    </InputLabel>
+                    <div class="mt-2">
+                        <VueDatePicker
+                            v-model="form.deadline_end"
+                            :action-row="{ showNow: true, showPreview: false }"
+                            :class="
+                                isDeadlineApproaching(form.deadline_end)
+                                    ? 'box-border rounded-md border-[2px] border-red-400 shadow-lg shadow-red-500/50'
+                                    : 'box-border'
+                            "
+                            :clearable="false"
+                            :enable-time-picker="false"
+                            :format="format"
+                            :min-date="new Date()"
+                            cancel-text="Отмена"
+                            locale="ru"
+                            now-button-label="Сегодня"
+                            select-text="Подтвердить"
+                        />
+                    </div>
+                    <InputError :message="errors.deadline_end" class="mt-2" />
                 </div>
 
                 <div class="mb-4">
@@ -833,6 +914,52 @@ export default {
                         </select>
                     </div>
                     <InputError :message="errors.cost" class="mt-2" />
+                </div>
+
+                <div class="mb-4">
+                    <InputLabel class="block text-sm font-medium text-gray-700">
+                        Дедлайн
+                        <span v-if="isToday(form.deadline_end)"
+                            >установлен на
+                            <span
+                                class="rounded border border-red-700 bg-red-100 px-2 py-0.5 font-semibold text-neutral-800"
+                                >сегодняшний день</span
+                            ></span
+                        >
+                        <span
+                            v-else-if="isDeadlineApproaching(form.deadline_end)"
+                            ><b
+                                class="rounded border border-red-700 bg-red-100 px-2 py-0.5 font-semibold text-neutral-800"
+                                >скоро наступит</b
+                            ></span
+                        >
+                        <span v-else
+                            ><b
+                                class="rounded border border-green-700 bg-green-100 px-2 py-0.5 font-semibold text-neutral-800"
+                                >установлен более чем на 2 дня</b
+                            ></span
+                        >
+                    </InputLabel>
+                    <div class="mt-2">
+                        <VueDatePicker
+                            v-model="form.deadline_end"
+                            :action-row="{ showNow: true, showPreview: false }"
+                            :class="
+                                isDeadlineApproaching(form.deadline_end)
+                                    ? 'box-border rounded-md border-[2px] border-red-400 shadow-lg shadow-red-500/50'
+                                    : 'box-border'
+                            "
+                            :clearable="false"
+                            :enable-time-picker="false"
+                            :format="format"
+                            :min-date="new Date()"
+                            cancel-text="Отмена"
+                            locale="ru"
+                            now-button-label="Сегодня"
+                            select-text="Подтвердить"
+                        />
+                    </div>
+                    <InputError :message="errors.deadline_end" class="mt-2" />
                 </div>
 
                 <div class="mb-4">

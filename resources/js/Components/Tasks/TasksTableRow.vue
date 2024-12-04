@@ -269,7 +269,7 @@ export default {
             <div class="flex items-center justify-center text-sm text-gray-900">
                 <VueDatePicker
                     v-model="task.deadline_end"
-                    :action-row="{ showNow: true }"
+                    :action-row="{ showNow: true, showPreview: false }"
                     :class="
                         isDeadlineApproaching(task.deadline_end)
                             ? 'box-border rounded-md border-[2px] border-red-400 shadow-lg shadow-red-500/50'
@@ -281,6 +281,7 @@ export default {
                     cancel-text="Отмена"
                     class="max-w-[9rem]"
                     locale="ru"
+                    :min-date="new Date()"
                     now-button-label="Сегодня"
                     select-text="Подтвердить"
                     @blur="updateDeadline(task)"

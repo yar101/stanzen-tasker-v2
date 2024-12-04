@@ -64,9 +64,16 @@ class TaskController extends Controller
                 'currency' => ['required'],
                 'parent_task' => ['nullable', 'integer'],
                 'priority' => ['string', 'required'],
-                'deadline_end' => ['nullable', 'date'],
             ])
         );
+
+        if ($request['deadline_end'] !== null) {
+            $deadlineEnd = Carbon::parse($request['deadline_end']);
+            $newTask->update([
+                'deadline_end' => $deadlineEnd,
+            ]);
+        };
+
 
         if ($request['cost'] === null) {
             $newTask->update([
