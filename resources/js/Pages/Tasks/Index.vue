@@ -586,7 +586,7 @@ export default {
             </div>
         </div>
 
-        <!-- Модальное окно создания -->
+        <!-- Модальное окно создания задачи -->
         <div
             v-if="isCreateModalOpen"
             class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50"
@@ -676,7 +676,6 @@ export default {
                         <TextInput
                             v-model="form.cost"
                             class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-0"
-                            model-value="0"
                         />
                         <select
                             v-model="form.currency"
@@ -689,7 +688,7 @@ export default {
                             <option value="LYR">LYR</option>
                         </select>
                     </div>
-                    <InputError :message="errors.cost" class="mt-2" />
+                    <InputError :message="errors.currency" class="mt-2" />
                 </div>
 
                 <div class="mb-4">

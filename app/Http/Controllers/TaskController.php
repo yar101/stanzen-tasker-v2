@@ -60,17 +60,30 @@ class TaskController extends Controller
                 'description' => ['required'],
                 'manager' => ['nullable', 'integer'],
                 'contractor' => ['required', 'integer'],
-                'cost' => ['numeric'],
+                'cost' => ['nullable'],
                 'currency' => ['required'],
                 'parent_task' => ['nullable', 'integer'],
                 'priority' => ['string', 'required'],
+                'deadline_end' => ['nullable', 'date'],
             ])
         );
+
+        if ($request['cost'] === null) {
+            $newTask->update([
+                'cost' => 0,
+            ]);
+        };
+
         $newTask->update([
             'created_by' => auth()->user()->id,
             'deadline_start' => Carbon::now(),
-            'deadline_end' => Carbon::now()->addDays(14),
         ]);
+
+        if (!($request['deadline_end']) || $request['deadline_end'] === null) {
+          $newTask->update([
+              'deadline_end' => Carbon::now()->addDays(14),
+          ]);
+        };
 
         if ($request['parent_task'] != null) {
           $newTask->update([
