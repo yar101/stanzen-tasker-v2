@@ -4,13 +4,13 @@ namespace App\Imports;
 
 use App\Models\Comment;
 use App\Models\Contractor;
-use App\Models\Status;
 use App\Models\Task;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 
-class TasksImport implements ToCollection
+class TasksImport implements ToCollection, WithChunkReading
 {
     public function collection(Collection $rows): void
     {
@@ -41,5 +41,10 @@ class TasksImport implements ToCollection
             };
 
         }
+    }
+
+    public function chunkSize(): int
+    {
+        return 50;
     }
 }
