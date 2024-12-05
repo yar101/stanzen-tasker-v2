@@ -23,7 +23,9 @@ class TaskController extends Controller
             ->with('subtasks', 'comments', 'subtasks.comments', 'contractor')
             ->get();
         $contractors = Contractor::orderBy('name')->get();
+
         $statuses = Status::all();
+
         $users = User::where('role_id', '!=', 1)->where('name', '!=', 'Антон Андреев')->get();
         $currentUserRole = auth()->user()->role->name;
 

@@ -389,6 +389,9 @@ export default {
                                     getStatusName(status.id) === 'DONE'
                                         ? 'border-green-500 bg-green-200 text-green-800 hover:bg-green-300 hover:text-green-900'
                                         : '',
+                                    getStatusName(status.id) === 'CLOSED'
+                                        ? 'border-amber-400 bg-neutral-800 text-amber-200 hover:bg-neutral-900 hover:text-amber-300'
+                                        : '',
                                 ]"
                                 class="flex select-none items-center gap-1 rounded border bg-opacity-90 p-1 text-sm font-semibold transition-all duration-100 ease-in-out hover:shadow-md"
                             >

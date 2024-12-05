@@ -1,12 +1,14 @@
 <script>
 import { useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
 import TaskCommentsModal from '@/Components/Tasks/TaskCommentsModal.vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import { addIcons, OhVueIcon } from 'oh-vue-icons';
 
+addIcons();
 export default {
-    components: { TaskCommentsModal, VueDatePicker, ref },
+    // eslint-disable-next-line vue/no-unused-components
+    components: { TaskCommentsModal, VueDatePicker, 'v-icon': OhVueIcon },
     inheritAttrs: false,
     props: {
         task: {
@@ -54,6 +56,9 @@ export default {
 
     data() {
         return {
+            // userStatuses: this.statuses.filter(
+            //     (status) => status.name !== 'CLOSED',
+            // ),
             isCommentsModalOpen: false,
             form: useForm({
                 task_id: this.task.id,
@@ -151,7 +156,7 @@ export default {
         >
             <div
                 :class="this.task.is_subtask === 1 ? 'ml-[5rem]' : ''"
-                class="w-fit max-w-[10rem]"
+                class="w-fit max-w-[10rem] flex items-start gap-1"
             >
                 <select
                     v-model="this.task.status"
@@ -171,12 +176,15 @@ export default {
                         getStatusName(this.task.status) === 'DONE'
                             ? 'border-green-500 bg-green-200 text-green-800 hover:bg-green-300 hover:text-green-900'
                             : '',
+                        getStatusName(this.task.status) === 'CLOSED'
+                            ? 'border-amber-400 bg-neutral-800 text-amber-200 hover:bg-neutral-900 hover:text-amber-300'
+                            : '',
                     ]"
                     class="ml-[0.5rem] rounded-md text-sm transition-colors focus:ring-0"
                     @change="updateStatus(this.task)"
                 >
                     <option
-                        v-for="status in statuses"
+                        v-for="status in this.statuses"
                         :key="status.id"
                         :value="status.id"
                     >
