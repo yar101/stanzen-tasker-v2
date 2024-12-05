@@ -5,6 +5,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, useForm } from '@inertiajs/vue3';
+import Checkbox from "@/Components/Checkbox.vue";
 
 defineProps({
     canResetPassword: {
@@ -68,14 +69,14 @@ const submit = () => {
                 <InputError :message="form.errors.password" class="mt-2" />
             </div>
 
-            <!--            <div class="mt-4 block">-->
-            <!--                <label class="flex items-center">-->
-            <!--                    <Checkbox v-model:checked="form.remember" name="remember" />-->
-            <!--                    <span class="ms-2 text-sm text-gray-600"-->
-            <!--                        >Запомнить меня</span-->
-            <!--                    >-->
-            <!--                </label>-->
-            <!--            </div>-->
+            <div class="mt-4 block">
+                <label class="flex items-center">
+                    <Checkbox v-model:checked="form.remember" name="remember" />
+                    <span class="ms-2 text-sm text-gray-600"
+                        >Запомнить меня</span
+                    >
+                </label>
+            </div>
 
             <div class="mt-4 flex items-center justify-end">
                 <!--                <Link-->
