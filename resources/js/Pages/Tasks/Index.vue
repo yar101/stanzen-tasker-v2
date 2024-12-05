@@ -7,6 +7,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import TasksTableRow from '@/Components/Tasks/TasksTableRow.vue';
 import { addIcons, OhVueIcon } from 'oh-vue-icons';
 import VueDatePicker from '@vuepic/vue-datepicker';
+import Cookies from 'js-cookie';
 import {
     BiBarChartLineFill,
     BiCurrencyExchange,
@@ -74,10 +75,27 @@ export default {
             this.selectAllUsersInFilter();
         }
         document.addEventListener('mousedown', this.closeFilters);
+
+        // Загрузка сохранённых статусов из куков при монтировании компонента
+        const savedStatuses = Cookies.get('selectedStatuses');
+        if (savedStatuses) {
+            this.selectedStatuses = JSON.parse(savedStatuses);
+        }
     },
 
     beforeUnmount() {
         document.removeEventListener('mousedown', this.closeFilters);
+    },
+
+    watch: {
+        selectedStatuses: {
+            handler(newValue) {
+                Cookies.set('selectedStatuses', JSON.stringify(newValue), {
+                    expires: 36500,
+                }); // Кука сохранится на 7 дней
+            },
+            deep: true,
+        },
     },
 
     computed: {
@@ -176,7 +194,7 @@ export default {
             searchQuery: '',
 
             filterByStatuses: false,
-            selectedStatuses: [1, 2, 3, 5],
+            selectedStatuses: [],
 
             filterByUser: false,
             selectedUsers: [this.$page.props.auth.user.id],
@@ -606,7 +624,7 @@ export default {
                                 @update-status="updateStatus"
                                 @update-deadline="updateDeadline"
                             />
-<!--                            <tr class="h-2.5 border-none"></tr>-->
+                            <!--                            <tr class="h-2.5 border-none"></tr>-->
                         </template>
                     </template>
                 </tbody>
