@@ -342,7 +342,7 @@ export default {
         </template>
 
         <div
-            class="mx-auto h-screen overflow-x-auto overflow-y-scroll px-5 pb-5 pt-5"
+            class="mx-auto h-full overflow-x-auto overflow-y-scroll px-5 pb-5 pt-5"
         >
             <!--            Фильтры-->
             <div
