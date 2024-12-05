@@ -251,7 +251,7 @@ export default {
             this.form.title = '';
             this.form.description = '';
             this.form.contractor = 1;
-            this.form.cost = '';
+            this.form.cost = 0;
             this.form.manager = this.$page.props.auth.user.id;
             this.form.currency = 'RUB';
             this.form.priority = 'III';
@@ -264,7 +264,7 @@ export default {
             this.form.title = task.title;
             this.form.description = '';
             this.form.contractor = task.contractor.id;
-            this.form.cost = null;
+            this.form.cost = 0;
             this.form.manager = task.manager;
             this.form.currency = task.currency;
             this.form.priority = task.priority;
