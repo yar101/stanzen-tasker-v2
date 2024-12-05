@@ -845,7 +845,7 @@ export default {
                             </option>
                         </select>
                     </div>
-                    <InputError :message="errors.contractor" class="mt-2" />
+                    <InputError :message="errors.manager" class="mt-2" />
                 </div>
 
                 <div class="mb-4">
