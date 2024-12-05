@@ -187,6 +187,7 @@ export default {
                         v-for="status in this.statuses"
                         :key="status.id"
                         :value="status.id"
+                        :hidden="status.id === 6 && this.$page.props.auth.user.role.name === 'user'"
                     >
                         {{ getStatusName(status.id) }}
                     </option>
