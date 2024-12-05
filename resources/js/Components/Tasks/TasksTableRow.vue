@@ -138,10 +138,10 @@ export default {
         class="group transition-all duration-100 ease-in-out [&>td]:border-s-2 [&>td]:border-dotted [&>td]:border-gray-500/25"
     >
         <td
-            :class="this.task.is_subtask === 1 ? 'opacity-0' : ''"
-            class="w-8 !border-s-0 text-center text-sm text-gray-900"
+            :class="this.task.is_subtask === 1 ? 'invisible' : ''"
+            class="w-fit !border-s-0 px-0.5 text-center text-xs text-gray-900"
         >
-            <span class="w-fit">
+            <span class="">
                 {{ this.task.id }}
             </span>
         </td>

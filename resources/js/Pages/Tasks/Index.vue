@@ -603,7 +603,7 @@ export default {
                                 @update-status="updateStatus"
                                 @update-deadline="updateDeadline"
                             />
-                            <tr class="h-2.5 border-none bg-gray-100"></tr>
+<!--                            <tr class="h-2.5 border-none"></tr>-->
                         </template>
                     </template>
                 </tbody>
