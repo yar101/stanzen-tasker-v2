@@ -99,6 +99,19 @@ export default {
     },
 
     computed: {
+        // Список контрагентов, отфильтрованный по запросу
+        filteredContractors() {
+            return this.contractors.filter((contractor) =>
+                contractor.name
+                    .toLowerCase()
+                    .includes(this.contractorSearchTerm.toLowerCase()),
+            );
+        },
+        // Имя выбранного контрагента для отображения
+        selectedContractorName() {
+            return this.selectedContractor ? this.selectedContractor.name : '';
+        },
+
         filteredTasks() {
             // Создаём глубокую копию задач с вложенными подзадачами
             let filteredTasks = this.tasks.map((task) => ({
@@ -176,6 +189,10 @@ export default {
 
     data() {
         return {
+            isContractorSelectOpen: false, // Статус дропдауна
+            contractorSearchTerm: '', // Текущий поисковый запрос
+            selectedContractor: null, // Выбранный контрагент
+
             isEditModalOpen: false,
             isCreateModalOpen: false,
             isCreateSubtaskModalOpen: false,
@@ -202,6 +219,15 @@ export default {
     },
 
     methods: {
+        toggleDropdown() {
+            this.isContractorSelectOpen = !this.isContractorSelectOpen;
+        },
+        selectContractor(contractor) {
+            this.selectedContractor = contractor;
+            this.form.contractor = contractor.id; // Сохраняем ID выбранного контрагента
+            this.isContractorSelectOpen = false; // Закрываем дропдаун
+        },
+
         isToday(date) {
             if (!date) return false;
             const today = new Date();
@@ -281,6 +307,7 @@ export default {
             this.form.parent_task = task.id;
             this.form.title = task.title;
             this.form.description = '';
+            this.selectedTask.contractor = { ...task.contractor };
             this.form.contractor = task.contractor.id;
             this.form.cost = 0;
             this.form.manager = task.manager;
@@ -294,6 +321,7 @@ export default {
             this.isCreateModalOpen = false;
             this.selectedTask = null;
             this.isCreateSubtaskModalOpen = false;
+            this.isContractorSelectOpen = false;
             this.form.clearErrors();
         },
 
@@ -340,6 +368,14 @@ export default {
             const user = this.users.find((user) => user.id === userId);
             if (userId === 1) return 'admin';
             return user ? user.name : '';
+        },
+
+        getContractorName(contractorId) {
+            const contractor = this.contractors.find(
+                (contractor) => contractor.id === contractorId,
+            );
+            if (contractorId === 1) return 'Без контрагента';
+            return contractor ? contractor.name : '';
         },
     },
 };
@@ -711,18 +747,60 @@ export default {
                         Контрагент
                     </InputLabel>
                     <div class="flex gap-2">
-                        <select
-                            v-model="form.contractor"
-                            class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-0"
+                        <div
+                            class="z-10 flex w-full items-center justify-center"
                         >
-                            <option
-                                v-for="contractor in contractors"
-                                :key="contractor.id"
-                                :value="contractor.id"
-                            >
-                                {{ contractor.name }}
-                            </option>
-                        </select>
+                            <div class="group relative w-full">
+                                <button
+                                    class="inline-flex w-full justify-between rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-0"
+                                    @click.prevent="toggleDropdown"
+                                >
+                                    <span>{{
+                                        selectedContractorName ||
+                                        'Выберите контрагента'
+                                    }}</span>
+                                    <svg
+                                        aria-hidden="true"
+                                        class="-mr-1 ml-2 h-5 w-5"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            clip-rule="evenodd"
+                                            d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                                            fill-rule="evenodd"
+                                        />
+                                    </svg>
+                                </button>
+                                <div
+                                    v-show="isContractorSelectOpen"
+                                    class="absolute left-0 right-0 mt-2 max-h-48 w-full overflow-y-auto rounded-md border border-gray-300 bg-gray-100 pr-1 shadow-lg"
+                                >
+                                    <div class="sticky top-0 bg-gray-100 p-1">
+                                        <div class="backdrop-blur">
+                                            <!-- Поле поиска -->
+                                            <input
+                                                v-model="contractorSearchTerm"
+                                                autocomplete="off"
+                                                class="h-[2rem] w-full rounded-md border border-gray-300 bg-gray-100 px-2 text-sm text-gray-800 outline-none ring-0 transition-all duration-100 ease-in-out focus:shadow-xl focus:shadow-blue-100/50"
+                                                placeholder="Поиск..."
+                                                type="text"
+                                            />
+                                        </div>
+                                    </div>
+                                    <!-- Список контрагентов -->
+                                    <span
+                                        v-for="contractor in filteredContractors"
+                                        :key="contractor.id"
+                                        class="m-1 block cursor-pointer rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 active:bg-blue-100"
+                                        @click="selectContractor(contractor)"
+                                    >
+                                        {{ contractor.name }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <InputError :message="errors.contractor" class="mt-2" />
                 </div>
@@ -733,6 +811,7 @@ export default {
                     </InputLabel>
                     <div class="flex gap-2">
                         <TextInput
+                            @click="$event.target.value = null"
                             v-model="form.cost"
                             class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-0"
                         />
@@ -899,19 +978,62 @@ export default {
                         Контрагент
                     </InputLabel>
                     <div class="flex gap-2">
-                        <select
-                            v-model="form.contractor"
-                            class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-0 disabled:bg-neutral-200 disabled:text-neutral-500"
-                            disabled
+                        <div
+                            class="z-10 flex w-full items-center justify-center"
                         >
-                            <option
-                                v-for="contractor in contractors"
-                                :key="contractor.id"
-                                :value="contractor.id"
-                            >
-                                {{ contractor.name }}
-                            </option>
-                        </select>
+                            <div class="group relative w-full">
+                                <button
+                                    class="inline-flex w-full justify-between rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-0 disabled:bg-neutral-200"
+                                    disabled
+                                    @click.prevent="toggleDropdown"
+                                >
+                                    <span>{{
+                                        selectedTask.contractor.name ||
+                                        selectedContractorName ||
+                                        'Выберите контрагента'
+                                    }}</span>
+                                    <svg
+                                        aria-hidden="true"
+                                        class="-mr-1 ml-2 h-5 w-5"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            clip-rule="evenodd"
+                                            d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                                            fill-rule="evenodd"
+                                        />
+                                    </svg>
+                                </button>
+                                <div
+                                    v-show="isContractorSelectOpen"
+                                    class="absolute left-0 right-0 mt-2 max-h-48 w-full overflow-y-auto rounded-md border border-gray-300 bg-gray-100 pr-1 shadow-lg"
+                                >
+                                    <div class="sticky top-0 bg-gray-100 p-1">
+                                        <div class="backdrop-blur">
+                                            <!-- Поле поиска -->
+                                            <input
+                                                v-model="contractorSearchTerm"
+                                                autocomplete="off"
+                                                class="h-[2rem] w-full rounded-md border border-gray-300 bg-gray-100 px-2 text-sm text-gray-800 outline-none ring-0 transition-all duration-100 ease-in-out focus:shadow-xl focus:shadow-blue-100/50"
+                                                placeholder="Поиск..."
+                                                type="text"
+                                            />
+                                        </div>
+                                    </div>
+                                    <!-- Список контрагентов -->
+                                    <span
+                                        v-for="contractor in filteredContractors"
+                                        :key="contractor.id"
+                                        class="m-1 block cursor-pointer rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 active:bg-blue-100"
+                                        @click="selectContractor(contractor)"
+                                    >
+                                        {{ contractor.name }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <InputError :message="errors.contractor" class="mt-2" />
                 </div>
@@ -922,6 +1044,7 @@ export default {
                     </InputLabel>
                     <div class="flex gap-2">
                         <TextInput
+                            @click="$event.target.value = null"
                             v-model="form.cost"
                             class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-0"
                         />
@@ -1090,18 +1213,62 @@ export default {
                         Контрагент
                     </InputLabel>
                     <div class="flex gap-2">
-                        <select
-                            v-model="form.contractor"
-                            class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-0 disabled:bg-neutral-200 disabled:text-neutral-500"
+                        <div
+                            class="z-10 flex w-full items-center justify-center"
                         >
-                            <option
-                                v-for="contractor in contractors"
-                                :key="contractor.id"
-                                :value="contractor.id"
-                            >
-                                {{ contractor.name }}
-                            </option>
-                        </select>
+                            <div class="group relative w-full">
+                                <button
+                                    :disabled="form.is_subtask"
+                                    class="inline-flex w-full disabled:bg-neutral-200 justify-between rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-0"
+                                    @click.prevent="toggleDropdown"
+                                >
+                                    <span>{{
+                                        getContractorName(
+                                            selectedTask.contractor,
+                                        ) || selectedTask.contractor.name
+                                    }}</span>
+                                    <svg
+                                        aria-hidden="true"
+                                        class="-mr-1 ml-2 h-5 w-5"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            clip-rule="evenodd"
+                                            d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                                            fill-rule="evenodd"
+                                        />
+                                    </svg>
+                                </button>
+                                <div
+                                    v-show="isContractorSelectOpen"
+                                    class="absolute left-0 right-0 mt-2 max-h-48 w-full overflow-y-auto rounded-md border border-gray-300 bg-gray-100 pr-1 shadow-lg"
+                                >
+                                    <div class="sticky top-0 bg-gray-100 p-1">
+                                        <div class="backdrop-blur">
+                                            <!-- Поле поиска -->
+                                            <input
+                                                v-model="contractorSearchTerm"
+                                                autocomplete="off"
+                                                class="h-[2rem] w-full rounded-md border border-gray-300 bg-gray-100 px-2 text-sm text-gray-800 outline-none ring-0 transition-all duration-100 ease-in-out focus:shadow-xl focus:shadow-blue-100/50"
+                                                placeholder="Поиск..."
+                                                type="text"
+                                            />
+                                        </div>
+                                    </div>
+                                    <!-- Список контрагентов -->
+                                    <span
+                                        v-for="contractor in filteredContractors"
+                                        :key="contractor.id"
+                                        class="m-1 block cursor-pointer rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 active:bg-blue-100"
+                                        @click="selectContractor(contractor)"
+                                    >
+                                        {{ contractor.name }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <InputError :message="errors.contractor" class="mt-2" />
                 </div>
