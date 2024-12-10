@@ -156,7 +156,7 @@ export default {
         >
             <div
                 :class="this.task.is_subtask === 1 ? 'ml-[5rem]' : ''"
-                class="w-fit max-w-[10rem] flex items-start gap-1"
+                class="flex w-fit max-w-[10rem] items-start gap-1"
             >
                 <select
                     v-model="this.task.status"
@@ -186,8 +186,11 @@ export default {
                     <option
                         v-for="status in this.statuses"
                         :key="status.id"
+                        :hidden="
+                            status.id === 6 &&
+                            this.$page.props.auth.user.role.name === 'user'
+                        "
                         :value="status.id"
-                        :hidden="status.id === 6 && this.$page.props.auth.user.role.name === 'user'"
                     >
                         {{ getStatusName(status.id) }}
                     </option>
@@ -274,7 +277,7 @@ export default {
             </div>
         </td>
 
-        <td>
+        <td class="w-[190px] min-w-[190px] max-w-[11.5rem] px-5">
             <div class="flex items-center justify-center text-sm text-gray-900">
                 <VueDatePicker
                     v-model="task.deadline_end"
@@ -289,7 +292,7 @@ export default {
                     :format="format"
                     :min-date="new Date()"
                     cancel-text="Отмена"
-                    class="max-w-[9rem]"
+                    class=""
                     locale="ru"
                     now-button-label="Сегодня"
                     select-text="Подтвердить"
