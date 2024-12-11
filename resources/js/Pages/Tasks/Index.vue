@@ -16,6 +16,7 @@ import {
     MdDownloadingRound,
     MdErroroutlineRound,
 } from 'oh-vue-icons/icons';
+import { ref } from 'vue';
 
 addIcons(
     IoPersonSharp,
@@ -71,7 +72,10 @@ export default {
     },
 
     mounted() {
-        if (this.currentUserRole === 'head-of-department' || this.currentUserRole === 'admin') {
+        if (
+            this.currentUserRole === 'head-of-department' ||
+            this.currentUserRole === 'admin'
+        ) {
             this.selectAllUsersInFilter();
         }
         document.addEventListener('mousedown', this.closeFilters);
@@ -191,7 +195,7 @@ export default {
         return {
             isContractorSelectOpen: false, // Статус дропдауна
             contractorSearchTerm: '', // Текущий поисковый запрос
-            selectedContractor: null, // Выбранный контрагент
+            selectedContractor: ref(null), // Выбранный контрагент
 
             isEditModalOpen: false,
             isCreateModalOpen: false,
@@ -222,8 +226,10 @@ export default {
         toggleDropdown() {
             this.isContractorSelectOpen = !this.isContractorSelectOpen;
         },
+
         selectContractor(contractor) {
             this.selectedContractor = contractor;
+            this.selectedTask.contractor = contractor;
             this.form.contractor = contractor.id; // Сохраняем ID выбранного контрагента
             this.isContractorSelectOpen = false; // Закрываем дропдаун
         },
@@ -251,14 +257,17 @@ export default {
         closeFilters(event) {
             const statusModal = this.$refs.filterByStatusesModal;
             const userModal = this.$refs.filterByUserModal;
+            const contractorSelect = this.$refs.contractorSelect;
 
-            if (
-                statusModal &&
-                !statusModal.contains(event.target) &&
-                userModal &&
-                !userModal.contains(event.target)
-            ) {
+            if (contractorSelect && !contractorSelect.contains(event.target)) {
+                this.isContractorSelectOpen = false;
+            }
+
+            if (statusModal && !statusModal.contains(event.target)) {
                 this.filterByStatuses = false;
+            }
+
+            if (userModal && !userModal.contains(event.target)) {
                 this.filterByUser = false;
             }
         },
@@ -638,7 +647,7 @@ export default {
                                 :users="users"
                                 @open-edit-modal="openEditModal"
                             />
-                            <!--                            <tr class="h-2.5 border-none"></tr>-->
+                            <!--                                                        <tr class="h-2.5 border-none"></tr>-->
                         </template>
                     </template>
                 </tbody>
@@ -753,6 +762,7 @@ export default {
                                 </button>
                                 <div
                                     v-show="isContractorSelectOpen"
+                                    ref="contractorSelect"
                                     class="absolute left-0 right-0 mt-2 max-h-48 w-full overflow-y-auto rounded-md border border-gray-300 bg-gray-100 pr-1 shadow-lg"
                                 >
                                     <div class="sticky top-0 bg-gray-100 p-1">
@@ -986,6 +996,7 @@ export default {
                                 </button>
                                 <div
                                     v-show="isContractorSelectOpen"
+                                    ref="contractorSelect"
                                     class="absolute left-0 right-0 mt-2 max-h-48 w-full overflow-y-auto rounded-md border border-gray-300 bg-gray-100 pr-1 shadow-lg"
                                 >
                                     <div class="sticky top-0 bg-gray-100 p-1">
@@ -1201,9 +1212,7 @@ export default {
                                     @click.prevent="toggleDropdown"
                                 >
                                     <span>{{
-                                        getContractorName(
-                                            selectedTask.contractor,
-                                        ) || selectedTask.contractor.name
+                                        selectedTask.contractor.name
                                     }}</span>
                                     <svg
                                         aria-hidden="true"
@@ -1221,6 +1230,7 @@ export default {
                                 </button>
                                 <div
                                     v-show="isContractorSelectOpen"
+                                    ref="contractorSelect"
                                     class="absolute left-0 right-0 mt-2 max-h-48 w-full overflow-y-auto rounded-md border border-gray-300 bg-gray-100 pr-1 shadow-lg"
                                 >
                                     <div class="sticky top-0 bg-gray-100 p-1">
