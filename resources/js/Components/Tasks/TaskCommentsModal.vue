@@ -47,6 +47,7 @@ export default {
                     this.closeCommentModal();
                     this.form.reset('content');
                 },
+                preserveScroll: true,
             });
         },
     },

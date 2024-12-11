@@ -71,7 +71,7 @@ export default {
     },
 
     mounted() {
-        if (this.currentUserRole === 'head-of-department') {
+        if (this.currentUserRole === 'head-of-department' || this.currentUserRole === 'admin') {
             this.selectAllUsersInFilter();
         }
         document.addEventListener('mousedown', this.closeFilters);
@@ -92,7 +92,7 @@ export default {
             handler(newValue) {
                 Cookies.set('selectedStatuses', JSON.stringify(newValue), {
                     expires: 36500,
-                }); // Кука сохранится на 7 дней
+                });
             },
             deep: true,
         },
@@ -342,24 +342,6 @@ export default {
                     },
                     preserveScroll: true,
                 },
-            );
-        },
-
-        updateStatus(task) {
-            this.$inertia.patch(
-                route('tasks.updateStatus', {
-                    task,
-                    status: task.status,
-                }),
-            );
-        },
-
-        updateDeadline(task) {
-            this.$inertia.patch(
-                route('tasks.updateDeadline', {
-                    task,
-                    deadline_end: task.deadline_end,
-                }),
             );
         },
 
@@ -639,8 +621,6 @@ export default {
                                 @open-create-subtask-modal="
                                     openCreateSubtaskModal
                                 "
-                                @update-status="updateStatus"
-                                @update-deadline="updateDeadline"
                             />
                         </WhenVisible>
                         <template
@@ -656,8 +636,6 @@ export default {
                                 :task="subtask"
                                 :users="users"
                                 @open-edit-modal="openEditModal"
-                                @update-status="updateStatus"
-                                @update-deadline="updateDeadline"
                             />
                             <!--                            <tr class="h-2.5 border-none"></tr>-->
                         </template>
@@ -667,7 +645,7 @@ export default {
 
             <div
                 v-if="filteredTasks.length === 0 || tasks.length === 0"
-                class="mx-auto mb-10 mt-10 flex h-[20rem] w-[40rem] flex-col items-center justify-evenly rounded-md border-2 border-dotted border-gray-300 bg-neutral-200/50 px-4 py-2 text-center text-xl text-gray-500 text-red-400 shadow-xl"
+                class="mx-auto mb-10 mt-10 flex h-[20rem] w-[40rem] flex-col items-center justify-evenly rounded-md border-2 border-dotted border-gray-300 bg-neutral-200/50 px-4 py-2 text-center text-xl text-red-400 shadow-xl"
             >
                 Задачи не найдены
                 <v-icon name="md-erroroutline-round" scale="5" />
@@ -810,9 +788,9 @@ export default {
                     </InputLabel>
                     <div class="flex gap-2">
                         <TextInput
-                            @click="$event.target.value = null"
                             v-model="form.cost"
                             class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-0"
+                            @click="$event.target.value = null"
                         />
                         <select
                             v-model="form.currency"
@@ -1043,9 +1021,9 @@ export default {
                     </InputLabel>
                     <div class="flex gap-2">
                         <TextInput
-                            @click="$event.target.value = null"
                             v-model="form.cost"
                             class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-0"
+                            @click="$event.target.value = null"
                         />
                         <select
                             v-model="form.currency"
@@ -1218,7 +1196,7 @@ export default {
                             <div class="group relative w-full">
                                 <button
                                     :disabled="form.is_subtask"
-                                    class="inline-flex w-full disabled:bg-neutral-200 justify-between rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-0"
+                                    class="inline-flex w-full justify-between rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-0 disabled:bg-neutral-200"
                                     @click.prevent="toggleDropdown"
                                 >
                                     <span>{{
