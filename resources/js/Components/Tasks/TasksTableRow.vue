@@ -36,13 +36,7 @@ export default {
         },
     },
 
-    emits: [
-        'open-edit-modal',
-        'open-create-subtask-modal',
-        'update-status',
-        'update-deadline',
-    ],
-
+    emits: ['open-edit-modal', 'open-create-subtask-modal'],
     setup() {
         const format = (date) => {
             const day = date.getDate();
@@ -97,6 +91,10 @@ export default {
                     task,
                     status: task.status,
                 }),
+                {},
+                {
+                    preserveScroll: true,
+                },
             );
         },
 
@@ -109,6 +107,10 @@ export default {
                     task,
                     deadline_end: formattedDate,
                 }),
+                {},
+                {
+                    preserveScroll: true,
+                },
             );
         },
 
