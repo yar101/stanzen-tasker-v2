@@ -58,6 +58,7 @@ export default {
             required: true,
         },
         currentUserRole: String,
+        currentUserDepartment: Object,
     },
 
     setup() {

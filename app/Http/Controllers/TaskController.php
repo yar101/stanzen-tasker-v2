@@ -19,12 +19,19 @@ class TaskController extends Controller
      */
     public function index()
     {
+        $currentUser = auth()->user();
+
         $tasks = Task::orderByDesc('created_at')
             ->with('subtasks', 'comments', 'subtasks.comments', 'contractor')
             ->get();
         $contractors = Contractor::orderBy('name')->get();
 
-        $statuses = Status::all();
+        if ($currentUser->department->name == 'Инструменты') {
+            $statuses = Status::all();
+        } else if ($currentUser->department->name == 'Оборудование') {
+            $eqpStatuses = [2,3,5,6];
+            $statuses = Status::whereIn('id', $eqpStatuses)->get();
+        }
 
         $users = User::where('role_id', '!=', 1)->where('name', '!=', 'Антон Андреев')->get();
         $currentUserRole = auth()->user()->role->name;
@@ -34,7 +41,8 @@ class TaskController extends Controller
             'statuses' => $statuses,
             'contractors' => $contractors,
             'users' => $users,
-            'currentUserRole' => $currentUserRole
+            'currentUserRole' => $currentUserRole,
+            'currentUserDepartment' => auth()->user()->department
         ]);
     }
 
