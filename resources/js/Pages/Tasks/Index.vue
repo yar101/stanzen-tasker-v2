@@ -535,7 +535,7 @@ export default {
             <!-- Таблица -->
             <table
                 v-if="tasks.length > 0"
-                class="w-full table-auto overflow-scroll rounded-md border-none border-transparent bg-white shadow-lg"
+                class="w-full table-auto overflow-scroll bg-white shadow-lg"
             >
                 <thead class="bg-neutral-200">
                     <tr>
@@ -590,13 +590,20 @@ export default {
                             Дедлайн
                         </th>
 
-                        <th class="text-center text-sm font-medium text-gray-700" v-show="currentUserDepartment.name === 'Оборудование'">
+                        <th
+                            class="text-center text-sm font-medium text-gray-700"
+                            v-show="
+                                currentUserDepartment.name === 'Оборудование'
+                            "
+                        >
                             <v-icon name="gi-progression" scale="1.5" />
                         </th>
 
                         <th
                             class="text-center text-sm font-medium text-gray-700"
-                            v-show="currentUserDepartment.name !== 'Оборудование'"
+                            v-show="
+                                currentUserDepartment.name !== 'Оборудование'
+                            "
                         >
                             <v-icon name="bi-currency-exchange" scale="2" />
                         </th>
@@ -610,13 +617,11 @@ export default {
                         <th></th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200 bg-white">
+                <tbody class="divide-y divide-gray-200">
                     <template v-for="task in filteredTasks" :key="task.id">
-                        <WhenVisible always data="task">
+                        <WhenVisible always data="task" as="span">
                             <template #fallback>
-                                <tr
-                                    class="group transition-all duration-100 ease-in-out [&>td]:border-s-2 [&>td]:border-dotted [&>td]:border-gray-500"
-                                >
+                                <tr>
                                     <td class="" colspan="12">
                                         Задача {{ task.id }}
                                         загружается
@@ -641,24 +646,25 @@ export default {
                                     openCreateSubtaskModal
                                 "
                             />
+                            <template
+                                v-if="task.subtasks && task.subtasks.length > 0"
+                            >
+                                <TasksTableRow
+                                    v-for="subtask in task.subtasks"
+                                    :key="subtask.id"
+                                    :comments="subtask.comments"
+                                    :contractors="contractors"
+                                    :errors="errors"
+                                    :statuses="statuses"
+                                    :task="subtask"
+                                    :users="users"
+                                    :currentUserDepartment="
+                                        currentUserDepartment
+                                    "
+                                    @open-edit-modal="openEditModal"
+                                />
+                            </template>
                         </WhenVisible>
-                        <template
-                            v-if="task.subtasks && task.subtasks.length > 0"
-                        >
-                            <TasksTableRow
-                                v-for="subtask in task.subtasks"
-                                :key="subtask.id"
-                                :comments="subtask.comments"
-                                :contractors="contractors"
-                                :errors="errors"
-                                :statuses="statuses"
-                                :task="subtask"
-                                :users="users"
-                                :currentUserDepartment="currentUserDepartment"
-                                @open-edit-modal="openEditModal"
-                            />
-                            <!--                                                        <tr class="h-2.5 border-none"></tr>-->
-                        </template>
                     </template>
                 </tbody>
             </table>
@@ -803,7 +809,10 @@ export default {
                     <InputError :message="errors.contractor" class="mt-2" />
                 </div>
 
-                <div class="mb-4" v-show="currentUserDepartment.name !== 'Оборудование'">
+                <div
+                    class="mb-4"
+                    v-show="currentUserDepartment.name !== 'Оборудование'"
+                >
                     <InputLabel class="block text-sm font-medium text-gray-700">
                         Стоимость
                     </InputLabel>
@@ -1037,7 +1046,10 @@ export default {
                     <InputError :message="errors.contractor" class="mt-2" />
                 </div>
 
-                <div class="mb-4" v-show="currentUserDepartment.name !== 'Оборудование'">
+                <div
+                    class="mb-4"
+                    v-show="currentUserDepartment.name !== 'Оборудование'"
+                >
                     <InputLabel class="block text-sm font-medium text-gray-700">
                         Стоимость
                     </InputLabel>
@@ -1271,7 +1283,10 @@ export default {
                     <InputError :message="errors.contractor" class="mt-2" />
                 </div>
 
-                <div class="mb-4" v-show="currentUserDepartment.name !== 'Оборудование'">
+                <div
+                    class="mb-4"
+                    v-show="currentUserDepartment.name !== 'Оборудование'"
+                >
                     <InputLabel class="block text-sm font-medium text-gray-700">
                         Стоимость
                     </InputLabel>

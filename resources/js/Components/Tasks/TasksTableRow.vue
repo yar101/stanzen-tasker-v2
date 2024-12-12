@@ -162,6 +162,7 @@ export default {
                 {{ this.task.id }}
             </span>
         </td>
+
         <td
             :class="this.task.is_subtask === 1 ? '!border-s-0' : ''"
             class="text-sm text-gray-900"
