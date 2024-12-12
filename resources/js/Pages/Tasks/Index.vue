@@ -13,10 +13,10 @@ import {
     BiBarChartLineFill,
     BiCurrencyExchange,
     FaCommentAlt,
+    GiProgression,
     IoPersonSharp,
     MdDownloadingRound,
     MdErroroutlineRound,
-    GiProgression,
 } from 'oh-vue-icons/icons';
 
 addIcons(
@@ -533,141 +533,155 @@ export default {
                 </div>
             </div>
             <!-- Таблица -->
-            <table
-                v-if="tasks.length > 0"
-                class="w-full table-auto overflow-scroll bg-white shadow-lg"
-            >
-                <thead class="bg-neutral-200">
-                    <tr>
-                        <th
-                            class="text-center text-sm font-medium text-gray-700"
-                        >
-                            ID
-                        </th>
-                        <th
-                            class="text-center text-sm font-medium text-gray-700"
-                        >
-                            Статус
-                        </th>
-
-                        <th class="text-gray-700">
-                            <v-icon name="bi-bar-chart-line-fill" scale="1.7" />
-                        </th>
-
-                        <th
-                            class="text-center text-sm font-medium text-gray-700"
-                        >
-                            <v-icon name="io-person-sharp" scale="1.5" />
-                        </th>
-
-                        <th
-                            class="text-center text-sm font-medium text-gray-700"
-                        >
-                            Контрагент
-                        </th>
-
-                        <th
-                            class="text-center text-sm font-medium text-gray-700"
-                        >
-                            Тема
-                        </th>
-
-                        <th
-                            class="text-center text-sm font-medium text-gray-700"
-                        >
-                            Описание
-                        </th>
-
-                        <th
-                            class="text-center text-sm font-medium text-gray-700"
-                        >
-                            Дата начала
-                        </th>
-
-                        <th
-                            class="text-center text-sm font-medium text-gray-700"
-                        >
-                            Дедлайн
-                        </th>
-
-                        <th
-                            class="text-center text-sm font-medium text-gray-700"
-                            v-show="
-                                currentUserDepartment.name === 'Оборудование'
-                            "
-                        >
-                            <v-icon name="gi-progression" scale="1.5" />
-                        </th>
-
-                        <th
-                            class="text-center text-sm font-medium text-gray-700"
-                            v-show="
-                                currentUserDepartment.name !== 'Оборудование'
-                            "
-                        >
-                            <v-icon name="bi-currency-exchange" scale="2" />
-                        </th>
-
-                        <th
-                            class="text-center text-sm font-medium text-gray-700"
-                        >
-                            <v-icon name="fa-comment-alt" scale="1.5" />
-                        </th>
-
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    <template v-for="task in filteredTasks" :key="task.id">
-                        <WhenVisible always data="task" as="span">
-                            <template #fallback>
-                                <tr>
-                                    <td class="" colspan="12">
-                                        Задача {{ task.id }}
-                                        загружается
-                                        <v-icon
-                                            class="text-blue-500"
-                                            name="md-downloading-round"
-                                        />
-                                    </td>
-                                </tr>
-                            </template>
-                            <TasksTableRow
-                                v-if="!task.is_subtask"
-                                :comments="task.comments"
-                                :contractors="contractors"
-                                :errors="errors"
-                                :statuses="statuses"
-                                :task="task"
-                                :users="users"
-                                :currentUserDepartment="currentUserDepartment"
-                                @open-edit-modal="openEditModal"
-                                @open-create-subtask-modal="
-                                    openCreateSubtaskModal
-                                "
-                            />
-                            <template
-                                v-if="task.subtasks && task.subtasks.length > 0"
+            <div class="mx-auto w-full overflow-hidden rounded-md shadow-lg">
+                <table
+                    v-if="tasks.length > 0"
+                    class="w-full table-auto overflow-scroll bg-white shadow-lg"
+                >
+                    <thead
+                        class="border-b border-blue-200 bg-neutral-300/50"
+                    >
+                        <tr>
+                            <th
+                                class="text-center text-sm font-medium text-gray-700"
                             >
+                                ID
+                            </th>
+                            <th
+                                class="text-center text-sm font-medium text-gray-700"
+                            >
+                                Статус
+                            </th>
+
+                            <th class="text-gray-700">
+                                <v-icon
+                                    name="bi-bar-chart-line-fill"
+                                    scale="1.7"
+                                />
+                            </th>
+
+                            <th
+                                class="text-center text-sm font-medium text-gray-700"
+                            >
+                                <v-icon name="io-person-sharp" scale="1.5" />
+                            </th>
+
+                            <th
+                                class="text-center text-sm font-medium text-gray-700"
+                            >
+                                Контрагент
+                            </th>
+
+                            <th
+                                class="text-center text-sm font-medium text-gray-700"
+                            >
+                                Тема
+                            </th>
+
+                            <th
+                                class="text-center text-sm font-medium text-gray-700"
+                            >
+                                Описание
+                            </th>
+
+                            <th
+                                class="text-center text-sm font-medium text-gray-700"
+                            >
+                                Дата начала
+                            </th>
+
+                            <th
+                                class="text-center text-sm font-medium text-gray-700"
+                            >
+                                Дедлайн
+                            </th>
+
+                            <th
+                                v-show="
+                                    currentUserDepartment.name ===
+                                    'Оборудование'
+                                "
+                                class="text-center text-sm font-medium text-gray-700"
+                            >
+                                <v-icon name="gi-progression" scale="1.5" />
+                            </th>
+
+                            <th
+                                v-show="
+                                    currentUserDepartment.name !==
+                                    'Оборудование'
+                                "
+                                class="text-center text-sm font-medium text-gray-700"
+                            >
+                                <v-icon name="bi-currency-exchange" scale="2" />
+                            </th>
+
+                            <th
+                                class="text-center text-sm font-medium text-gray-700"
+                            >
+                                <v-icon name="fa-comment-alt" scale="1.5" />
+                            </th>
+
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <template v-for="task in filteredTasks" :key="task.id">
+                            <WhenVisible always as="span" data="task">
+                                <template #fallback>
+                                    <tr>
+                                        <td class="" colspan="12">
+                                            Задача {{ task.id }}
+                                            загружается
+                                            <v-icon
+                                                class="text-blue-500"
+                                                name="md-downloading-round"
+                                            />
+                                        </td>
+                                    </tr>
+                                </template>
                                 <TasksTableRow
-                                    v-for="subtask in task.subtasks"
-                                    :key="subtask.id"
-                                    :comments="subtask.comments"
+                                    v-if="!task.is_subtask"
+                                    :comments="task.comments"
                                     :contractors="contractors"
-                                    :errors="errors"
-                                    :statuses="statuses"
-                                    :task="subtask"
-                                    :users="users"
                                     :currentUserDepartment="
                                         currentUserDepartment
                                     "
+                                    :errors="errors"
+                                    :statuses="statuses"
+                                    :task="task"
+                                    :users="users"
                                     @open-edit-modal="openEditModal"
+                                    @open-create-subtask-modal="
+                                        openCreateSubtaskModal
+                                    "
                                 />
-                            </template>
-                        </WhenVisible>
-                    </template>
-                </tbody>
-            </table>
+                                <template
+                                    v-if="
+                                        task.subtasks &&
+                                        task.subtasks.length > 0
+                                    "
+                                >
+                                    <TasksTableRow
+                                        v-for="subtask in task.subtasks"
+                                        :key="subtask.id"
+                                        :comments="subtask.comments"
+                                        :contractors="contractors"
+                                        :currentUserDepartment="
+                                            currentUserDepartment
+                                        "
+                                        :errors="errors"
+                                        :statuses="statuses"
+                                        :task="subtask"
+                                        :users="users"
+                                        @open-edit-modal="openEditModal"
+                                    />
+                                </template>
+                            </WhenVisible>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
 
             <div
                 v-if="filteredTasks.length === 0 || tasks.length === 0"
@@ -810,8 +824,8 @@ export default {
                 </div>
 
                 <div
-                    class="mb-4"
                     v-show="currentUserDepartment.name !== 'Оборудование'"
+                    class="mb-4"
                 >
                     <InputLabel class="block text-sm font-medium text-gray-700">
                         Стоимость
@@ -1047,8 +1061,8 @@ export default {
                 </div>
 
                 <div
-                    class="mb-4"
                     v-show="currentUserDepartment.name !== 'Оборудование'"
+                    class="mb-4"
                 >
                     <InputLabel class="block text-sm font-medium text-gray-700">
                         Стоимость
@@ -1284,8 +1298,8 @@ export default {
                 </div>
 
                 <div
-                    class="mb-4"
                     v-show="currentUserDepartment.name !== 'Оборудование'"
+                    class="mb-4"
                 >
                     <InputLabel class="block text-sm font-medium text-gray-700">
                         Стоимость
