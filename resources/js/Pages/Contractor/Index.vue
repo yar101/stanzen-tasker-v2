@@ -1,13 +1,16 @@
 <script>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, WhenVisible } from '@inertiajs/vue3';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
+import { OhVueIcon } from 'oh-vue-icons';
 
 export default {
     // eslint-disable-next-line vue/no-reserved-component-names
     components: {
+        'v-icon': OhVueIcon,
+        WhenVisible,
         TextInput,
         InputLabel,
         InputError,
@@ -107,7 +110,7 @@ export default {
         <div class="mx-auto w-fit overflow-hidden rounded-md pb-5 pt-5">
             <!-- Таблица -->
             <table
-                class="m-5 min-w-[38rem] divide-y divide-gray-200 overflow-hidden rounded-md border border-none border-gray-200 border-transparent shadow-lg"
+                class="m-5 min-w-[38rem] divide-y divide-gray-200 overflow-hidden rounded-md border border-none border-transparent shadow-lg"
             >
                 <thead class="bg-neutral-200">
                     <tr>
@@ -135,23 +138,39 @@ export default {
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                    <tr
-                        v-for="contractor in filteredContractors"
+                    <template
+                        v-for="contractor in contractors"
                         :key="contractor.id"
-                        class="group hover:bg-gray-100"
                     >
-                        <td
-                            class="flex items-center justify-between px-4 py-2 text-sm text-gray-900"
-                        >
-                            <span>{{ contractor.name }}</span>
-                            <button
-                                class="translate-x-10 rounded bg-blue-500 px-3 py-1 text-sm text-white opacity-0 transition-all hover:bg-blue-600 hover:shadow-md group-hover:translate-x-0 group-hover:opacity-100 group-hover:shadow-md"
-                                @click="openEditModal(contractor)"
-                            >
-                                Редактировать
-                            </button>
-                        </td>
-                    </tr>
+                        <WhenVisible as="span" data="contractors">
+                            <template #fallback>
+                                <tr>
+                                    <td class="" colspan="2">
+                                        Контрагент {{ contractor.id }}
+                                        загружается
+                                        <v-icon
+                                            class="text-blue-500"
+                                            name="md-downloading-round"
+                                        />
+                                    </td>
+                                </tr>
+                            </template>
+
+                            <tr class="group hover:bg-gray-100">
+                                <td
+                                    class="flex items-center justify-between px-4 py-2 text-sm text-gray-900"
+                                >
+                                    <span>{{ contractor.name }}</span>
+                                    <button
+                                        class="translate-x-10 rounded bg-blue-500 px-3 py-1 text-sm text-white opacity-0 transition-all hover:bg-blue-600 hover:shadow-md group-hover:translate-x-0 group-hover:opacity-100 group-hover:shadow-md"
+                                        @click="openEditModal(contractor)"
+                                    >
+                                        Редактировать
+                                    </button>
+                                </td>
+                            </tr>
+                        </WhenVisible>
+                    </template>
                     <tr v-if="filteredContractors.length === 0">
                         <td class="px-4 py-2 text-center text-sm text-gray-500">
                             Контрагенты не найдены
