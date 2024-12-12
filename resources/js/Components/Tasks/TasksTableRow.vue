@@ -4,11 +4,17 @@ import TaskCommentsModal from '@/Components/Tasks/TaskCommentsModal.vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { addIcons, OhVueIcon } from 'oh-vue-icons';
+import TextInput from '@/Components/TextInput.vue';
 
 addIcons();
 export default {
     // eslint-disable-next-line vue/no-unused-components
-    components: { TaskCommentsModal, VueDatePicker, 'v-icon': OhVueIcon },
+    components: {
+        TextInput,
+        TaskCommentsModal,
+        VueDatePicker,
+        'v-icon': OhVueIcon,
+    },
     inheritAttrs: false,
     props: {
         task: {
@@ -330,6 +336,13 @@ export default {
                 <!--                    @blur="updateDeadline(this.task)"-->
                 <!--                />-->
             </div>
+        </td>
+
+        <td
+            v-show="currentUserDepartment.name === 'Оборудование'"
+            class="w-[4rem] px-1 text-center text-sm"
+        >
+            <TextInput :model-value="task.progress" class="text-center" />
         </td>
 
         <td

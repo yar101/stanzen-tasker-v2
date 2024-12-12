@@ -8,6 +8,7 @@ import TasksTableRow from '@/Components/Tasks/TasksTableRow.vue';
 import { addIcons, OhVueIcon } from 'oh-vue-icons';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import Cookies from 'js-cookie';
+import { ref } from 'vue';
 import {
     BiBarChartLineFill,
     BiCurrencyExchange,
@@ -15,8 +16,8 @@ import {
     IoPersonSharp,
     MdDownloadingRound,
     MdErroroutlineRound,
+    GiProgression,
 } from 'oh-vue-icons/icons';
-import { ref } from 'vue';
 
 addIcons(
     IoPersonSharp,
@@ -25,6 +26,7 @@ addIcons(
     BiBarChartLineFill,
     MdErroroutlineRound,
     MdDownloadingRound,
+    GiProgression,
 );
 export default {
     components: {
@@ -42,7 +44,7 @@ export default {
     props: {
         errors: Object,
         tasks: {
-            type: Object,
+            type: Array,
             required: true,
         },
         statuses: {
@@ -586,6 +588,10 @@ export default {
                             class="text-center text-sm font-medium text-gray-700"
                         >
                             Дедлайн
+                        </th>
+
+                        <th class="text-center text-sm font-medium text-gray-700" v-show="currentUserDepartment.name === 'Оборудование'">
+                            <v-icon name="gi-progression" scale="1.5" />
                         </th>
 
                         <th
