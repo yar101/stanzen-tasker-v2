@@ -54,7 +54,7 @@ export default {
             required: true,
         },
         users: {
-            type: Object,
+            type: Array,
             required: true,
         },
         currentUserRole: String,
@@ -590,6 +590,7 @@ export default {
 
                         <th
                             class="text-center text-sm font-medium text-gray-700"
+                            v-show="currentUserDepartment.name !== 'Оборудование'"
                         >
                             <v-icon name="bi-currency-exchange" scale="2" />
                         </th>
@@ -628,6 +629,7 @@ export default {
                                 :statuses="statuses"
                                 :task="task"
                                 :users="users"
+                                :currentUserDepartment="currentUserDepartment"
                                 @open-edit-modal="openEditModal"
                                 @open-create-subtask-modal="
                                     openCreateSubtaskModal
@@ -646,6 +648,7 @@ export default {
                                 :statuses="statuses"
                                 :task="subtask"
                                 :users="users"
+                                :currentUserDepartment="currentUserDepartment"
                                 @open-edit-modal="openEditModal"
                             />
                             <!--                                                        <tr class="h-2.5 border-none"></tr>-->
@@ -794,7 +797,7 @@ export default {
                     <InputError :message="errors.contractor" class="mt-2" />
                 </div>
 
-                <div class="mb-4">
+                <div class="mb-4" v-show="currentUserDepartment.name !== 'Оборудование'">
                     <InputLabel class="block text-sm font-medium text-gray-700">
                         Стоимость
                     </InputLabel>
@@ -1028,7 +1031,7 @@ export default {
                     <InputError :message="errors.contractor" class="mt-2" />
                 </div>
 
-                <div class="mb-4">
+                <div class="mb-4" v-show="currentUserDepartment.name !== 'Оборудование'">
                     <InputLabel class="block text-sm font-medium text-gray-700">
                         Стоимость
                     </InputLabel>
@@ -1262,7 +1265,7 @@ export default {
                     <InputError :message="errors.contractor" class="mt-2" />
                 </div>
 
-                <div class="mb-4">
+                <div class="mb-4" v-show="currentUserDepartment.name !== 'Оборудование'">
                     <InputLabel class="block text-sm font-medium text-gray-700">
                         Стоимость
                     </InputLabel>

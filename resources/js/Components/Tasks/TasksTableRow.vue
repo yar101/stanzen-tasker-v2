@@ -31,6 +31,10 @@ export default {
             required: true,
         },
         users: {
+            type: Array,
+            required: true,
+        },
+        currentUserDepartment: {
             type: Object,
             required: true,
         },
@@ -232,7 +236,11 @@ export default {
                 <div
                     class="select-none transition-all duration-100 ease-in-out"
                 >
-                    {{ splitUserName(getUserName(task.manager)) }}
+                    {{
+                        task.manager
+                            ? splitUserName(getUserName(task.manager))
+                            : ''
+                    }}
                 </div>
             </div>
             <!-- Всплывающее окно -->
@@ -324,7 +332,10 @@ export default {
             </div>
         </td>
 
-        <td class="text-sm text-gray-900">
+        <td
+            v-show="currentUserDepartment.name !== 'Оборудование'"
+            class="text-sm text-gray-900"
+        >
             <div class="flex flex-col items-center justify-center">
                 <div class="text-center">
                     {{ this.task.cost }}
