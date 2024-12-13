@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
         // Create Departments
         Department::create(['name' => 'Без отдела']);
         Department::create(['name' => 'Инструменты']);
+        Department::create(['name' => 'Оборудование']);
 
         // Create Roles
         Role::create(['name' => 'admin']);
@@ -112,9 +113,6 @@ class DatabaseSeeder extends Seeder
         Status::create(['name' => 'DONE', 'department_id' => Department::where('name', 'Инструменты')->first()->id]);
         Status::create(['name' => 'CLOSED', 'department_id' => Department::where('name', 'Инструменты')->first()->id]);
 
-        // TasksImport
-//        Excel::import(new TasksImport, 'tools_tasks.xlsx');
-
         // Антон Андреев
         User::create([
             'name' => 'Антон Андреев',
@@ -136,5 +134,26 @@ class DatabaseSeeder extends Seeder
         Contractor::firstOrCreate(['name' => 'АВТОВАЗ АО']);
         Contractor::firstOrCreate(['name' => 'АКВАРИУМ ООО']);
 
+
+        // TasksImport
+        Excel::import(new TasksImport, 'tools_tasks.xlsx');
+
+        // TEST Ob USERS
+
+        User::create([
+            'name' => 'Пользователь Оборудование1',
+            'email' => 'ob1@stnzn.ru',
+            'role_id' => $userRole,
+            'department_id' => 3,
+            'password' => Hash::make('0000'),
+        ]);
+
+        User::create([
+            'name' => 'Пользователь Оборудование2',
+            'email' => 'ob2@stnzn.ru',
+            'role_id' => $userRole,
+            'department_id' => 3,
+            'password' => Hash::make('0000'),
+        ]);
     }
 }
