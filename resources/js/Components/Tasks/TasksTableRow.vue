@@ -274,7 +274,7 @@ export default {
             @mouseleave="isShowPopup = false"
         >
             <div
-                class="flex h-[5rem] min-h-8 cursor-pointer flex-col items-center justify-center overflow-x-hidden overflow-y-hidden text-center hover:bg-indigo-100"
+                class="flex h-[5rem] min-h-8 cursor-pointer flex-col items-center justify-center overflow-x-hidden overflow-y-hidden text-center hover:bg-indigo-100 rounded-md"
                 @click="isShowPopup = !isShowPopup"
             >
                 <div
