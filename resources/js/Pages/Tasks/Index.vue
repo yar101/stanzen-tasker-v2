@@ -232,7 +232,9 @@ export default {
 
         selectContractor(contractor) {
             this.selectedContractor = contractor;
-            this.selectedTask.contractor = contractor;
+            if (this.selectedTask) {
+                this.selectedTask.contractor = contractor;
+            }
             this.form.contractor = contractor.id; // Сохраняем ID выбранного контрагента
             this.isContractorSelectOpen = false; // Закрываем дропдаун
         },
@@ -538,9 +540,7 @@ export default {
                     v-if="tasks.length > 0"
                     class="w-full table-auto overflow-scroll bg-white shadow-lg"
                 >
-                    <thead
-                        class="border-b border-blue-200 bg-neutral-300/50"
-                    >
+                    <thead class="border-b border-blue-200 bg-neutral-300/50">
                         <tr>
                             <th
                                 class="text-center text-sm font-medium text-gray-700"
@@ -1247,9 +1247,17 @@ export default {
                                     class="inline-flex w-full justify-between rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-0 disabled:bg-neutral-200"
                                     @click.prevent="toggleDropdown"
                                 >
-                                    <span>{{
+                                    <span v-show="!selectedTask.is_subtask">{{
                                         selectedTask.contractor.name
                                     }}</span>
+
+                                    <span v-show="selectedTask.is_subtask">
+                                        {{
+                                            getContractorName(
+                                                selectedTask.contractor,
+                                            )
+                                        }}
+                                    </span>
                                     <svg
                                         aria-hidden="true"
                                         class="-mr-1 ml-2 h-5 w-5"
