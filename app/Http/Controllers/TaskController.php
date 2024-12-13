@@ -31,7 +31,10 @@ class TaskController extends Controller
             $eqpStatuses = [2, 3, 5, 6];
             $statuses = Status::whereIn('id', $eqpStatuses)->get();
             $users = User::where('role_id', '!=', 1)->where('name', '!=', 'Антон Андреев')->where('department_id', '=', Department::where('name', '=', 'Оборудование')->first()->id)->get();
-            $tasks = $tasks->where('department_id', '=', Department::where('name', '=', 'Оборудование')->first()->id);
+            $tasks = Task::orderByDesc('created_at')
+                ->where('department_id', '=', Department::where('name', '=', 'Оборудование')->first()->id)
+                ->with('subtasks', 'comments', 'subtasks.comments', 'contractor')
+                ->get();
         } elseif ($currentUser->department->name == 'Инструменты') {
             $statuses = Status::all();
             $users = User::where('role_id', '!=', 1)->where('name', '!=', 'Антон Андреев')->where('department_id', '=', Department::where('name', '=', 'Инструменты')->first()->id)->get();
@@ -148,6 +151,13 @@ class TaskController extends Controller
     public function updateDeadline(Request $request, Task $task)
     {
         $task->update($request->validate(['deadline_end' => ['required', 'date']]));
+
+        return redirect()->route('tasks.index');
+    }
+
+    public function updateProgress(Request $request, Task $task)
+    {
+        $task->update($request->validate(['progress' => ['required', 'integer']]));
 
         return redirect()->route('tasks.index');
     }

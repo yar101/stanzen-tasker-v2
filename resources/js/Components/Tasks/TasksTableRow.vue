@@ -4,13 +4,11 @@ import TaskCommentsModal from '@/Components/Tasks/TaskCommentsModal.vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { addIcons, OhVueIcon } from 'oh-vue-icons';
-import TextInput from '@/Components/TextInput.vue';
+import { BiArrowUpSquareFill } from 'oh-vue-icons/icons';
 
-addIcons();
+addIcons(BiArrowUpSquareFill);
 export default {
-    // eslint-disable-next-line vue/no-unused-components
     components: {
-        TextInput,
         TaskCommentsModal,
         VueDatePicker,
         'v-icon': OhVueIcon,
@@ -47,6 +45,7 @@ export default {
     },
 
     emits: ['open-edit-modal', 'open-create-subtask-modal'],
+
     setup() {
         const format = (date) => {
             const day = date.getDate();
@@ -122,6 +121,44 @@ export default {
                     preserveScroll: true,
                 },
             );
+        },
+
+        formatProgress(progressValue) {
+            if (progressValue > 100) {
+                this.task.progress = 100;
+            }
+
+            if (progressValue < 0) {
+                this.task.progress = 0;
+            }
+        },
+
+        updateProgress(task) {
+            // this.formatProgress(task.progress);
+            this.$inertia.patch(
+                route('tasks.updateProgress', {
+                    task,
+                    progress: task.progress,
+                }),
+                {},
+                {
+                    preserveScroll: true,
+                },
+            );
+        },
+
+        updateProgressByButton(task, target) {
+            const button = target.closest('button'); // Находим кнопку, ближайшую к месту клика
+
+            if (button.classList.contains('progress-plus')) {
+                task.progress += 10;
+                this.formatProgress(task.progress);
+                this.updateProgress(task);
+            } else if (button.classList.contains('progress-minus')) {
+                task.progress -= 10;
+                this.formatProgress(task.progress);
+                this.updateProgress(task);
+            }
         },
 
         splitUserName(fullUserName) {
@@ -341,9 +378,63 @@ export default {
 
         <td
             v-show="currentUserDepartment.name === 'Оборудование'"
-            class="w-[4rem] px-1 text-center text-sm"
+            class="w-[5.5rem] px-1 text-center text-sm"
         >
-            <TextInput :model-value="task.progress" class="text-center" />
+            <div class="flex w-fit items-center gap-1">
+                <input
+                    v-model="this.task.progress"
+                    :class="[
+                        this.task.progress >= 0 && this.task.progress <= 25
+                            ? 'border border-orange-500 bg-orange-500/70 text-neutral-900'
+                            : '',
+                        this.task.progress > 25 && this.task.progress <= 50
+                            ? 'border border-amber-600 bg-amber-300 text-neutral-900'
+                            : '',
+                        this.task.progress > 50 && this.task.progress <= 85
+                            ? 'border border-blue-600 bg-blue-500/70 text-neutral-900'
+                            : '',
+                        this.task.progress > 85 && this.task.progress <= 100
+                            ? 'border border-green-600 bg-green-500/70 text-neutral-900'
+                            : '',
+                    ]"
+                    class="mt-0 w-full rounded border-gray-300 text-center text-sm font-semibold shadow-sm transition-all focus:border-blue-500 focus:ring-0"
+                    disabled
+                    @update:model-value="updateProgress(this.task)"
+                />
+                <div class="flex-col items-center justify-center">
+                    <div class="mb-1 flex items-center justify-center">
+                        <button
+                            class="progress-plus"
+                            @click="
+                                updateProgressByButton(this.task, $event.target)
+                            "
+                        >
+                            <v-icon
+                                class="rounded bg-green-700/70 shadow transition-all active:translate-y-[-2px] active:bg-green-500"
+                                fill="#fff"
+                                name="bi-arrow-up-square-fill"
+                                scale="1.2"
+                            />
+                        </button>
+                    </div>
+
+                    <div class="flex items-center justify-center">
+                        <button
+                            class="progress-minus"
+                            @click="
+                                updateProgressByButton(this.task, $event.target)
+                            "
+                        >
+                            <v-icon
+                                class="rotate-180 rounded bg-red-700/70 shadow transition-all active:translate-y-[2px] active:bg-red-500"
+                                fill="#fff"
+                                name="bi-arrow-up-square-fill"
+                                scale="1.2"
+                            />
+                        </button>
+                    </div>
+                </div>
+            </div>
         </td>
 
         <td
