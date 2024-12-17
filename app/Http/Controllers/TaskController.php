@@ -43,7 +43,9 @@ class TaskController extends Controller
                 ->where('department_id', '=', $dpEqpId)
                 ->with('subtasks', 'comments', 'subtasks.comments', 'contractor', 'project')
                 ->get();
-            $projects = Project::with(['tasks', 'tasks.comments', 'tasks.subtasks', 'tasks.contractor'])->where('department_id', '=', $dpEqpId)->get();
+            $projects = Project::with(['tasks', 'tasks.comments', 'tasks.subtasks', 'tasks.contractor'])
+                ->where('department_id', '=', $dpEqpId)
+                ->get();
         } elseif ($currentUser->department->name == 'Инструменты') {
             $statuses = Status::all();
             $users = User::where('role_id', '!=', 1)->where('name', '!=', 'Антон Андреев')->where('department_id', '=', Department::where('name', '=', 'Инструменты')->first()->id)->get();
@@ -100,6 +102,12 @@ class TaskController extends Controller
             'progress' => 0,
             'department_id' => auth()->user()->department_id,
         ]);
+
+        if ($request['project_id'] === null) {
+            $newTask->update([
+                'project_id' => 1,
+            ]);
+        }
 
         if ($request['deadline_end'] !== null) {
             $deadlineEnd = Carbon::parse($request['deadline_end']);

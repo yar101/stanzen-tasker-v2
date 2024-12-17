@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use function Termwind\render;
@@ -32,12 +33,22 @@ class ProjectController extends Controller
     {
 
 
-        Project::create(
+        $newProject = Project::create(
             $request->validate([
                 'name' => ['required', 'string', 'max:255', Rule::unique('projects', 'name')],
                 'department_id' => ['required', 'integer', Rule::exists('departments', 'id')],
             ])
         );
+
+        if ($request['deadline_start'] !== null) {
+            $deadlineStart = Carbon::parse($request['deadline_start']);
+            $newProject->update(['deadline_start' => $deadlineStart]);
+        };
+
+        if ($request['deadline_end'] !== null) {
+            $deadlineEnd = Carbon::parse($request['deadline_end']);
+            $newProject->update(['deadline_end' => $deadlineEnd]);
+        };
 
         return redirect()->route('tasks.index');
     }

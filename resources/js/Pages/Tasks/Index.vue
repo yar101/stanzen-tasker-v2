@@ -11,6 +11,7 @@ import Cookies from 'js-cookie';
 import { ref } from 'vue';
 import {
     BiArrowRepeat,
+    RiCheckLine,
     BiBarChartLineFill,
     BiCurrencyExchange,
     FaCommentAlt,
@@ -21,6 +22,7 @@ import {
 
 addIcons(
     IoPersonSharp,
+    RiCheckLine,
     BiCurrencyExchange,
     FaCommentAlt,
     BiArrowRepeat,
@@ -225,6 +227,8 @@ export default {
             projectForm: useForm({
                 name: '',
                 department_id: null,
+                deadline_start: null,
+                deadline_end: null,
             }),
 
             form: useForm({
@@ -700,7 +704,10 @@ export default {
                         <!--                    Проекты в таблице-->
 
                         <template
-                            v-if="currentUserDepartment.name === 'Оборудование'"
+                            v-if="
+                                currentUserDepartment.name === 'Оборудование' &&
+                                this.projects.length !== 0
+                            "
                         >
                             <template
                                 v-for="project in projects"
@@ -714,21 +721,29 @@ export default {
                                                 Проект
                                                 {{ project.id }} загружается
                                                 <v-icon
+                                                    animation="spin"
                                                     class="text-blue-500"
                                                     name="bi-arrow-repeat"
-                                                    animation="spin"
                                                 />
                                             </td>
                                         </tr>
                                     </template>
 
-                                    <!-- Название проекта -->
+                                    <!-- Информация о проекте -->
                                     <tr>
                                         <td colspan="12">
                                             <div
-                                                class="mx-4 mb-1 mt-1 rounded-md bg-blue-300/50 text-center text-lg"
+                                                class="mx-4 mb-1 mt-1 flex justify-between rounded-md bg-blue-300/50 text-center text-lg"
                                             >
-                                                {{ project.name }}
+                                                <div class="">
+                                                    {{ project.deadline_start }}
+                                                </div>
+                                                <div class="">
+                                                    {{ project.name }}
+                                                </div>
+                                                <div class="">
+                                                    {{ project.deadline_end }}
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>
@@ -751,9 +766,9 @@ export default {
                                                         {{ task.id }}
                                                         загружается
                                                         <v-icon
+                                                            animation="spin"
                                                             class="text-blue-500"
                                                             name="bi-arrow-repeat"
-                                                            animation="spin"
                                                         />
                                                     </td>
                                                 </tr>
@@ -821,9 +836,9 @@ export default {
                                                 Задача {{ task.id }}
                                                 загружается
                                                 <v-icon
+                                                    animation="spin"
                                                     class="text-blue-500"
                                                     name="bi-arrow-repeat"
-                                                    animation="spin"
                                                 />
                                             </td>
                                         </tr>
@@ -876,7 +891,7 @@ export default {
                 v-if="
                     filteredTasks.length === 0 ||
                     tasks.length === 0 ||
-                    projects.length === 0
+                    (projects.length === 0 && tasks.length === 0)
                 "
                 class="mx-auto mb-10 mt-10 flex h-[20rem] w-[40rem] flex-col items-center justify-evenly rounded-md border-2 border-dotted border-gray-300 bg-neutral-200/50 px-4 py-2 text-center text-xl text-red-400 shadow-xl"
             >
@@ -1044,9 +1059,9 @@ export default {
                                     "
                                 >
                                     <span>{{
-                                      selectedContractor ?
-                                          selectedContractor.name
-                                          : 'Выберите контрагента'
+                                        selectedContractor
+                                            ? selectedContractor.name
+                                            : 'Выберите контрагента'
                                     }}</span>
                                     <svg
                                         aria-hidden="true"
@@ -1655,7 +1670,7 @@ export default {
                 @submit.prevent="storeProject"
             >
                 <h2 class="mb-4 text-lg font-medium text-gray-800">
-                    Добавить проект
+                    Создать проект
                 </h2>
 
                 <!--                Поля формы-->
@@ -1670,6 +1685,108 @@ export default {
                         type="text"
                     />
                     <InputError :message="errors.name" class="mt-2" />
+                </div>
+
+                <div class="mb-4">
+                    <InputLabel class="block text-sm font-medium text-gray-700">
+                        Дата начала проекта
+                        <span v-if="isToday(projectForm.deadline_start)"
+                            >установлена на
+                            <span
+                                class="rounded border border-red-700 bg-red-100 px-2 py-0.5 font-semibold text-neutral-800"
+                                >сегодняшний день</span
+                            ></span
+                        >
+                        <span
+                            v-else-if="
+                                isDeadlineApproaching(
+                                    projectForm.deadline_start,
+                                )
+                            "
+                            ><b
+                                class="rounded border border-red-700 bg-red-100 px-2 py-0.5 font-semibold text-neutral-800"
+                                >скоро наступит</b
+                            ></span
+                        >
+                        <span v-else-if="projectForm.deadline_start === null">
+                        </span>
+                        <span
+                            v-else
+                            class="rounded border border-green-700 bg-green-100 px-1 py-1 font-semibold text-neutral-800"
+                        >
+                            <v-icon name="ri-check-line" />
+                        </span>
+                    </InputLabel>
+                    <div class="mt-2">
+                        <VueDatePicker
+                            v-model="projectForm.deadline_start"
+                            :action-row="{ showNow: true, showPreview: false }"
+                            :class="
+                                isDeadlineApproaching(
+                                    projectForm.deadline_start,
+                                )
+                                    ? 'box-border rounded-md border-[2px] border-red-400 shadow-lg shadow-red-500/50'
+                                    : 'box-border'
+                            "
+                            :clearable="true"
+                            :enable-time-picker="false"
+                            :format="format"
+                            :min-date="new Date()"
+                            cancel-text="Отмена"
+                            locale="ru"
+                            now-button-label="Сегодня"
+                            select-text="Подтвердить"
+                        />
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <InputLabel class="block text-sm font-medium text-gray-700">
+                        Дедлайн проекта
+                        <span v-if="isToday(projectForm.deadline_end)"
+                            >установлен на
+                            <span
+                                class="rounded border border-red-700 bg-red-100 px-2 py-0.5 font-semibold text-neutral-800"
+                                >сегодняшний день</span
+                            ></span
+                        >
+                        <span
+                            v-else-if="
+                                isDeadlineApproaching(projectForm.deadline_end)
+                            "
+                            ><b
+                                class="rounded border border-red-700 bg-red-100 px-2 py-0.5 font-semibold text-neutral-800"
+                                >скоро наступит</b
+                            ></span
+                        >
+                        <span v-else-if="projectForm.deadline_end === null">
+                        </span>
+                        <span
+                            v-else
+                            class="rounded border border-green-700 bg-green-100 px-1 py-1 font-semibold text-neutral-800"
+                        >
+                            <v-icon name="ri-check-line" />
+                        </span>
+                    </InputLabel>
+                    <div class="mt-2">
+                        <VueDatePicker
+                            v-model="projectForm.deadline_end"
+                            :action-row="{ showNow: true, showPreview: false }"
+                            :class="
+                                isDeadlineApproaching(projectForm.deadline_end)
+                                    ? 'box-border rounded-md border-[2px] border-red-400 shadow-lg shadow-red-500/50'
+                                    : 'box-border'
+                            "
+                            :clearable="true"
+                            :enable-time-picker="false"
+                            :format="format"
+                            :min-date="new Date()"
+                            cancel-text="Отмена"
+                            locale="ru"
+                            now-button-label="Сегодня"
+                            select-text="Подтвердить"
+                        />
+                    </div>
                 </div>
 
                 <!--                Кнопки формы-->

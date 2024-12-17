@@ -16,6 +16,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignIdFor(Department::class, 'department_id')->constrained();
+            $table->date('deadline_start')->nullable();
+            $table->date('deadline_end')->nullable();
+            $table->boolean('is_complete')->default(false);
             $table->timestamps();
         });
     }
