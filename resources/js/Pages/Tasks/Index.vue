@@ -10,12 +10,12 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import Cookies from 'js-cookie';
 import { ref } from 'vue';
 import {
+    BiArrowRepeat,
     BiBarChartLineFill,
     BiCurrencyExchange,
     FaCommentAlt,
     GiProgression,
     IoPersonSharp,
-    MdDownloadingRound,
     MdErroroutlineRound,
 } from 'oh-vue-icons/icons';
 
@@ -23,9 +23,9 @@ addIcons(
     IoPersonSharp,
     BiCurrencyExchange,
     FaCommentAlt,
+    BiArrowRepeat,
     BiBarChartLineFill,
     MdErroroutlineRound,
-    MdDownloadingRound,
     GiProgression,
 );
 export default {
@@ -57,6 +57,10 @@ export default {
         },
         users: {
             type: Array,
+            required: true,
+        },
+        projects: {
+            type: Object,
             required: true,
         },
         currentUserRole: String,
@@ -106,6 +110,14 @@ export default {
     },
 
     computed: {
+        filteredProjects() {
+            return this.projects.filter((project) =>
+                project.name
+                    .toLowerCase()
+                    .includes(this.projectSearchTerm.toLowerCase()),
+            );
+        },
+
         // Список контрагентов, отфильтрованный по запросу
         filteredContractors() {
             return this.contractors.filter((contractor) =>
@@ -200,11 +212,23 @@ export default {
             contractorSearchTerm: '', // Текущий поисковый запрос
             selectedContractor: ref(null), // Выбранный контрагент
 
+            isProjectSelectOpen: false, // Статус дропдауна
+            projectSearchTerm: '', // Текущий поисковый запрос
+            selectedProject: ref(null), // Выбранный контрагент
+
             isEditModalOpen: false,
             isCreateModalOpen: false,
             isCreateSubtaskModalOpen: false,
             selectedTask: null,
+
+            isCreateProjectModalOpen: false,
+            projectForm: useForm({
+                name: '',
+                department_id: null,
+            }),
+
             form: useForm({
+                project_id: null,
                 parent_task: null,
                 title: '',
                 description: '',
@@ -226,8 +250,23 @@ export default {
     },
 
     methods: {
-        toggleDropdown() {
-            this.isContractorSelectOpen = !this.isContractorSelectOpen;
+        openCreateProjectModal() {
+            this.isCreateProjectModalOpen = true;
+            this.projectForm.department_id = this.currentUserDepartment.id;
+        },
+
+        closeCreateProjectModal() {
+            this.isCreateProjectModalOpen = false;
+        },
+
+        toggleDropdown(field) {
+            if (field === 'contractorField') {
+                this.isContractorSelectOpen = !this.isContractorSelectOpen;
+            }
+
+            if (field === 'projectField') {
+                this.isProjectSelectOpen = !this.isProjectSelectOpen;
+            }
         },
 
         selectContractor(contractor) {
@@ -237,6 +276,15 @@ export default {
             }
             this.form.contractor = contractor.id; // Сохраняем ID выбранного контрагента
             this.isContractorSelectOpen = false; // Закрываем дропдаун
+        },
+
+        selectProject(project) {
+            this.selectedProject = project;
+            if (this.selectedTask) {
+                this.selectedTask.project = project;
+            }
+            this.form.project_id = project.id; // Сохраняем ID выбранного контрагента
+            this.isProjectSelectOpen = false; // Закрываем дропдаун
         },
 
         isToday(date) {
@@ -263,9 +311,14 @@ export default {
             const statusModal = this.$refs.filterByStatusesModal;
             const userModal = this.$refs.filterByUserModal;
             const contractorSelect = this.$refs.contractorSelect;
+            const projectSelect = this.$refs.projectSelect;
 
             if (contractorSelect && !contractorSelect.contains(event.target)) {
                 this.isContractorSelectOpen = false;
+            }
+
+            if (projectSelect && !projectSelect.contains(event.target)) {
+                this.isProjectSelectOpen = false;
             }
 
             if (statusModal && !statusModal.contains(event.target)) {
@@ -289,6 +342,7 @@ export default {
         },
         openEditModal(task) {
             this.selectedTask = { ...task }; // Копируем объект
+            this.form.project_id = task.project_id;
             this.form.parent_task = task.parent_task;
             this.form.title = String(task.title);
             this.form.description = task.description;
@@ -304,7 +358,7 @@ export default {
             this.isEditModalOpen = true;
         },
         openCreateModal() {
-            // Сбрасываем форму
+            this.form.project_id = null;
             this.form.parent_task = null;
             this.form.title = '';
             this.form.description = '';
@@ -317,6 +371,7 @@ export default {
         },
 
         openCreateSubtaskModal(task) {
+            this.form.project_id = task.project_id;
             this.selectedTask = { ...task };
             this.form.parent_task = task.id;
             this.form.title = task.title;
@@ -360,6 +415,14 @@ export default {
             );
         },
 
+        storeProject() {
+            this.$inertia.post(route('projects.store'), this.projectForm, {
+                onSuccess: () => {
+                    this.closeCreateProjectModal();
+                },
+            });
+        },
+
         getUserName(userId) {
             const user = this.users.find((user) => user.id === userId);
             if (userId === 1) return 'admin';
@@ -384,10 +447,18 @@ export default {
         <template #nav-buttons>
             <div :class="tasks.length === 0 ? 'hidden' : ''" class="">
                 <button
-                    class="m-2 rounded bg-green-500 px-3 py-1 text-sm text-white transition-all duration-100 hover:bg-green-500/90 hover:shadow-md active:translate-y-[3px] active:shadow-inner active:ring-0"
+                    class="m-2 rounded bg-gradient-to-br from-green-500 to-green-700 px-3 py-1 text-sm text-white transition-all duration-100 hover:bg-green-500/90 hover:shadow-md active:translate-y-[3px] active:shadow-inner active:ring-0"
                     @click="openCreateModal"
                 >
                     Создать задачу
+                </button>
+
+                <button
+                    v-show="currentUserDepartment.name === 'Оборудование'"
+                    class="m-2 rounded bg-gradient-to-br from-indigo-500 to-indigo-700 px-3 py-1 text-sm text-white transition-all duration-100 hover:bg-green-500/90 hover:shadow-md active:translate-y-[3px] active:shadow-inner active:ring-0"
+                    @click="openCreateProjectModal"
+                >
+                    Создать проект
                 </button>
             </div>
         </template>
@@ -535,10 +606,10 @@ export default {
                 </div>
             </div>
             <!-- Таблица -->
-            <div class="mx-auto w-full overflow-hidden rounded-md shadow-lg">
+            <div class="mx-auto w-full overflow-auto rounded-md shadow-lg">
                 <table
-                    v-if="tasks.length > 0"
-                    class="w-full table-auto overflow-scroll bg-white shadow-lg"
+                    v-if="tasks.length > 0 || projects.length > 0"
+                    class="w-full table-auto overflow-auto bg-white shadow-lg"
                 >
                     <thead class="border-b border-blue-200 bg-neutral-300/50">
                         <tr>
@@ -626,75 +697,206 @@ export default {
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
-                        <template v-for="task in filteredTasks" :key="task.id">
-                            <WhenVisible always as="span" data="task">
-                                <template #fallback>
+                        <!--                    Проекты в таблице-->
+
+                        <template
+                            v-if="currentUserDepartment.name === 'Оборудование'"
+                        >
+                            <template
+                                v-for="project in projects"
+                                :key="project.id"
+                            >
+                                <!-- Обёртка для каждого проекта -->
+                                <WhenVisible always as="span" data="project">
+                                    <template #fallback>
+                                        <tr>
+                                            <td colspan="12">
+                                                Проект
+                                                {{ project.id }} загружается
+                                                <v-icon
+                                                    class="text-blue-500"
+                                                    name="bi-arrow-repeat"
+                                                    animation="spin"
+                                                />
+                                            </td>
+                                        </tr>
+                                    </template>
+
+                                    <!-- Название проекта -->
                                     <tr>
-                                        <td class="" colspan="12">
-                                            Задача {{ task.id }}
-                                            загружается
-                                            <v-icon
-                                                class="text-blue-500"
-                                                name="md-downloading-round"
-                                            />
+                                        <td colspan="12">
+                                            <div
+                                                class="mx-4 mb-1 mt-1 rounded-md bg-blue-300/50 text-center text-lg"
+                                            >
+                                                {{ project.name }}
+                                            </div>
                                         </td>
                                     </tr>
-                                </template>
-                                <TasksTableRow
-                                    v-if="!task.is_subtask"
-                                    :comments="task.comments"
-                                    :contractors="contractors"
-                                    :currentUserDepartment="
-                                        currentUserDepartment
-                                    "
-                                    :errors="errors"
-                                    :statuses="statuses"
-                                    :task="task"
-                                    :users="users"
-                                    @open-edit-modal="openEditModal"
-                                    @open-create-subtask-modal="
-                                        openCreateSubtaskModal
-                                    "
-                                />
-                                <template
-                                    v-if="
-                                        task.subtasks &&
-                                        task.subtasks.length > 0
-                                    "
-                                >
+
+                                    <!-- Задачи проекта -->
+
+                                    <template
+                                        v-for="task in project.tasks"
+                                        :key="task.id"
+                                    >
+                                        <WhenVisible
+                                            always
+                                            as="span"
+                                            data="task"
+                                        >
+                                            <template #fallback>
+                                                <tr>
+                                                    <td colspan="12">
+                                                        Задача
+                                                        {{ task.id }}
+                                                        загружается
+                                                        <v-icon
+                                                            class="text-blue-500"
+                                                            name="bi-arrow-repeat"
+                                                            animation="spin"
+                                                        />
+                                                    </td>
+                                                </tr>
+                                            </template>
+
+                                            <!-- Основные задачи -->
+                                            <TasksTableRow
+                                                v-if="!task.is_subtask"
+                                                :comments="task.comments"
+                                                :contractors="contractors"
+                                                :currentUserDepartment="
+                                                    currentUserDepartment
+                                                "
+                                                :errors="errors"
+                                                :statuses="statuses"
+                                                :task="task"
+                                                :users="users"
+                                                @open-edit-modal="openEditModal"
+                                                @open-create-subtask-modal="
+                                                    openCreateSubtaskModal
+                                                "
+                                            />
+
+                                            <!-- Подзадачи -->
+                                            <template
+                                                v-if="
+                                                    task.subtasks &&
+                                                    task.subtasks.length > 0
+                                                "
+                                            >
+                                                <TasksTableRow
+                                                    v-for="subtask in task.subtasks"
+                                                    :key="subtask.id"
+                                                    :comments="subtask.comments"
+                                                    :contractors="contractors"
+                                                    :currentUserDepartment="
+                                                        currentUserDepartment
+                                                    "
+                                                    :errors="errors"
+                                                    :statuses="statuses"
+                                                    :task="subtask"
+                                                    :users="users"
+                                                    @open-edit-modal="
+                                                        openEditModal
+                                                    "
+                                                />
+                                            </template>
+                                        </WhenVisible>
+                                    </template>
+                                </WhenVisible>
+                            </template>
+                        </template>
+
+                        <!--                        Задачи у отделов без проектов-->
+
+                        <template v-else>
+                            <template
+                                v-for="task in filteredTasks"
+                                :key="task.id"
+                            >
+                                <WhenVisible always as="span" data="task">
+                                    <template #fallback>
+                                        <tr>
+                                            <td class="" colspan="12">
+                                                Задача {{ task.id }}
+                                                загружается
+                                                <v-icon
+                                                    class="text-blue-500"
+                                                    name="bi-arrow-repeat"
+                                                    animation="spin"
+                                                />
+                                            </td>
+                                        </tr>
+                                    </template>
                                     <TasksTableRow
-                                        v-for="subtask in task.subtasks"
-                                        :key="subtask.id"
-                                        :comments="subtask.comments"
+                                        v-if="!task.is_subtask"
+                                        :comments="task.comments"
                                         :contractors="contractors"
                                         :currentUserDepartment="
                                             currentUserDepartment
                                         "
                                         :errors="errors"
                                         :statuses="statuses"
-                                        :task="subtask"
+                                        :task="task"
                                         :users="users"
                                         @open-edit-modal="openEditModal"
+                                        @open-create-subtask-modal="
+                                            openCreateSubtaskModal
+                                        "
                                     />
-                                </template>
-                            </WhenVisible>
+                                    <template
+                                        v-if="
+                                            task.subtasks &&
+                                            task.subtasks.length > 0
+                                        "
+                                    >
+                                        <TasksTableRow
+                                            v-for="subtask in task.subtasks"
+                                            :key="subtask.id"
+                                            :comments="subtask.comments"
+                                            :contractors="contractors"
+                                            :currentUserDepartment="
+                                                currentUserDepartment
+                                            "
+                                            :errors="errors"
+                                            :statuses="statuses"
+                                            :task="subtask"
+                                            :users="users"
+                                            @open-edit-modal="openEditModal"
+                                        />
+                                    </template>
+                                </WhenVisible>
+                            </template>
                         </template>
                     </tbody>
                 </table>
             </div>
 
             <div
-                v-if="filteredTasks.length === 0 || tasks.length === 0"
+                v-if="
+                    filteredTasks.length === 0 ||
+                    tasks.length === 0 ||
+                    projects.length === 0
+                "
                 class="mx-auto mb-10 mt-10 flex h-[20rem] w-[40rem] flex-col items-center justify-evenly rounded-md border-2 border-dotted border-gray-300 bg-neutral-200/50 px-4 py-2 text-center text-xl text-red-400 shadow-xl"
             >
                 Задачи не найдены
                 <v-icon name="md-erroroutline-round" scale="5" />
-                <button
-                    class="text-md m-2 w-[200px] rounded bg-green-500 px-3 py-1 text-white transition-all duration-100 hover:bg-green-500/90 hover:shadow-md active:translate-y-[3px] active:shadow-inner active:ring-0"
-                    @click="openCreateModal"
-                >
-                    Создать задачу
-                </button>
+                <div class="flex gap-2">
+                    <button
+                        class="text-md m-2 w-[200px] rounded bg-gradient-to-br from-green-500 to-green-700 px-3 py-1 text-white transition-all duration-100 hover:bg-green-500/90 hover:shadow-md active:translate-y-[3px] active:shadow-inner active:ring-0"
+                        @click="openCreateModal"
+                    >
+                        Создать задачу
+                    </button>
+
+                    <button
+                        class="text-md m-2 w-[200px] rounded bg-gradient-to-br from-indigo-500 to-indigo-700 px-3 py-1 text-white transition-all duration-100 hover:bg-green-500/90 hover:shadow-md active:translate-y-[3px] active:shadow-inner active:ring-0"
+                        @click="openCreateProjectModal"
+                    >
+                        Создать проект
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -712,6 +914,73 @@ export default {
                 </h2>
 
                 <!--                Поля формы-->
+
+                <div class="mb-4">
+                    <InputLabel class="block text-sm font-medium text-gray-700">
+                        Проект
+                    </InputLabel>
+                    <div class="flex gap-2">
+                        <div
+                            class="z-10 mt-1 flex w-full items-center justify-center"
+                        >
+                            <div class="group relative w-full">
+                                <button
+                                    class="inline-flex w-full justify-between rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-0"
+                                    @click.prevent="
+                                        toggleDropdown('projectField')
+                                    "
+                                >
+                                    <span>{{
+                                        selectedProject
+                                            ? selectedProject.name
+                                            : 'Выберите проект'
+                                    }}</span>
+                                    <svg
+                                        aria-hidden="true"
+                                        class="-mr-1 ml-2 h-5 w-5"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            clip-rule="evenodd"
+                                            d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                                            fill-rule="evenodd"
+                                        />
+                                    </svg>
+                                </button>
+                                <div
+                                    v-show="isProjectSelectOpen"
+                                    ref="projectSelect"
+                                    class="absolute left-0 right-0 mt-2 max-h-48 w-full overflow-y-auto rounded-md border border-gray-300 bg-gray-100 pr-1 shadow-lg"
+                                >
+                                    <div class="sticky top-0 bg-gray-100 p-1">
+                                        <div class="backdrop-blur">
+                                            <!-- Поле поиска -->
+                                            <input
+                                                v-model="projectSearchTerm"
+                                                autocomplete="off"
+                                                class="h-[2rem] w-full rounded-md border border-gray-300 bg-gray-100 px-2 text-sm text-gray-800 outline-none ring-0 transition-all duration-100 ease-in-out focus:shadow-xl focus:shadow-blue-100/50"
+                                                placeholder="Поиск..."
+                                                type="text"
+                                            />
+                                        </div>
+                                    </div>
+                                    <!-- Список проектов -->
+                                    <span
+                                        v-for="project in filteredProjects"
+                                        :key="project.id"
+                                        class="m-1 block cursor-pointer rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 active:bg-blue-100"
+                                        @click="selectProject(project)"
+                                    >
+                                        {{ project.name }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <InputError :message="errors.project_id" class="mt-2" />
+                </div>
 
                 <div v-if="currentUserRole !== 'user'" class="mb-4">
                     <InputLabel class="block text-sm font-medium text-gray-700">
@@ -770,11 +1039,14 @@ export default {
                             <div class="group relative w-full">
                                 <button
                                     class="inline-flex w-full justify-between rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-0"
-                                    @click.prevent="toggleDropdown"
+                                    @click.prevent="
+                                        toggleDropdown('contractorField')
+                                    "
                                 >
                                     <span>{{
-                                        selectedContractorName ||
-                                        'Выберите контрагента'
+                                      selectedContractor ?
+                                          selectedContractor.name
+                                          : 'Выберите контрагента'
                                     }}</span>
                                     <svg
                                         aria-hidden="true"
@@ -1006,7 +1278,9 @@ export default {
                                 <button
                                     class="inline-flex w-full justify-between rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-0 disabled:bg-neutral-200"
                                     disabled
-                                    @click.prevent="toggleDropdown"
+                                    @click.prevent="
+                                        toggleDropdown('contractorField')
+                                    "
                                 >
                                     <span>{{
                                         selectedTask.contractor.name ||
@@ -1245,7 +1519,9 @@ export default {
                                 <button
                                     :disabled="form.is_subtask"
                                     class="inline-flex w-full justify-between rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-0 disabled:bg-neutral-200"
-                                    @click.prevent="toggleDropdown"
+                                    @click.prevent="
+                                        toggleDropdown('contractorField')
+                                    "
                                 >
                                     <span v-show="!selectedTask.is_subtask">{{
                                         selectedTask.contractor.name
@@ -1363,6 +1639,53 @@ export default {
                         type="submit"
                     >
                         Обновить
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!--        Окно создания проекта-->
+
+        <div
+            v-if="isCreateProjectModalOpen"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50"
+        >
+            <form
+                class="w-[30rem] rounded-md bg-white p-5 shadow-lg"
+                @submit.prevent="storeProject"
+            >
+                <h2 class="mb-4 text-lg font-medium text-gray-800">
+                    Добавить проект
+                </h2>
+
+                <!--                Поля формы-->
+
+                <div class="mb-4">
+                    <InputLabel class="block text-sm font-medium text-gray-700">
+                        Название
+                    </InputLabel>
+                    <TextInput
+                        v-model="projectForm.name"
+                        class="mt-1 w-full rounded border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-0"
+                        type="text"
+                    />
+                    <InputError :message="errors.name" class="mt-2" />
+                </div>
+
+                <!--                Кнопки формы-->
+                <div class="flex justify-end gap-2">
+                    <button
+                        class="rounded bg-gray-300 px-4 py-2 text-sm hover:bg-gray-400"
+                        type="button"
+                        @click="closeCreateProjectModal"
+                    >
+                        Отмена
+                    </button>
+                    <button
+                        class="rounded bg-green-500 px-4 py-2 text-sm text-white hover:bg-green-600"
+                        type="submit"
+                    >
+                        Добавить
                     </button>
                 </div>
             </form>

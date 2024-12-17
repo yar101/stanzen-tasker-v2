@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Models\Contractor;
 use App\Models\Department;
+use App\Models\Project;
 use App\Models\Status;
 use App\Models\Task;
 use App\Models\User;
@@ -21,30 +22,48 @@ class TaskController extends Controller
     {
         $currentUser = auth()->user();
         $currentUserRole = auth()->user()->role->name;
+
         $users = User::where('role_id', '!=', 1)->where('name', '!=', 'Антон Андреев')->get();
         $statuses = Status::all();
+        $projects = Project::with('tasks');
 
         $tasks = Task::orderByDesc('created_at')->with('subtasks', 'comments', 'subtasks.comments', 'contractor')->get();
         $contractors = Contractor::orderBy('name')->get();
 
+        $dpToolsId = Department::where('name', '=', 'Инструменты')->first()->id;
+        $dpEqpId = Department::where('name', '=', 'Оборудование')->first()->id;
+
         if ($currentUser->department->name == 'Оборудование') {
             $eqpStatuses = [2, 3, 5, 6];
             $statuses = Status::whereIn('id', $eqpStatuses)->get();
-            $users = User::where('role_id', '!=', 1)->where('name', '!=', 'Антон Андреев')->where('department_id', '=', Department::where('name', '=', 'Оборудование')->first()->id)->get();
-            $tasks = Task::orderByDesc('created_at')
-                ->where('department_id', '=', Department::where('name', '=', 'Оборудование')->first()->id)
-                ->with('subtasks', 'comments', 'subtasks.comments', 'contractor')
+            $users = User::where('role_id', '!=', 1)->where('name', '!=', 'Антон Андреев')
+                ->where('department_id', '=', $dpEqpId)
                 ->get();
+            $tasks = Task::orderByDesc('created_at')
+                ->where('department_id', '=', $dpEqpId)
+                ->with('subtasks', 'comments', 'subtasks.comments', 'contractor', 'project')
+                ->get();
+            $projects = Project::with(['tasks', 'tasks.comments', 'tasks.subtasks', 'tasks.contractor'])->where('department_id', '=', $dpEqpId)->get();
         } elseif ($currentUser->department->name == 'Инструменты') {
             $statuses = Status::all();
             $users = User::where('role_id', '!=', 1)->where('name', '!=', 'Антон Андреев')->where('department_id', '=', Department::where('name', '=', 'Инструменты')->first()->id)->get();
             $tasks = Task::orderByDesc('created_at')
                 ->where('department_id', '=', Department::where('name', '=', 'Инструменты')->first()->id)
-                ->with('subtasks', 'comments', 'subtasks.comments', 'contractor')
+                ->with('subtasks', 'comments', 'subtasks.comments', 'contractor', 'project')
                 ->get();
+            $projects = Project::with('tasks')
+                ->where('department_id', '=', $dpToolsId);
         }
 
-        return Inertia::render('Tasks/Index', ['tasks' => $tasks, 'statuses' => $statuses, 'contractors' => $contractors, 'users' => $users, 'currentUserRole' => $currentUserRole, 'currentUserDepartment' => $currentUser->department]);
+        return Inertia::render('Tasks/Index', [
+            'tasks' => $tasks,
+            'statuses' => $statuses,
+            'contractors' => $contractors,
+            'users' => $users,
+            'currentUserRole' => $currentUserRole,
+            'currentUserDepartment' => $currentUser->department,
+            'projects' => $projects,
+        ]);
     }
 
     public function getComments(Task $task)
@@ -74,6 +93,7 @@ class TaskController extends Controller
             'currency' => ['required'],
             'parent_task' => ['nullable', 'integer'],
             'priority' => ['string', 'required'],
+            'project_id' => ['nullable', 'integer'],
         ]));
 
         $newTask->update([

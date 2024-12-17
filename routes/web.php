@@ -4,6 +4,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContractorController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -39,3 +40,5 @@ Route::patch('/task/{task}/update-deadline', [TaskController::class, 'updateDead
 Route::patch('/tasks/{task}/update-progress', [TaskController::class, 'updateProgress'])->middleware('auth')->name('tasks.updateProgress');
 
 Route::resource('/comments', CommentController::class)->middleware('auth');
+
+Route::resource('/projects', ProjectController::class)->middleware('auth');

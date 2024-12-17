@@ -232,6 +232,7 @@ export default {
                     ]"
                     class="ml-[0.5rem] rounded-md text-sm transition-colors focus:ring-0"
                     @change="updateStatus(this.task)"
+                    :disabled="this.$page.props.auth.user.id !== this.task.manager"
                 >
                     <option
                         v-for="status in this.statuses"
@@ -274,7 +275,7 @@ export default {
             @mouseleave="isShowPopup = false"
         >
             <div
-                class="flex h-[5rem] min-h-8 cursor-pointer flex-col items-center justify-center overflow-x-hidden overflow-y-hidden text-center hover:bg-indigo-100 rounded-md"
+                class="flex h-[5rem] min-h-8 cursor-pointer flex-col items-center justify-center overflow-x-hidden overflow-y-hidden rounded-md text-center hover:bg-indigo-100"
                 @click="isShowPopup = !isShowPopup"
             >
                 <div
@@ -350,7 +351,7 @@ export default {
                     locale="ru"
                     now-button-label="Сегодня"
                     select-text="Подтвердить"
-                    @blur="updateDeadline(task)"
+                    @change="updateDeadline(task)"
                 />
                 <!--                {{-->
                 <!--                    new Date(this.task.deadline_end).toLocaleDateString(-->

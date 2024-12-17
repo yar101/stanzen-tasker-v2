@@ -4,8 +4,10 @@ import { Head, WhenVisible } from '@inertiajs/vue3';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { OhVueIcon } from 'oh-vue-icons';
+import { addIcons, OhVueIcon } from 'oh-vue-icons';
+import { BiArrowRepeat } from 'oh-vue-icons/icons';
 
+addIcons(BiArrowRepeat);
 export default {
     // eslint-disable-next-line vue/no-reserved-component-names
     components: {
@@ -91,7 +93,7 @@ export default {
         destroy(id, name) {
             if (
                 confirm(
-                    'Вы действительно хотите удалить контрагента `' +
+                    'Вы действительно хотите удалить контрагента `' +
                         name +
                         '`?',
                 )
@@ -139,10 +141,10 @@ export default {
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
                     <template
-                        v-for="contractor in contractors"
+                        v-for="contractor in filteredContractors"
                         :key="contractor.id"
                     >
-                        <WhenVisible as="span" data="contractors">
+                        <WhenVisible as="span" data="contractors" always>
                             <template #fallback>
                                 <tr>
                                     <td class="" colspan="2">
@@ -150,7 +152,8 @@ export default {
                                         загружается
                                         <v-icon
                                             class="text-blue-500"
-                                            name="md-downloading-round"
+                                            name="bi-arrow-repeat"
+                                            animation="spin"
                                         />
                                     </td>
                                 </tr>

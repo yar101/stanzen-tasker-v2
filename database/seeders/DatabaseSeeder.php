@@ -6,6 +6,7 @@ use App\Imports\ContractorsImport;
 use App\Imports\TasksImport;
 use App\Models\Contractor;
 use App\Models\Department;
+use App\Models\Project;
 use App\Models\Role;
 use App\Models\Status;
 use App\Models\User;
@@ -134,6 +135,8 @@ class DatabaseSeeder extends Seeder
         Contractor::firstOrCreate(['name' => 'АВТОВАЗ АО']);
         Contractor::firstOrCreate(['name' => 'АКВАРИУМ ООО']);
 
+        // Null Project
+        Project::create(['name' => 'Без проекта', 'department_id' => Department::where('name', '=', 'Без отдела')->first()->id]);
 
         // TasksImport
         Excel::import(new TasksImport, 'tools_tasks.xlsx');

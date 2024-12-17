@@ -13,7 +13,6 @@ const showingNavigationDropdown = ref(false);
 <template>
     <div>
         <div class="min-h-svh bg-gray-100">
-            {{  }}
             <nav
                 class="fixed top-0 z-10 w-full border-b border-gray-300 bg-white shadow-md"
             >
@@ -165,6 +164,13 @@ const showingNavigationDropdown = ref(false);
                             :href="route('dashboard')"
                         >
                             Дашборд
+                        </ResponsiveNavLink>
+
+                        <ResponsiveNavLink
+                            :active="route().current('tasks.index')"
+                            :href="route('tasks.index')"
+                        >
+                            Задачи
                         </ResponsiveNavLink>
 
                         <ResponsiveNavLink

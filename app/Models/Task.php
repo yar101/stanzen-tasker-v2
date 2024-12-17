@@ -17,6 +17,11 @@ class Task extends Model
      */
     protected $guarded = [];
 
+
+    public function project() :BelongsTo
+    {
+        return $this->belongsTo(Project::class);
+    }
     public function status() :BelongsTo
     {
         return $this->belongsTo(Status::class);
