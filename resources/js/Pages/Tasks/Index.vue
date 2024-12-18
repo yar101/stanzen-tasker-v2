@@ -427,6 +427,7 @@ export default {
         openCreateProjectModal() {
             this.isCreateProjectModalOpen = true;
             this.projectForm.name = '';
+            this.projectForm.deadline_start = new Date();
             this.projectForm.department_id = this.currentUserDepartment.id;
         },
 
@@ -541,6 +542,17 @@ export default {
             this.selectedContractor = null;
             this.selectedProject = null;
             this.form.cost = 0;
+
+            if (this.currentUserDepartment.name === 'Оборудование') {
+                this.form.deadline_end = new Date().setDate(
+                    new Date().getDate() + 90,
+                );
+            } else {
+                this.form.deadline_end = new Date().setDate(
+                    new Date().getDate() + 14,
+                );
+            }
+
             this.form.manager = this.$page.props.auth.user.id;
             this.form.currency = 'RUB';
             this.form.priority = 'III';
@@ -555,6 +567,15 @@ export default {
             this.form.description = '';
             this.selectedTask.contractor = { ...task.contractor };
             this.form.contractor = task.contractor.id;
+            if (this.currentUserDepartment.name === 'Оборудование') {
+                this.form.deadline_end = new Date().setDate(
+                    new Date().getDate() + 14,
+                );
+            } else {
+                this.form.deadline_end = new Date().setDate(
+                    new Date().getDate() + 14,
+                );
+            }
             this.form.cost = 0;
             this.form.manager = task.manager;
             this.form.currency = task.currency;
@@ -904,18 +925,46 @@ export default {
 
                                     <!-- Информация о проекте -->
                                     <tr>
-                                        <td colspan="12">
+                                        <td class="p-1" colspan="12">
                                             <div
-                                                class="mx-4 mb-1 mt-1 flex justify-between rounded-md bg-blue-300/50 text-center text-lg"
+                                                class="grid cursor-pointer select-none grid-cols-[1fr,1fr,1fr] rounded-[4px] border-2 border-dotted border-amber-300/80 bg-amber-200/50 p-1 text-sm font-semibold text-neutral-700 transition-all duration-200 ease-in-out hover:border-amber-400 hover:bg-amber-200/70 hover:text-amber-900 active:border-blue-300"
                                             >
-                                                <div class="">
-                                                    {{ project.deadline_start }}
+                                                <div class="text-start">
+                                                    <div
+                                                        v-if="
+                                                            project.deadline_start
+                                                        "
+                                                        class=""
+                                                    >
+                                                        {{
+                                                            project.deadline_start
+                                                        }}
+                                                    </div>
+                                                    <div v-else class="">
+                                                        Дата начала не
+                                                        установлена
+                                                    </div>
                                                 </div>
-                                                <div class="">
+                                                <div class="text-center">
                                                     {{ project.name }}
                                                 </div>
                                                 <div class="">
-                                                    {{ project.deadline_end }}
+                                                    <div
+                                                        v-if="
+                                                            project.deadline_end
+                                                        "
+                                                        class="text-end"
+                                                    >
+                                                        {{
+                                                            project.deadline_end
+                                                        }}
+                                                    </div>
+                                                    <div
+                                                        v-else
+                                                        class="text-end"
+                                                    >
+                                                        Дедлайн не установлен
+                                                    </div>
                                                 </div>
                                             </div>
                                         </td>
@@ -1143,7 +1192,7 @@ export default {
                                 </button>
                                 <button @click.prevent="openCreateProjectModal">
                                     <v-icon
-                                        class="text-indigo-200 justify-self-end rounded bg-gradient-to-br from-indigo-500 to-indigo-700 transition-all duration-100 hover:bg-green-500/90 hover:shadow-md active:translate-y-[3px] active:shadow-inner active:ring-0"
+                                        class="justify-self-end rounded bg-gradient-to-br from-indigo-500 to-indigo-700 text-indigo-200 shadow-md transition-all duration-100 hover:bg-green-500/90 hover:shadow-md active:translate-y-[3px] active:shadow-inner active:ring-0"
                                         name="bi-plus-square-dotted"
                                         scale="1.5"
                                     />
@@ -1360,12 +1409,15 @@ export default {
                                 >скоро наступит</b
                             ></span
                         >
-                        <span v-else
-                            ><b
-                                class="rounded border border-green-700 bg-green-100 px-2 py-0.5 font-semibold text-neutral-800"
-                                >установлен более чем на 2 дня</b
-                            ></span
+                        <span v-if="form.deadline_end === null">
+                            Не установлен
+                        </span>
+                        <span
+                            v-else
+                            class="rounded border border-green-700 bg-green-100 p-0.5 font-semibold text-neutral-800"
                         >
+                            <v-icon name="ri-check-line" />
+                        </span>
                     </InputLabel>
                     <div class="mt-2">
                         <VueDatePicker
@@ -1931,7 +1983,7 @@ export default {
                                 isDeadlineApproaching(
                                     projectForm.deadline_start,
                                 )
-                                    ? 'box-border rounded-md border-[2px] border-red-400 shadow-lg shadow-red-500/50'
+                                    ? 'box-border rounded-md'
                                     : 'box-border'
                             "
                             :clearable="true"
@@ -1966,6 +2018,7 @@ export default {
                             ></span
                         >
                         <span v-else-if="projectForm.deadline_end === null">
+                            не установлен
                         </span>
                         <span
                             v-else
