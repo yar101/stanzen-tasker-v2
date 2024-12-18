@@ -111,8 +111,8 @@ export default {
                                 :class="
                                     comment.created_by ===
                                     $page.props.auth.user.id
-                                        ? 'rounded-md border border-gray-200 bg-gray-100 p-2 text-sm text-neutral-700 shadow-md'
-                                        : 'rounded-md border border-blue-200 bg-blue-100 p-2 text-sm text-neutral-700 shadow-md'
+                                        ? 'rounded-md border border-gray-200 bg-gray-100 p-2 text-sm text-neutral-700 shadow-md break-words'
+                                        : 'rounded-md border border-blue-200 bg-blue-100 p-2 text-sm text-neutral-700 shadow-md break-words'
                                 "
                             >
                                 {{ comment.content }}

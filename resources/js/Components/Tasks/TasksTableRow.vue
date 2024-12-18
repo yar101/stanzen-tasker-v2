@@ -231,9 +231,11 @@ export default {
                             ? 'border-amber-400 bg-neutral-800 text-amber-200 hover:bg-neutral-900 hover:text-amber-300'
                             : '',
                     ]"
+                    :disabled="
+                        this.$page.props.auth.user.id !== this.task.manager
+                    "
                     class="ml-[0.5rem] rounded-md text-sm transition-colors focus:ring-0"
                     @change="updateStatus(this.task)"
-                    :disabled="this.$page.props.auth.user.id !== this.task.manager"
                 >
                     <option
                         v-for="status in this.statuses"
@@ -453,18 +455,18 @@ export default {
             </div>
         </td>
 
-        <td class="max-w-[20rem]">
+        <td class="max-w-[10rem]">
             <!--                  Last comment-->
             <template v-if="task.comments && task.comments.length > 0">
                 <div
                     v-if="task.comments.length > 1"
-                    class="ml-1 mt-1 w-fit cursor-pointer rounded border border-blue-500 bg-blue-200 px-2 text-end text-sm font-medium text-blue-900 transition-all duration-100 ease-in-out hover:bg-blue-300"
+                    class="mb-1.5 ml-1 mt-1 w-fit cursor-pointer rounded border border-blue-500 bg-blue-200 px-2 text-end text-sm font-medium text-blue-900 transition-all duration-100 ease-in-out hover:bg-blue-300"
                     @click="isCommentsModalOpen = true"
                 >
                     {{ task.comments.length }}
                 </div>
                 <div
-                    class="m-1 mt-2 cursor-pointer overflow-y-auto rounded-md border border-transparent p-1 text-sm text-neutral-900 transition-all duration-100 ease-in-out hover:translate-y-[-3px] hover:border-blue-600 hover:bg-blue-400/50 hover:shadow-md"
+                    class="max-h-[7rem] w-full cursor-pointer overflow-y-scroll rounded-md border border-transparent p-1 text-sm text-neutral-900 transition-all duration-100 ease-in-out hover:translate-y-[-3px] hover:border-blue-600 hover:bg-blue-400/50 hover:shadow-md"
                     @click="isCommentsModalOpen = true"
                 >
                     <!--                    <div-->
@@ -490,7 +492,7 @@ export default {
                     <!--                        </div>-->
                     <!--                    </div>-->
                     <div
-                        class="cursor-pointer p-1 text-start font-medium"
+                        class="w-full cursor-pointer break-words p-1 text-start font-medium"
                         @click="isCommentsModalOpen = true"
                     >
                         {{ task.comments[0].content }}

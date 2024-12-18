@@ -661,9 +661,7 @@ export default {
             </div>
         </template>
 
-        <div
-            class="mx-auto h-full overflow-x-auto overflow-y-scroll px-5 pb-5 pt-5"
-        >
+        <div class="mx-auto h-full overflow-x-auto px-5 pb-5 pt-5">
             <!--            Фильтры-->
             <div
                 :class="tasks.length === 0 ? 'hidden' : ''"
@@ -927,20 +925,35 @@ export default {
                                     <tr>
                                         <td class="p-1" colspan="12">
                                             <div
-                                                class="grid cursor-pointer select-none grid-cols-[1fr,1fr,1fr] rounded-[4px] border-2 border-dotted border-amber-300/80 bg-amber-200/50 p-1 text-sm font-semibold text-neutral-700 transition-all duration-200 ease-in-out hover:border-amber-400 hover:bg-amber-200/70 hover:text-amber-900 active:border-blue-300"
+                                                class="grid cursor-pointer select-none grid-cols-[1fr,1fr,1fr] rounded-[4px] border-2 border-dotted border-amber-300/80 bg-amber-200/50 text-sm font-semibold text-neutral-700 transition-all duration-200 ease-in-out hover:border-amber-400 hover:bg-amber-200/70 hover:text-amber-900 active:border-blue-300"
                                             >
                                                 <div class="text-start">
                                                     <div
                                                         v-if="
                                                             project.deadline_start
                                                         "
-                                                        class=""
                                                     >
-                                                        {{
-                                                            project.deadline_start
-                                                        }}
+                                                        <span
+                                                            class="border-r-2 border-dotted border-amber-300/80 px-1 text-xs"
+                                                        >
+                                                            {{
+                                                                new Date(
+                                                                    project.deadline_start,
+                                                                ).toLocaleDateString(
+                                                                    'ru-RU',
+                                                                    {
+                                                                        day: '2-digit',
+                                                                        month: '2-digit',
+                                                                        year: 'numeric',
+                                                                    },
+                                                                )
+                                                            }}
+                                                        </span>
                                                     </div>
-                                                    <div v-else class="">
+                                                    <div
+                                                        v-else
+                                                        class="px-1 text-xs"
+                                                    >
                                                         Дата начала не
                                                         установлена
                                                     </div>
@@ -948,20 +961,33 @@ export default {
                                                 <div class="text-center">
                                                     {{ project.name }}
                                                 </div>
-                                                <div class="">
+                                                <div>
                                                     <div
                                                         v-if="
                                                             project.deadline_end
                                                         "
                                                         class="text-end"
                                                     >
-                                                        {{
-                                                            project.deadline_end
-                                                        }}
+                                                        <span
+                                                            class="border-l-2 border-dotted border-amber-300/80 px-1 text-xs"
+                                                        >
+                                                            {{
+                                                                new Date(
+                                                                    project.deadline_end,
+                                                                ).toLocaleDateString(
+                                                                    'ru-RU',
+                                                                    {
+                                                                        day: '2-digit',
+                                                                        month: '2-digit',
+                                                                        year: 'numeric',
+                                                                    },
+                                                                )
+                                                            }}
+                                                        </span>
                                                     </div>
                                                     <div
                                                         v-else
-                                                        class="text-end"
+                                                        class="px-1 text-end text-xs"
                                                     >
                                                         Дедлайн не установлен
                                                     </div>
