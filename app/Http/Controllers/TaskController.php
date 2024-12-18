@@ -39,11 +39,11 @@ class TaskController extends Controller
             $users = User::where('role_id', '!=', 1)->where('name', '!=', 'Антон Андреев')
                 ->where('department_id', '=', $dpEqpId)
                 ->get();
-            $tasks = Task::orderByDesc('created_at')
-                ->where('department_id', '=', $dpEqpId)
-                ->with('subtasks', 'comments', 'subtasks.comments', 'contractor', 'project')
-                ->get();
-            $projects = Project::with(['tasks', 'tasks.comments', 'tasks.subtasks', 'tasks.contractor'])
+//            $tasks = Task::orderByDesc('created_at')
+//                ->where('department_id', '=', $dpEqpId)
+//                ->with('subtasks', 'comments', 'subtasks.comments', 'contractor', 'project')
+//                ->get();
+            $projects = Project::with(['tasks', 'tasks.comments', 'tasks.subtasks', 'tasks.contractor', 'tasks.project'])
                 ->where('department_id', '=', $dpEqpId)
                 ->get();
         } elseif ($currentUser->department->name == 'Инструменты') {
