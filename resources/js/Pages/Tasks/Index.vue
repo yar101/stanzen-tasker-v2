@@ -13,6 +13,7 @@ import {
     BiArrowRepeat,
     BiBarChartLineFill,
     BiCurrencyExchange,
+    BiPlusSquareDotted,
     FaCommentAlt,
     GiProgression,
     IoPersonSharp,
@@ -21,6 +22,7 @@ import {
 } from 'oh-vue-icons/icons';
 
 addIcons(
+    BiPlusSquareDotted,
     IoPersonSharp,
     RiCheckLine,
     BiCurrencyExchange,
@@ -424,6 +426,7 @@ export default {
     methods: {
         openCreateProjectModal() {
             this.isCreateProjectModalOpen = true;
+            this.projectForm.name = '';
             this.projectForm.department_id = this.currentUserDepartment.id;
         },
 
@@ -1111,7 +1114,7 @@ export default {
                         <div
                             class="z-10 mt-1 flex w-full items-center justify-center"
                         >
-                            <div class="group relative w-full">
+                            <div class="group relative flex w-full gap-2">
                                 <button
                                     class="inline-flex w-full justify-between rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-0"
                                     @click.prevent="
@@ -1123,6 +1126,7 @@ export default {
                                             ? selectedProject.name
                                             : 'Выберите проект'
                                     }}</span>
+
                                     <svg
                                         aria-hidden="true"
                                         class="-mr-1 ml-2 h-5 w-5"
@@ -1137,10 +1141,17 @@ export default {
                                         />
                                     </svg>
                                 </button>
+                                <button @click.prevent="openCreateProjectModal">
+                                    <v-icon
+                                        class="text-indigo-200 justify-self-end rounded bg-gradient-to-br from-indigo-500 to-indigo-700 transition-all duration-100 hover:bg-green-500/90 hover:shadow-md active:translate-y-[3px] active:shadow-inner active:ring-0"
+                                        name="bi-plus-square-dotted"
+                                        scale="1.5"
+                                    />
+                                </button>
                                 <div
                                     v-show="isProjectSelectOpen"
                                     ref="projectSelect"
-                                    class="absolute left-0 right-0 mt-2 max-h-48 w-full overflow-y-auto rounded-md border border-gray-300 bg-gray-100 pr-1 shadow-lg"
+                                    class="absolute left-0 right-0 mt-11 max-h-48 w-full overflow-y-auto rounded-md border border-gray-300 bg-gray-100 pr-1 shadow-lg"
                                 >
                                     <div class="sticky top-0 bg-gray-100 p-1">
                                         <div class="backdrop-blur">
