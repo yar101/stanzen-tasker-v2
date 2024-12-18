@@ -535,6 +535,8 @@ export default {
             this.form.title = '';
             this.form.description = '';
             this.form.contractor = 1;
+            this.selectedContractor = null;
+            this.selectedProject = null;
             this.form.cost = 0;
             this.form.manager = this.$page.props.auth.user.id;
             this.form.currency = 'RUB';
@@ -1098,7 +1100,10 @@ export default {
 
                 <!--                Поля формы-->
 
-                <div class="mb-4">
+                <div
+                    v-show="currentUserDepartment.name === 'Оборудование'"
+                    class="mb-4"
+                >
                     <InputLabel class="block text-sm font-medium text-gray-700">
                         Проект
                     </InputLabel>
@@ -1150,14 +1155,36 @@ export default {
                                         </div>
                                     </div>
                                     <!-- Список проектов -->
-                                    <span
-                                        v-for="project in filteredProjects"
-                                        :key="project.id"
-                                        class="m-1 block cursor-pointer rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 active:bg-blue-100"
-                                        @click="selectProject(project)"
+                                    <template
+                                        v-if="filteredProjects.length > 0"
                                     >
-                                        {{ project.name }}
-                                    </span>
+                                        <span
+                                            v-for="project in filteredProjects"
+                                            :key="project.id"
+                                            class="m-1 block cursor-pointer rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 active:bg-blue-100"
+                                            @click="selectProject(project)"
+                                        >
+                                            {{ project.name }}
+                                        </span>
+                                    </template>
+                                    <template v-else>
+                                        <div
+                                            class="flex items-center justify-between gap-5"
+                                        >
+                                            <span
+                                                class="m-1 w-[11rem] rounded px-3 py-1 text-sm text-gray-500"
+                                                >Проекты не найдены</span
+                                            >
+                                            <button
+                                                class="m-1 w-[10rem] rounded bg-gradient-to-br from-indigo-500 to-indigo-700 px-3 py-1 text-sm text-white transition-all duration-100 hover:bg-green-500/90 hover:shadow-md active:translate-y-[3px] active:shadow-inner active:ring-0"
+                                                @click.prevent="
+                                                    openCreateProjectModal
+                                                "
+                                            >
+                                                Создать проект
+                                            </button>
+                                        </div>
+                                    </template>
                                 </div>
                             </div>
                         </div>

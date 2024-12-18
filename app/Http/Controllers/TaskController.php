@@ -25,7 +25,7 @@ class TaskController extends Controller
 
         $users = User::where('role_id', '!=', 1)->where('name', '!=', 'Антон Андреев')->get();
         $statuses = Status::all();
-//        $projects = Project::with('tasks');
+        $projects = [];
 
         $tasks = Task::orderByDesc('created_at')->with('subtasks', 'comments', 'subtasks.comments', 'contractor')->get();
         $contractors = Contractor::orderBy('name')->get();
@@ -53,7 +53,6 @@ class TaskController extends Controller
                 ->where('department_id', '=', Department::where('name', '=', 'Инструменты')->first()->id)
                 ->with('subtasks', 'comments', 'subtasks.comments', 'contractor', 'project')
                 ->get();
-            $projects = [];
         }
 
         return Inertia::render('Tasks/Index', [
@@ -85,17 +84,30 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $newTask = Task::create($request->validate([
-            'title' => ['required'],
-            'description' => ['required'],
-            'manager' => ['nullable', 'integer'],
-            'contractor' => ['required', 'integer'],
-            'cost' => ['nullable'],
-            'currency' => ['required'],
-            'parent_task' => ['nullable', 'integer'],
-            'priority' => ['string', 'required'],
-            'project_id' => ['nullable', 'integer'],
-        ]));
+       if (auth()->user()->department->name == 'Оборудование') {
+           $newTask = Task::create($request->validate([
+               'title' => ['required'],
+               'description' => ['required'],
+               'manager' => ['nullable', 'integer'],
+               'contractor' => ['required', 'integer'],
+               'cost' => ['nullable'],
+               'currency' => ['required'],
+               'parent_task' => ['nullable', 'integer'],
+               'priority' => ['string', 'required'],
+               'project_id' => ['required', 'integer'],
+           ]));
+       } else {
+           $newTask = Task::create($request->validate([
+               'title' => ['required'],
+               'description' => ['required'],
+               'manager' => ['nullable', 'integer'],
+               'contractor' => ['nullable', 'integer'],
+               'cost' => ['nullable'],
+               'currency' => ['required'],
+               'parent_task' => ['nullable', 'integer'],
+               'priority' => ['string', 'required'],
+           ]));
+       }
 
         $newTask->update([
             'progress' => 0,
