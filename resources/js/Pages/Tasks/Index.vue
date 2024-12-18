@@ -11,13 +11,13 @@ import Cookies from 'js-cookie';
 import { ref } from 'vue';
 import {
     BiArrowRepeat,
-    RiCheckLine,
     BiBarChartLineFill,
     BiCurrencyExchange,
     FaCommentAlt,
     GiProgression,
     IoPersonSharp,
     MdErroroutlineRound,
+    RiCheckLine,
 } from 'oh-vue-icons/icons';
 
 addIcons(
@@ -63,7 +63,6 @@ export default {
         },
         projects: {
             type: Object,
-            required: true,
         },
         currentUserRole: String,
         currentUserDepartment: Object,
@@ -205,6 +204,175 @@ export default {
                 });
 
             return filteredTasks;
+        },
+
+        filteredTasksWithProjects() {
+            let filteredProjects = [];
+
+            // Если есть проекты
+            if (this.projects.length !== 0) {
+                filteredProjects = this.projects.map((project) => ({
+                    ...project,
+                    tasks: project.tasks.map((task) => ({
+                        ...task,
+                        subtasks:
+                            task.subtasks?.map((subtask) => ({ ...subtask })) ||
+                            [],
+                    })),
+                }));
+            } else {
+                // Если нет проектов, используем все задачи из отдела
+                filteredProjects = this.tasks.map((task) => ({
+                    ...task,
+                    subtasks:
+                        task.subtasks?.map((subtask) => ({ ...subtask })) || [],
+                }));
+            }
+
+            // Фильтрация по статусам
+            if (this.selectedStatuses.length > 0) {
+                filteredProjects = filteredProjects
+                    .map((projectOrTask) => {
+                        const tasks = projectOrTask.tasks
+                            ?.map((task) => ({
+                                ...task,
+                                subtasks: task.subtasks.filter((subtask) =>
+                                    this.selectedStatuses.includes(
+                                        subtask.status,
+                                    ),
+                                ),
+                            }))
+                            .filter(
+                                (task) =>
+                                    this.selectedStatuses.includes(
+                                        task.status,
+                                    ) || task.subtasks.length > 0,
+                            );
+
+                        return {
+                            ...projectOrTask,
+                            tasks: tasks || [],
+                            subtasks: projectOrTask.subtasks?.filter(
+                                (subtask) =>
+                                    this.selectedStatuses.includes(
+                                        subtask.status,
+                                    ),
+                            ),
+                        };
+                    })
+                    .filter(
+                        (projectOrTask) =>
+                            projectOrTask.tasks?.length > 0 ||
+                            projectOrTask.subtasks?.length > 0,
+                    );
+            }
+
+            // Фильтрация по пользователям
+            if (this.selectedUsers.length > 0) {
+                filteredProjects = filteredProjects
+                    .map((projectOrTask) => {
+                        const tasks = projectOrTask.tasks
+                            ?.map((task) => ({
+                                ...task,
+                                subtasks: task.subtasks.filter((subtask) =>
+                                    this.selectedUsers.includes(
+                                        subtask.manager,
+                                    ),
+                                ),
+                            }))
+                            .filter(
+                                (task) =>
+                                    this.selectedUsers.includes(task.manager) ||
+                                    task.subtasks.length > 0,
+                            );
+
+                        return {
+                            ...projectOrTask,
+                            tasks: tasks || [],
+                            subtasks: projectOrTask.subtasks?.filter(
+                                (subtask) =>
+                                    this.selectedUsers.includes(
+                                        subtask.manager,
+                                    ),
+                            ),
+                        };
+                    })
+                    .filter(
+                        (projectOrTask) =>
+                            projectOrTask.tasks?.length > 0 ||
+                            projectOrTask.subtasks?.length > 0,
+                    );
+            }
+
+            // Фильтрация по текстовому запросу
+            const query = this.searchQuery.toLowerCase();
+            filteredProjects = filteredProjects
+                .map((projectOrTask) => {
+                    const tasks = projectOrTask.tasks
+                        ?.map((task) => ({
+                            ...task,
+                            subtasks: task.subtasks.filter((subtask) => {
+                                return (
+                                    subtask.title
+                                        ?.toLowerCase()
+                                        .includes(query) ||
+                                    subtask.description
+                                        ?.toLowerCase()
+                                        .includes(query) ||
+                                    subtask.contractor?.name
+                                        ?.toLowerCase()
+                                        .includes(query) ||
+                                    subtask.id
+                                        ?.toString()
+                                        .toLowerCase()
+                                        .includes(query)
+                                );
+                            }),
+                        }))
+                        .filter((task) => {
+                            const matchesTask =
+                                task.title?.toLowerCase().includes(query) ||
+                                task.description
+                                    ?.toLowerCase()
+                                    .includes(query) ||
+                                task.contractor?.name
+                                    ?.toLowerCase()
+                                    .includes(query) ||
+                                task.id
+                                    ?.toString()
+                                    .toLowerCase()
+                                    .includes(query);
+
+                            return matchesTask || task.subtasks.length > 0;
+                        });
+
+                    return {
+                        ...projectOrTask,
+                        tasks: tasks || [],
+                        subtasks: projectOrTask.subtasks?.filter((subtask) => {
+                            return (
+                                subtask.title?.toLowerCase().includes(query) ||
+                                subtask.description
+                                    ?.toLowerCase()
+                                    .includes(query) ||
+                                subtask.contractor?.name
+                                    ?.toLowerCase()
+                                    .includes(query) ||
+                                subtask.id
+                                    ?.toString()
+                                    .toLowerCase()
+                                    .includes(query)
+                            );
+                        }),
+                    };
+                })
+                .filter(
+                    (projectOrTask) =>
+                        projectOrTask.tasks?.length > 0 ||
+                        projectOrTask.subtasks?.length > 0,
+                );
+
+            return filteredProjects;
         },
     },
 
@@ -710,7 +878,7 @@ export default {
                             "
                         >
                             <template
-                                v-for="project in projects"
+                                v-for="project in filteredTasksWithProjects"
                                 :key="project.id"
                             >
                                 <!-- Обёртка для каждого проекта -->

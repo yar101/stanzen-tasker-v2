@@ -25,7 +25,7 @@ class TaskController extends Controller
 
         $users = User::where('role_id', '!=', 1)->where('name', '!=', 'Антон Андреев')->get();
         $statuses = Status::all();
-        $projects = Project::with('tasks');
+//        $projects = Project::with('tasks');
 
         $tasks = Task::orderByDesc('created_at')->with('subtasks', 'comments', 'subtasks.comments', 'contractor')->get();
         $contractors = Contractor::orderBy('name')->get();
@@ -53,8 +53,7 @@ class TaskController extends Controller
                 ->where('department_id', '=', Department::where('name', '=', 'Инструменты')->first()->id)
                 ->with('subtasks', 'comments', 'subtasks.comments', 'contractor', 'project')
                 ->get();
-            $projects = Project::with('tasks')
-                ->where('department_id', '=', $dpToolsId);
+            $projects = [];
         }
 
         return Inertia::render('Tasks/Index', [
