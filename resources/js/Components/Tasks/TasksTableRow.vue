@@ -33,6 +33,7 @@ export default {
         comments: {
             type: Array,
             required: true,
+            default: () => [],
         },
         users: {
             type: Array,
