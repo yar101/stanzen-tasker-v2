@@ -682,7 +682,7 @@ export default {
                                 ? 'block translate-x-0'
                                 : 'translate-x-[-1000px]'
                         "
-                        class="absolute mt-2 flex w-fit flex-col gap-2 rounded-md border border-blue-500 bg-blue-600/30 px-3 py-3 shadow-md backdrop-blur-lg transition-all duration-200"
+                        class="absolute z-10 mt-2 flex w-fit flex-col gap-2 rounded-md border border-blue-500 bg-blue-600/30 px-3 py-3 shadow-md backdrop-blur-lg transition-all duration-200"
                     >
                         <div
                             v-for="status in statuses"
@@ -805,7 +805,7 @@ export default {
             <div class="mx-auto w-full overflow-auto rounded-md shadow-lg">
                 <table
                     v-if="tasks.length > 0 || projects.length > 0"
-                    class="w-full table-auto overflow-auto bg-white shadow-lg"
+                    class="w-full table-auto overflow-hidden bg-white shadow-lg"
                 >
                     <thead class="border-b border-blue-200 bg-neutral-300/50">
                         <tr>

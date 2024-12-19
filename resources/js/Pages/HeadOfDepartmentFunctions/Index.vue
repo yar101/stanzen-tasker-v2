@@ -61,7 +61,7 @@ export default {
                     class="rounded-b-md border border-t-0 border-gray-400 bg-neutral-200 pb-16 pl-16 pr-16 pt-10"
                 >
                     <div
-                        class="min-h-[10rem] w-fit rounded border border-gray-400/50 bg-gradient-to-br from-amber-400/30 to-amber-500/40 p-1 text-center text-sm"
+                        class="min-h-[10rem] w-fit rounded border border-gray-400/50 bg-gradient-to-br from-amber-400/30 to-amber-500/40 p-1 text-center text-sm shadow-sm"
                     >
                         <div
                             class="border-b border-blue-400/50 p-1 text-center text-sm"
@@ -75,8 +75,9 @@ export default {
                                 <div class="text-center text-xs font-semibold">
                                     Сотрудники
                                 </div>
+
                                 <div
-                                    class="mt-6 flex flex-col justify-between gap-3 text-sm"
+                                    class="mt-6 flex min-h-[8rem] flex-col items-start gap-3 text-sm"
                                 >
                                     <div
                                         v-for="user in users"
@@ -127,8 +128,9 @@ export default {
                                 <div class="text-center text-xs font-semibold">
                                     Руководители
                                 </div>
+
                                 <div
-                                    class="mt-6 flex flex-col justify-between gap-2 text-sm"
+                                    class="mt-6 flex min-h-[8rem] flex-col items-end gap-2 text-sm"
                                 >
                                     <div
                                         v-for="user in headOfDepartmentUsers"
@@ -138,7 +140,9 @@ export default {
                                         <button
                                             :disabled="
                                                 user.id ===
-                                                this.$page.props.auth.user.id
+                                                    this.$page.props.auth.user
+                                                        .id ||
+                                                user.name === 'Антон Андреев'
                                             "
                                             class="flex cursor-pointer select-none items-center justify-center transition-all duration-[50ms] active:scale-90 disabled:pointer-events-none"
                                             @click="switchUserRoleToUser(user)"
@@ -148,6 +152,10 @@ export default {
                                                     user.id ===
                                                     this.$page.props.auth.user
                                                         .id
+                                                        ? 'w-[2rem] rounded-md border border-neutral-500/50 bg-gradient-to-br from-gray-300 to-gray-500 shadow-md'
+                                                        : 'w-[2rem] rounded-md border border-neutral-500/50 bg-gradient-to-br from-amber-300 to-amber-500 shadow-md',
+                                                    user.name ===
+                                                    'Антон Андреев'
                                                         ? 'w-[2rem] rounded-md border border-neutral-500/50 bg-gradient-to-br from-gray-300 to-gray-500 shadow-md'
                                                         : 'w-[2rem] rounded-md border border-neutral-500/50 bg-gradient-to-br from-amber-300 to-amber-500 shadow-md',
                                                 ]"
@@ -161,6 +169,9 @@ export default {
                                             :class="[
                                                 user.id ===
                                                 this.$page.props.auth.user.id
+                                                    ? 'select-none rounded-md border border-neutral-400 bg-gray-300 p-1 text-neutral-700'
+                                                    : 'select-none rounded-md border border-neutral-400 bg-amber-200/80 p-1 text-neutral-700',
+                                                user.name === 'Антон Андреев'
                                                     ? 'select-none rounded-md border border-neutral-400 bg-gray-300 p-1 text-neutral-700'
                                                     : 'select-none rounded-md border border-neutral-400 bg-amber-200/80 p-1 text-neutral-700',
                                             ]"

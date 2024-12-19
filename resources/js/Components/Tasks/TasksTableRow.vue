@@ -232,6 +232,7 @@ export default {
                             : '',
                     ]"
                     :disabled="
+                        this.$page.props.auth.user.role.name === 'user' &&
                         this.$page.props.auth.user.id !== this.task.manager
                     "
                     class="ml-[0.5rem] cursor-pointer rounded-md text-sm transition-colors focus:ring-0"
@@ -346,6 +347,10 @@ export default {
                             : ''
                     "
                     :clearable="false"
+                    :disabled="
+                        this.$page.props.auth.user.role.name === 'user' &&
+                        this.$page.props.auth.user.id !== this.task.manager
+                    "
                     :enable-time-picker="false"
                     :format="format"
                     :min-date="new Date()"
