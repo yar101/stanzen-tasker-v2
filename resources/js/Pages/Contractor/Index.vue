@@ -17,6 +17,7 @@ export default {
         InputLabel,
         InputError,
         AuthenticatedLayout,
+        // eslint-disable-next-line vue/no-reserved-component-names
         Head,
     },
     props: {
@@ -28,6 +29,8 @@ export default {
             type: Object,
             default: () => ({}),
         },
+        error: String,
+        success: String,
         currentUserRole: String,
     },
     data() {
@@ -87,19 +90,24 @@ export default {
                     onSuccess: () => {
                         this.closeModals();
                     },
+                    preserveScroll: true,
                 },
             );
         },
-        destroy(id, name) {
+        destroy(contractor) {
             if (
                 confirm(
                     'Вы действительно хотите удалить контрагента `' +
-                        name +
+                        contractor.name +
                         '`?',
                 )
             ) {
-                this.$inertia.delete(route('contractors.destroy', id));
-                this.closeModals();
+                this.$inertia.delete(route('contractors.destroy', contractor), {
+                    onSuccess: () => {
+                        this.closeModals();
+                    },
+                    preserveScroll: true,
+                });
             }
         },
     },
@@ -109,6 +117,22 @@ export default {
 <template>
     <Head title="Контрагенты" />
     <AuthenticatedLayout>
+        <div class="sticky top-16 mx-auto w-fit overflow-hidden backdrop-blur">
+            <!-- Отображение сообщений -->
+            <div
+                v-if="$page.props.flash.success"
+                class="rounded-md border border-green-500 bg-green-500/35 px-5 py-2 text-sm shadow-md"
+            >
+                {{ $page.props.flash.success }}
+            </div>
+            <div
+                v-if="$page.props.flash.error"
+                class="rounded-md border border-red-500 bg-red-500/35 px-5 py-2 text-sm shadow-md"
+            >
+                {{ $page.props.flash.error }}
+            </div>
+        </div>
+
         <div class="mx-auto w-fit overflow-hidden rounded-md pb-5 pt-5">
             <!-- Таблица -->
             <table
@@ -144,16 +168,16 @@ export default {
                         v-for="contractor in filteredContractors"
                         :key="contractor.id"
                     >
-                        <WhenVisible as="span" data="contractors" always>
+                        <WhenVisible always as="span" data="contractors">
                             <template #fallback>
                                 <tr>
                                     <td class="" colspan="2">
                                         Контрагент {{ contractor.id }}
                                         загружается
                                         <v-icon
+                                            animation="spin"
                                             class="text-blue-500"
                                             name="bi-arrow-repeat"
-                                            animation="spin"
                                         />
                                     </td>
                                 </tr>
@@ -249,20 +273,15 @@ export default {
                     <InputError :message="errors.name" class="mt-2" />
                 </div>
                 <div class="flex justify-between gap-2">
-                    <!--                    <div class="">-->
-                    <!--                        <button-->
-                    <!--                            class="rounded bg-red-500 px-4 py-2 text-sm hover:bg-red-600"-->
-                    <!--                            type="button"-->
-                    <!--                            @click="-->
-                    <!--                                destroy(-->
-                    <!--                                    selectedContractor.id,-->
-                    <!--                                    selectedContractor.name,-->
-                    <!--                                )-->
-                    <!--                            "-->
-                    <!--                        >-->
-                    <!--                            Удалить-->
-                    <!--                        </button>-->
-                    <!--                    </div>-->
+                    <div class="">
+                        <button
+                            class="rounded bg-red-500 px-4 py-2 text-sm text-white hover:bg-red-600"
+                            type="button"
+                            @click="destroy(selectedContractor)"
+                        >
+                            Удалить
+                        </button>
+                    </div>
                     <div class="flex gap-2">
                         <button
                             class="rounded bg-gray-300 px-4 py-2 text-sm hover:bg-gray-400"

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contractor;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -17,10 +18,7 @@ class ContractorController extends Controller
         $contractors = Contractor::orderBy('name')->where('id', '!=', '1')->get();
         $currentUserRole = auth()->user()->role->name;
 
-        return Inertia::render('Contractor/Index', [
-            'contractors' => $contractors,
-            'currentUserRole' => $currentUserRole,
-        ]);
+        return Inertia::render('Contractor/Index', ['contractors' => $contractors, 'currentUserRole' => $currentUserRole]);
     }
 
     /**
@@ -28,11 +26,8 @@ class ContractorController extends Controller
      */
     public function store(Request $request)
     {
-        Contractor::create(
-            $request->validate([
-                'name' => ['required', 'string', 'max:255', Rule::unique('contractors', 'name')],
-            ])
-        );
+        Contractor::create($request->validate(['name' => ['required', 'string', 'max:255', Rule::unique('contractors', 'name')]]));
+
         return redirect()->route('contractors.index')->with('success', 'Контрагент добавлен.');
     }
 
@@ -49,12 +44,9 @@ class ContractorController extends Controller
      */
     public function update(Request $request, Contractor $contractor)
     {
-        $contractor->update(
-            $request->validate([
-                'name' => ['required', 'string', 'max:255', Rule::unique('contractors', 'name')->ignore($contractor->id)],
-            ])
-        );
-        return redirect()->route('contractors.index')->with('success', 'Контрагент добавлен.');
+        $contractor->update($request->validate(['name' => ['required', 'string', 'max:255', Rule::unique('contractors', 'name')->ignore($contractor->id)]]));
+
+        return redirect()->route('contractors.index')->with('success', 'Контрагент обновлён.');
     }
 
     /**
@@ -62,7 +54,20 @@ class ContractorController extends Controller
      */
     public function destroy(Contractor $contractor)
     {
-        $contractor->delete();
-        return redirect()->route('contractors.index')->with('success', 'Контрагент удален.');
+        try {
+            $contractor = Contractor::findOrFail($contractor->id);
+            $contractor->delete();
+
+            return redirect()->route('contractors.index')->with('success', 'Контрагент успешно удалён.');
+        } catch (QueryException $e) {
+            if ($e->getCode() == '23000') {
+                // Ошибка, если контрагент используется в задачах
+                return redirect()->route('contractors.index')->with('error', 'Невозможно удалить контрагента. Он используется в задачах.');
+            }
+
+            return redirect()->route('contractors.index')->with('error', 'Произошла ошибка при удалении контрагента.');
+        }
+        //        $contractor->delete();
+        //        return redirect()->route('contractors.index')->with('success', 'Контрагент удален.');
     }
 }
