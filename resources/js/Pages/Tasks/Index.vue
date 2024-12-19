@@ -927,7 +927,9 @@ export default {
                                             <div
                                                 class="grid cursor-pointer select-none grid-cols-[1fr,1fr,1fr] rounded-[4px] border-2 border-dotted border-amber-300/80 bg-amber-200/50 text-sm font-semibold text-neutral-700 transition-all duration-200 ease-in-out hover:border-amber-400 hover:bg-amber-200/70 hover:text-amber-900 active:border-blue-300"
                                             >
-                                                <div class="text-start">
+                                                <div
+                                                    class="flex items-center justify-start"
+                                                >
                                                     <div
                                                         v-if="
                                                             project.deadline_start
@@ -961,7 +963,9 @@ export default {
                                                 <div class="text-center">
                                                     {{ project.name }}
                                                 </div>
-                                                <div>
+                                                <div
+                                                    class="flex items-center justify-end"
+                                                >
                                                     <div
                                                         v-if="
                                                             project.deadline_end

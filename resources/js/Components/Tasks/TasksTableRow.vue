@@ -234,7 +234,7 @@ export default {
                     :disabled="
                         this.$page.props.auth.user.id !== this.task.manager
                     "
-                    class="ml-[0.5rem] rounded-md text-sm transition-colors focus:ring-0"
+                    class="ml-[0.5rem] cursor-pointer rounded-md text-sm transition-colors focus:ring-0"
                     @change="updateStatus(this.task)"
                 >
                     <option

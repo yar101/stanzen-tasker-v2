@@ -144,7 +144,7 @@ class DatabaseSeeder extends Seeder
         // TEST Ob USERS
 
         User::create([
-            'name' => 'Пользователь Оборудование1',
+            'name' => 'Пользователь Оборудование',
             'email' => 'ob1@stnzn.ru',
             'role_id' => $userRole,
             'department_id' => 3,
@@ -152,9 +152,9 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => 'Пользователь Оборудование2',
+            'name' => 'Руководитель Оборудование',
             'email' => 'ob2@stnzn.ru',
-            'role_id' => $userRole,
+            'role_id' => $headOfDepartmentRole,
             'department_id' => 3,
             'password' => Hash::make('0000'),
         ]);

@@ -94,6 +94,20 @@ const showingNavigationDropdown = ref(false);
                                         >
                                             Профиль
                                         </DropdownLink>
+
+                                        <template
+                                            v-if="
+                                                $page.props.auth.user
+                                                    .role_id === 3
+                                            "
+                                        >
+                                            <DropdownLink
+                                                :href="route('hod-functions')"
+                                            >
+                                                Управление отделом
+                                            </DropdownLink>
+                                        </template>
+
                                         <DropdownLink
                                             :href="route('logout')"
                                             as="button"

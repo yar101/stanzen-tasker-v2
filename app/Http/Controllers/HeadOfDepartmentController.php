@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class HeadOfDepartmentController extends Controller
@@ -23,5 +23,19 @@ class HeadOfDepartmentController extends Controller
             'users' => $users,
             'headOfDepartmentUsers' => $headOfDepartmentUsers,
         ]);
+    }
+
+    public function switchUserRoleToHeadOfDepartment(User $user)
+    {
+        $HeadOfDepartmentRoleId = Role::where('name', '=', 'head-of-department')->first()->id;
+        $user->update(['role_id' => $HeadOfDepartmentRoleId]);
+        return redirect()->route('hod-functions');
+    }
+
+    public function switchUserRoleToUser(User $user)
+    {
+        $userRoleId = Role::where('name', '=', 'user')->first()->id;
+        $user->update(['role_id' => $userRoleId]);
+        return redirect()->route('hod-functions');
     }
 }

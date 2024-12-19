@@ -3,6 +3,7 @@
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContractorController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HeadOfDepartmentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
@@ -21,7 +22,7 @@ use Inertia\Inertia;
 ////    ]);
 ////})->middleware('auth');
 
-Route::get('/', [DashboardController::class, 'index'])->middleware('auth', 'verified')->name('dashboard');
+Route::get('/', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -42,3 +43,7 @@ Route::patch('/tasks/{task}/update-progress', [TaskController::class, 'updatePro
 Route::resource('/comments', CommentController::class)->middleware('auth');
 
 Route::resource('/projects', ProjectController::class)->middleware('auth');
+
+Route::get('/hod-functions/index', [HeadOfDepartmentController::class, 'index'])->middleware('auth')->name('hod-functions');
+Route::patch('/hod-functions/{user}/switch-to-hod', [HeadOfDepartmentController::class, 'switchUserRoleToHeadOfDepartment'])->middleware('auth')->name('hod-functions.switchUserRoleToHeadOfDepartment');
+Route::patch('/hod-functions/{user}/switch-to-user', [HeadOfDepartmentController::class, 'switchUserRoleToUser'])->middleware('auth')->name('hod-functions.switchUserRoleToUser');
